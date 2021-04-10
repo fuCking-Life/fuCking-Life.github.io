@@ -1,0 +1,28 @@
+baseURL = "https://localhost:1313/"
+languageCode = "en-us"
+theme = "anatole"
+title = "Welcome to fuCking-Life"
+enableEmoji = true
+buildDrafts = true
+publishdir = "/Users/yonas/blog/"
+
+
+# Syntax highlighting
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
+
+[params]
+title = "Hey. I'm Yonas."
+author = "Yonas"
+description = """
+Hey bro. Welcome to my site.
+My name's Yonas. I used to be an iOS developer. But now, I am a postgraduate student at BUAA. I could develop iOS/Android/Wechat applications but iOS is my major.
+Recently I am learning computer vision.
+You may ask me why my site is named "Fucking Life". I think it may be a cool name.Tell the truth I don't satisfy with my life and always confused.
+Whatever.
+By the way, I'll share some knowledge with you.Most of them are about iOS technology.
+"""
+profilePicture = "images/profile.jpg"
+keywords = "iOS/Objective-C/Python/Android/Java"
+
