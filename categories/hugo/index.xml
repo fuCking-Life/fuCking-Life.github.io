@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Fucking Life</title>
-    <link>https://fuCking-Life.github.io/</link>
-    <description>Recent content on Fucking Life</description>
+    <title>hugo on Fucking Life</title>
+    <link>https://fuCking-Life.github.io/categories/hugo/</link>
+    <description>Recent content in hugo on Fucking Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 10 Apr 2021 22:07:20 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 10 Apr 2021 22:07:20 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/categories/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hugo的使用和主题的修改</title>
       <link>https://fuCking-Life.github.io/post/inithugo/</link>

@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" data-theme=""><head>
-    <title> Yonas | Categories </title>
+    <title> Yonas | Hugo的使用和主题的修改 </title>
 
     
     <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="description" content="Hey bro. Welcome to my site.
-I used to be an iOS developer. But now, I am a postgraduate student at BUAA. I could develop iOS/Android/Wechat applications but iOS is my major.
-Recently I am learning computer vision.
-You may ask me why my site is named &#34;Fucking Life&#34;. I think it may be a cool name.Tell the truth I don&#39;t satisfy with my life and always confused.
-Whatever.
-By the way, I&#39;ll share some knowledge with you.Most of them are about iOS technology.
-">
+    <meta name="description" content="Sample article showcasing basic Markdown syntax and formatting for HTML elements.">
     
     <link rel="stylesheet"
           href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
@@ -35,10 +29,9 @@ By the way, I&#39;ll share some knowledge with you.Most of them are about iOS te
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
 
-    <link rel="canonical" href="/categories/">
+    <link rel="canonical" href="/post/inithugo/">
 
     
-    <link rel="alternate" type="application/rss+xml" href="/categories/index.xml" title="Fucking Life" />
     
     
     
@@ -59,14 +52,8 @@ By the way, I&#39;ll share some knowledge with you.Most of them are about iOS te
     <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
 
-<meta name="twitter:title" content="Categories"/>
-<meta name="twitter:description" content="Hey bro. Welcome to my site.
-I used to be an iOS developer. But now, I am a postgraduate student at BUAA. I could develop iOS/Android/Wechat applications but iOS is my major.
-Recently I am learning computer vision.
-You may ask me why my site is named &#34;Fucking Life&#34;. I think it may be a cool name.Tell the truth I don&#39;t satisfy with my life and always confused.
-Whatever.
-By the way, I&#39;ll share some knowledge with you.Most of them are about iOS technology.
-"/>
+<meta name="twitter:title" content="Hugo的使用和主题的修改"/>
+<meta name="twitter:description" content="Sample article showcasing basic Markdown syntax and formatting for HTML elements."/>
 
 
     
@@ -154,23 +141,140 @@ By the way, I&#39;ll share some knowledge with you.Most of them are about iOS te
 
     <div class="autopagerize_page_element">
         <div class="content">
-    <div class="archive  animated fadeInDown ">
-        <ul class="list-with-title">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
             
-                <div class="listing-title">2021</div>
+            <div class="post-title">
+                <h3>Hugo的使用和主题的修改</h3>
                 
-                    <ul class="listing">
-                        <div class="listing-item">
-                            <div class="listing-post"><a href="/categories/hugo/" title="hugo">hugo</a>
-                                <div class="post-time"><span class="date"> Apr 10 
-                                                                            </span></div>
-                            </div>
-                        </div>
-                    </ul>
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Sat, Apr 10, 2021 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">One-minute read</span>
+                    </div>
                 
-            
-        </ul>
+            </div>
+
+            <p>本人电脑是mac，所以仅仅按照mac的安装步骤阐述。</p>
+<h2 id="1-安装git-和-brew">1. 安装git 和 brew</h2>
+<p>应该都要的，没有的请自行百度。</p>
+<h2 id="2--安装hugo">2.  安装Hugo</h2>
+<ul>
+<li>
+<ol>
+<li>brew install hugo  // 下载hugo</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>hugo new site blog //初始化站点，一般是在Users/目录下</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li><a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a> // 选择一个你中意的主题</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>cd themes/</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>git clone 主题地址</li>
+</ol>
+</li>
+<li>
+<ol start="6">
+<li>cd themes/主题/examplesite</li>
+</ol>
+</li>
+<li>
+<ol start="7">
+<li>hugo server &ndash;themesDir ../..    //可以查看当前的主题</li>
+</ol>
+</li>
+</ul>
+<h2 id="3-生成一个blog">3. 生成一个blog</h2>
+<ul>
+<li>
+<ol>
+<li>hugo new post/first_blog.md //生成一个blog，在content/post/下</li>
+</ol>
+</li>
+</ul>
+<h2 id="4-关联远端-github">4. 关联远端 github</h2>
+<ul>
+<li>
+<ol>
+<li>去github创建一个仓库，仓库的名字要跟你的github名字一样：如下图所示</li>
+</ol>
+</li>
+</ul>
+<p><img src="../post_images/initHugo/1.jpg" alt="图片1"></p>
+<ul>
+<li>
+<ol start="2">
+<li>hugo &ndash;baseUrl=&ldquo;https://上面的仓库名字&rdquo; &ndash;buildDraf
+ts //这会生成一个public文件</li>
+</ol>
+</li>
+</ul>
+<h2 id="5-将文件推送到远端">5. 将文件推送到远端</h2>
+<ul>
+<li>
+<ol>
+<li>cd public</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>git init</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>git add .</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>git commit -m &ldquo;update&rdquo;</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>git push origin master</li>
+</ol>
+</li>
+</ul>
+<h2 id="6-修改theme">6. 修改theme</h2>
+<ul>
+<li>
+<ol>
+<li>可以直接把examplesite里面的config复制到根目录，覆盖即可。然后根据里面的内容进行修改。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>图片需要在跟目录放置一个static，这个也可以参考examplesite，看看他是怎么放的。</li>
+</ol>
+</li>
+</ul>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/hugo/">hugo</a></span>
+                
+            </div>
+        </div>
+
+        
     </div>
+
 
         </div>
     </div>
