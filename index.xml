@@ -8,6 +8,16 @@
     <language>en</language>
     <lastBuildDate>Sat, 10 Apr 2021 22:07:20 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>About Me</title>
+      <link>https://fuCking-Life.github.io/about/</link>
+      <pubDate>Sun, 11 Apr 2021 10:55:09 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/about/</guid>
+      <description>Hey bro. Welcome to my site.
+I used to be an iOS developer.</description>
+    </item>
+    
+    <item>
       <title>Hugo的使用和主题的修改</title>
       <link>https://fuCking-Life.github.io/post/inithugo/</link>
       <pubDate>Sat, 10 Apr 2021 22:07:20 +0800</pubDate>
