@@ -6,7 +6,27 @@
     <description>Recent content on Fucking Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 10 Apr 2021 22:07:20 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Apr 2021 21:55:05 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>iOS底层历险记-目录</title>
+      <link>https://fuCking-Life.github.io/post/objc_essence_0/</link>
+      <pubDate>Fri, 23 Apr 2021 21:55:05 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/objc_essence_0/</guid>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;现在的iOS开发已经进入到了后iOS开发时代，不再是那个会点网络请求、会拖个界面、会写个自定义控件就可以找个不错的工作的年代了。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Objective-C 对象本质(一)</title>
+      <link>https://fuCking-Life.github.io/post/objc_essence_1/</link>
+      <pubDate>Tue, 13 Apr 2021 22:07:09 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/objc_essence_1/</guid>
+      <description>一. 对象的分类 整个OC对象的分类可以分为以下三种：
+   实例对象 instance    类对象 class    元类对象 meta-class    接下来呢，我要一一开始讨论三类对象，每个对象，都会从内存布局、源码分析等角度切入，然后扩展，说到哪儿算哪儿。</description>
+    </item>
+    
     <item>
       <title>About Me</title>
       <link>https://fuCking-Life.github.io/about/</link>

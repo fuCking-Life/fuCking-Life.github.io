@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme=""><head>
 
-    <title> Ermao(二毛) | Posts </title>
+    <title> Ermao(二毛) | iOS底层历险记-目录 </title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     
     <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -33,10 +33,9 @@ Go to &#34; About me&#34; if you want to know more details.
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
 
-    <link rel="canonical" href="/post/">
+    <link rel="canonical" href="/post/objc_essence_0/">
 
     
-    <link rel="alternate" type="application/rss+xml" href="/post/index.xml" title="Fucking Life" />
     
     
     
@@ -56,11 +55,9 @@ Go to &#34; About me&#34; if you want to know more details.
     <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
 
-<meta name="twitter:title" content="Posts"/>
-<meta name="twitter:description" content="iOS developer/Bored constantly
-Welcome to my site.
-Go to &#34; About me&#34; if you want to know more details.
-"/>
+<meta name="twitter:title" content="iOS底层历险记-目录"/>
+<meta name="twitter:description" content="前言
+现在的iOS开发已经进入到了后iOS开发时代，不再是那个会点网络请求、会拖个界面、会写个自定义控件就可以找个不错的工作的年代了。"/>
 
 
     
@@ -118,7 +115,7 @@ Go to &#34; About me&#34; if you want to know more details.
                    title="">Home</a></li>
         
             
-            <li><a class="current"
+            <li><a 
                    href="/post/"
                         
                    title="">Posts</a></li>
@@ -142,41 +139,75 @@ Go to &#34; About me&#34; if you want to know more details.
 
     <div class="autopagerize_page_element">
         <div class="content">
-    <div class="archive  animated fadeInDown ">
-        <ul class="list-with-title">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
             
-                <div class="listing-title">2021</div>
+            <div class="post-title">
+                <h3>iOS底层历险记-目录</h3>
                 
-                    <ul class="listing">
-                        <div class="listing-item">
-                            <div class="listing-post"><a href="/post/objc_essence_0/" title="iOS底层历险记-目录">iOS底层历险记-目录</a>
-                                <div class="post-time"><span class="date"> Apr 23 
-                                                                            </span></div>
-                            </div>
-                        </div>
-                    </ul>
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Fri, Apr 23, 2021 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">100 Words|Read in about 1 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
                 
-                    <ul class="listing">
-                        <div class="listing-item">
-                            <div class="listing-post"><a href="/post/objc_essence_1/" title="Objective-C 对象本质(一)">Objective-C 对象本质(一)</a>
-                                <div class="post-time"><span class="date"> Apr 13 
-                                                                            </span></div>
-                            </div>
-                        </div>
-                    </ul>
+
+            </div>
+
+            <h2 id="前言">前言</h2>
+<p>现在的iOS开发已经进入到了后iOS开发时代，不再是那个会点网络请求、会拖个界面、会写个自定义控件就可以找个不错的工作的年代了。</p>
+<p>从事物的发展角度来看，这是必然的一个趋势，毕竟世间万物都是运动的。从另外一个角度来看这个问题就是，现在的互联网时代，该瓜分的领域都瓜分的差不多了，已经进入到了各个互联网企业开始下沉自己业务的时候了，那么随着业务的下沉，技术也需要开始沉淀。那么这个时代对于我们这些IT一线人员也就提出了越来越多的要求，也慢慢的提升了这个行业的准入门槛(对跨专业的同学比较不友好)。</p>
+<p>鉴于网上对于iOS的深入讲解还是停留在N年之前，而且很多blog都是你抄我的我抄你的，所以我准备开始重新写一些东西来说一下关于底层的一些理解。</p>
+<p>这个系列从iOS的开始，慢慢揭开iOS的本质，大概可以深入到汇编层次。再往下的关于compiler的东西我实在是没有多少知识储备，不过后面可能会补上，因为最近也在看LLVM和Clang相关的东西。慢慢来吧。</p>
+<p>我也劝大家一步一步走，现在的技术革新实在是太快，不过本质的东西往往被忽视，其实大家都知道的技术金字塔，最底层的东西往往是迭代最慢的。</p>
+<p>最后有几句话送给自己，也算是送给你。</p>
+<ul>
+<li>
+<ol>
+<li>做我们这行的得keep learning，千万不要忘记这一点。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>可以多涉猎，但是一定要在某个领域有一定的深度，深到像是字节、美团的大佬那样把人问到不会为止。</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>对事物保持好奇心 keep curiosity，千万别跟有的人一样20多岁心就死了，</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>计算机基础知识最好要扎实，包括但不限于计算机网络、操作系统、汇编、编译原理等。</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<h3 id="一对象的本质一objc_essence_1indexhtml"><a href="../objc_essence_1/index.html">一：对象的本质(一)</a></h3>
+</blockquote></div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/objc/">objc</a></span>
                 
-                    <ul class="listing">
-                        <div class="listing-item">
-                            <div class="listing-post"><a href="/post/inithugo/" title="Hugo的使用和主题的修改">Hugo的使用和主题的修改</a>
-                                <div class="post-time"><span class="date"> Apr 10 
-                                                                            </span></div>
-                            </div>
-                        </div>
-                    </ul>
-                
-            
-        </ul>
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
     </div>
+
 
         </div>
     </div>

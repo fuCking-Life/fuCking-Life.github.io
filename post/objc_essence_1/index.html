@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+
+    <title> Ermao(二毛) | Objective-C 对象本质(一) </title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Objective-C 对象本质(一)">
+    
+    <link rel="stylesheet"
+          href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
+          integrity="sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+        integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="/post/objc_essence_1/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="/js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js"
+            integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="
+            crossorigin="anonymous"></script>
+
+    
+        
+        
+        <script type="text/javascript"
+                src="/js/anatole-theme-switcher.min.47918423907d577c1f04c2fd28730186eca486fb18e52fc882c3c7ad5f2540b1.js"
+                integrity="sha256-R5GEI5B9V3wfBML9KHMBhuykhvsY5S/IgsPHrV8lQLE="
+                crossorigin="anonymous"></script>
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="Objective-C 对象本质(一)"/>
+<meta name="twitter:description" content="Objective-C 对象本质(一)"/>
+
+
+    
+
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Hey. I&#39;m Ermao.</a></h3>
+            <div class="description">
+                <p>iOS developer/Bored constantly<br>Welcome to my site.<br>Go to " About me" if you want to know more details.<br></p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/fuCking-Life/" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:464514962@qq.com" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Ermao(二毛)  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About me</a></li>
+        
+        
+        
+            <li class="theme-switch-item">
+                <a class="theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h3>Objective-C 对象本质(一)</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Tue, Apr 13, 2021 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">400 Words|Read in about 2 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
+                
+
+            </div>
+
+            <h2 id="一-对象的分类">一. 对象的分类</h2>
+<p>整个OC对象的分类可以分为以下三种：</p>
+<ul>
+<li>
+<ol>
+<li>实例对象 instance</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>类对象 class</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>元类对象 meta-class</li>
+</ol>
+</li>
+</ul>
+<p>接下来呢，我要一一开始讨论三类对象，每个对象，都会从内存布局、源码分析等角度切入，然后扩展，说到哪儿算哪儿。</p>
+<h3 id="1-实例对象的内存布局">1. 实例对象的内存布局</h3>
+<h4 id="11-nsobject基类祖宗">1.1 NSObject(基类/祖宗)</h4>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//最简单的一个实例对象
+</span><span class="c1"></span><span class="n">NSObject</span> <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</code></pre></div><p>我们先创建一个NSObject 对象，来看看这个对象里面有什么，这个对象可是祖宗🙂，只要是个对象肯定是继承自NSObject(NSProxy除外)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">//终端输入,通过clang输出重新编译为c++的文件。
+//需要指定sdk的版本
+//架构 arm64
+xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp 
+</code></pre></div><p>重新编译完后的c++代码有接近4万行，我们只摘取有用的部分</p>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//可以看做是NSObject实例对象的实现，里面只有一个isa指针,而且就是个结构体
+</span><span class="c1"></span><span class="k">struct</span> <span class="n">NSObject_IMPL</span> <span class="p">{</span>
+	<span class="kt">Class</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">//Class的定义
+</span><span class="c1"></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">objc_class</span> <span class="o">*</span><span class="kt">Class</span><span class="p">;</span>
+
+<span class="c1">//main函数，这个看起来实在是恶心
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="cm">/* @autoreleasepool */</span> <span class="p">{</span> <span class="n">__AtAutoreleasePool</span> <span class="n">__autoreleasepool</span><span class="p">;</span> 
+        <span class="n">NSObject</span> <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="p">((</span><span class="n">NSObject</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">id</span><span class="p">,</span> <span class="kt">SEL</span><span class="p">))(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">objc_msgSend</span><span class="p">)((</span><span class="kt">id</span><span class="p">)((</span><span class="n">NSObject</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">id</span><span class="p">,</span> <span class="kt">SEL</span><span class="p">))(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">objc_msgSend</span><span class="p">)((</span><span class="kt">id</span><span class="p">)</span><span class="n">objc_getClass</span><span class="p">(</span><span class="s">&#34;NSObject&#34;</span><span class="p">),</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">&#34;alloc&#34;</span><span class="p">)),</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">&#34;init&#34;</span><span class="p">));</span>
+        
+      <span class="c1">//下面这是修改过的，我删掉了很多强转，可以看出来就是消息转发而已。后面会讲objc_msgSend
+</span><span class="c1"></span>    	<span class="n">NSObject</span> <span class="o">*</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">objc_msgSend</span><span class="p">(</span>
+            <span class="n">objc_msgSend</span><span class="p">(</span>
+            <span class="n">objc_getClass</span><span class="p">(</span><span class="s">&#34;NSObject&#34;</span><span class="p">),</span>
+            <span class="n">sel_registerName</span><span class="p">(</span><span class="s">&#34;alloc&#34;</span><span class="p">)),</span>
+            <span class="n">sel_registerName</span><span class="p">(</span><span class="s">&#34;init&#34;</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div><p>从上面可以看出来，其实NSObject实例对象里面就只有一个isa指针</p>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="k">struct</span> <span class="n">NSObject_IMPL</span> <span class="p">{</span>
+	<span class="kt">Class</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><p>可以打印一下实例对象占的内存大小。64位下一个指针8个字节。看一下NSObject的对象是不是8个字节就可以了。或者用一个结构体去获取一下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//第一种方式，看一下实例对象的大小
+</span><span class="c1"></span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&#34;%zd&#34;</span><span class="p">,</span><span class="n">class_getInstanceSize</span><span class="p">([</span><span class="n">NSObject</span> <span class="k">class</span><span class="p">]));</span> <span class="c1">//输出8
+</span><span class="c1"></span>
+<span class="c1">//第二种方式.
+</span><span class="c1"></span><span class="k">struct</span> <span class="n">PObject</span><span class="p">{</span>
+    <span class="kt">Class</span> <span class="n">isaa</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">//打个断点，看一下p-&gt;isaa是谁?
+</span><span class="c1">//很显然是NSObject类，这也间接证明了，实例对象的isa指向的是对应的类。
+</span><span class="c1"></span><span class="k">struct</span> <span class="n">PObject</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="k">struct</span> <span class="n">PObject</span> <span class="o">*</span><span class="p">)([[</span><span class="n">NSObject</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">]);</span>
+
+</code></pre></div><h4 id="12-personnsobject">1.2 Person:NSObject</h4>
+<p>新建Person类，查看Person的内存布局。</p>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="k">@interface</span> <span class="nc">Person</span>:<span class="nc">NSObject</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">_age</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">assign</span><span class="p">)</span> <span class="kt">int</span> <span class="n">number</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">test</span><span class="p">();</span>
+<span class="k">@end</span>
+
+<span class="kt">void</span> <span class="n">main</span><span class="p">(){</span>
+	<span class="c1">//这就是一个实例对象
+</span><span class="c1"></span>	<span class="n">Person</span> <span class="o">*</span><span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">]</span> 
+<span class="p">}</span>
+</code></pre></div><p>同样编译为C++输出，截取有用部分展示如下</p>
+<div class="highlight"><pre class="chroma"><code class="language-objective-c" data-lang="objective-c"><span class="k">struct</span> <span class="n">NSObject_IMPL</span> <span class="p">{</span>
+	<span class="kt">Class</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">// 可以看到Person_IMPL内就是一个NSObject的结构体和成员变量，而NSObject_IMPL结构体内就一个isa指针
+</span><span class="c1"></span><span class="k">struct</span> <span class="n">Person_IMPL</span> <span class="p">{</span>
+	<span class="k">struct</span> <span class="n">NSObject_IMPL</span> <span class="n">NSObject_IVARS</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">_age</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">_number</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><blockquote>
+<p>⭐️⭐️⭐️⭐️⭐️综上，实例对象中包含的是成员变量+isa指针，并不包含任何方法.</p>
+</blockquote>
+<h3 id="2-类对象class的内存布局">2. 类对象(Class)的内存布局</h3>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="kt">Class</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSObject</span> <span class="k">class</span><span class="p">];</span>
+<span class="c1">//点开看一下Class的定义发现是一个objc_class的结构体
+</span><span class="c1"></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">objc_class</span> <span class="o">*</span><span class="kt">Class</span><span class="p">;</span>
+</code></pre></div><p>这里可以通过<a href="https://opensource.apple.com/tarballs/objc4/">Objc部分源码</a>来查看一下这个objc_class结构体是个啥玩意儿。</p>
+<p>内部代码非常混乱，我这里做了删减，只把重点的东西挑出来。</p>
+<div class="highlight"><pre class="chroma"><code class="language-objective-c" data-lang="objective-c"><span class="cp"># isa_t
+</span><span class="cp"></span><span class="k">union</span> <span class="n">isa_t</span> <span class="p">{</span>
+    <span class="n">isa_t</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    <span class="n">isa_t</span><span class="p">(</span><span class="n">uintptr_t</span> <span class="n">value</span><span class="p">)</span> <span class="o">:</span> <span class="n">bits</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+
+    <span class="n">uintptr_t</span> <span class="n">bits</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp"># objc_object
+</span><span class="cp"></span><span class="k">struct</span> <span class="n">objc_object</span> <span class="p">{</span>
+<span class="nl">private</span><span class="p">:</span>
+    <span class="n">isa_t</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#objc_class
+</span><span class="cp"></span><span class="k">struct</span> <span class="nl">objc_class</span> <span class="p">:</span> <span class="n">objc_object</span><span class="p">{</span>
+  	<span class="kt">Class</span> <span class="n">superclass</span><span class="p">;</span>
+    <span class="n">cache_t</span> <span class="n">cache</span><span class="p">;</span>             <span class="c1">// 这个是方法调用缓存，内部维护着一个bucket_t结构体的列表
+</span><span class="c1"></span>    <span class="n">class_data_bits_t</span> <span class="n">bits</span><span class="p">;</span>    <span class="c1">// class_rw_t * plus custom rr/alloc flags
+</span><span class="c1"></span>	  <span class="n">class_rw_t</span> <span class="o">*</span><span class="nf">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">bits</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp"># class_data_bits_t
+</span><span class="cp"></span><span class="k">struct</span> <span class="n">class_data_bits_t</span><span class="p">{</span>
+  <span class="n">class_rw_t</span><span class="o">*</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">class_rw_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">bits</span> <span class="o">&amp;</span> <span class="n">FAST_DATA_MASK</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp"># class_rw_t
+</span><span class="cp"></span><span class="k">struct</span> <span class="n">class_rw_t</span> <span class="p">{</span>
+	  <span class="n">uint32_t</span> <span class="n">flags</span><span class="p">;</span><span class="c1">//这个flag可以和不同的MASK做与操作得到不同的表达意思，比如可以判断是否是metaclass
+</span><span class="c1"></span>  	<span class="n">class_ro_t</span> <span class="o">*</span><span class="n">ro</span><span class="p">;</span> 
+	  <span class="n">method_array_t</span> <span class="nf">methods</span><span class="p">();</span> <span class="c1">//方法列表
+</span><span class="c1"></span>	  <span class="n">property_array_t</span> <span class="nf">properties</span><span class="p">();</span> <span class="c1">//属性列表
+</span><span class="c1"></span>	  <span class="n">protocol_array_t</span> <span class="nf">protocols</span><span class="p">();</span> <span class="c1">//协议列表 
+</span><span class="c1"></span><span class="p">}</span>
+<span class="cp"># class_ro_t
+</span><span class="cp"></span><span class="k">struct</span> <span class="n">class_ro_t</span><span class="p">{</span>
+	  <span class="n">explicit_atomic</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*&gt;</span> <span class="n">name</span><span class="p">;</span><span class="c1">//类名
+</span><span class="c1"></span>    <span class="n">uint32_t</span> <span class="n">instanceSize</span><span class="p">;</span><span class="c1">// 实例对象的大小
+</span><span class="c1"></span>	  <span class="n">protocol_list_t</span> <span class="o">*</span> <span class="n">baseProtocols</span><span class="p">;</span> <span class="c1">//基础协议
+</span><span class="c1"></span>	  <span class="k">const</span> <span class="n">ivar_list_t</span> <span class="o">*</span> <span class="n">ivars</span><span class="p">;</span><span class="c1">//成员变量
+</span><span class="c1"></span>    <span class="n">property_list_t</span> <span class="o">*</span><span class="n">baseProperties</span><span class="p">;</span><span class="c1">//基础属性
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>👆就是objc_class的内存布局，简而言之就是一幅图&hellip;</p>
+<p><img src="../post_images/objc_essence/objc_essence_1_1.jpg" alt="图片1"></p>
+<blockquote>
+<p>⭐️⭐️⭐️⭐️⭐️综上，类对象中存放着以下几个东西：</p>
+<ol>
+<li>isa_t (这个之前是指针，不过现在成了一个共用体，后面会详细解释这个东西)</li>
+<li>superclass指针</li>
+<li>cache_t (方法调用缓存)</li>
+<li>属性信息</li>
+<li>对象方法</li>
+<li>协议：描述信息</li>
+<li>ivar：描述信息</li>
+</ol>
+</blockquote>
+<h3 id="3-元类对象meta-class的内存布局">3. 元类对象(meta-class)的内存布局</h3>
+<p>Class和meta-class的内存布局是一样的，这里就不做过多的展开了。</p>
+<blockquote>
+<p>⭐️⭐️⭐️⭐️⭐️meta-class中存放的东西：</p>
+<ol>
+<li>类方法</li>
+<li>isa_t</li>
+<li>superclass指针</li>
+</ol>
+</blockquote>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/objc/">objc</a></span>
+                
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/js/medium-zoom.min.2d6fd0be87fa98f0c9b4dc2536b312bbca48757f584f6ea1f394abc9bcc38fbc.js"
+        integrity="sha256-LW/Qvof6mPDJtNwlNrMSu8pIdX9YT26h85SrybzDj7w="
+        crossorigin="anonymous"></script></body>
+
+</html>
