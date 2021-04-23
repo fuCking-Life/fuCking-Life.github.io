@@ -18,12 +18,12 @@
     </item>
     
     <item>
-      <title>Objective-C 对象本质(一)</title>
+      <title>Objective-C 一、对象本质——对象的分类</title>
       <link>https://fuCking-Life.github.io/post/objc_essence_1/</link>
       <pubDate>Tue, 13 Apr 2021 22:07:09 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/objc_essence_1/</guid>
-      <description>一. 对象的分类 整个OC对象的分类可以分为以下三种：
+      <description>整个OC对象的分类可以分为以下三种：
    实例对象 instance    类对象 class    元类对象 meta-class    接下来呢，我要一一开始讨论三类对象，每个对象，都会从内存布局、源码分析等角度切入，然后扩展，说到哪儿算哪儿。</description>
     </item>
     
