@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+
+    <title> Ermao(二毛) | weex(二)weex实时更新实现 </title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="iOS developer/Bored constantly
+Welcome to my site.
+Go to &#34; About me&#34; if you want to know more details.
+">
+    
+    <link rel="stylesheet"
+          href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
+          integrity="sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+        integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="/post/weex/weex2/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="/js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js"
+            integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="
+            crossorigin="anonymous"></script>
+
+    
+        
+        
+        <script type="text/javascript"
+                src="/js/anatole-theme-switcher.min.47918423907d577c1f04c2fd28730186eca486fb18e52fc882c3c7ad5f2540b1.js"
+                integrity="sha256-R5GEI5B9V3wfBML9KHMBhuykhvsY5S/IgsPHrV8lQLE="
+                crossorigin="anonymous"></script>
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="weex(二)weex实时更新实现"/>
+<meta name="twitter:description" content="一：写在前面 用过RN的都知道，RN有HotReload技术。而且修改一下RCTSocket.m（具体什么文件忘记了）文件中的localhost地址即可实现。但是Weex官方文档中并没有提及Weex 热加载的技术。是不是并不能实现呢？答案是否定的。在我翻阅了很多过时的陈旧的资料，以及Weexdemo后发现，weex也是可以实现热加载的。不知道是不是叫做hot reload，还是说只有RN的才是hot reload。我们暂时叫做实时更新吧。严谨一些。
+二：什么是Hot reload？以及实现原理 这里借鉴React Native 热加载（Hot Reload）原理简介 ，不知道weex的实时更新是否使用的和RN同样的技术。 warning:这一点埋个坑，以后来补。"/>
+
+
+    
+
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Hey. I&#39;m Ermao.</a></h3>
+            <div class="description">
+                <p>iOS developer/Bored constantly<br>Welcome to my site.<br>Go to " About me" if you want to know more details.<br></p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/fuCking-Life/" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:464514962@qq.com" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Ermao(二毛)  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About me</a></li>
+        
+        
+        
+            <li class="theme-switch-item">
+                <a class="theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h3>weex(二)weex实时更新实现</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Mon, May 21, 2018 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">200 Words|Read in about 1 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
+                
+
+            </div>
+
+            <h2 id="一写在前面">一：写在前面</h2>
+<p>用过RN的都知道，RN有HotReload技术。而且修改一下RCTSocket.m（具体什么文件忘记了）文件中的localhost地址即可实现。但是Weex官方文档中并没有提及Weex 热加载的技术。是不是并不能实现呢？答案是否定的。在我翻阅了很多过时的陈旧的资料，以及Weexdemo后发现，weex也是可以实现热加载的。不知道是不是叫做hot reload，还是说只有RN的才是hot reload。我们暂时叫做实时更新吧。严谨一些。</p>
+<h2 id="二什么是hot-reload以及实现原理">二：什么是Hot reload？以及实现原理</h2>
+<p>这里借鉴<a href="https://www.jianshu.com/p/1fa6e9c0799f">React Native 热加载（Hot Reload）原理简介</a> ，不知道weex的实时更新是否使用的和RN同样的技术。
+<strong>warning:这一点埋个坑，以后来补。</strong></p>
+<h2 id="三weex的实时更新实现">三：Weex的实时更新实现</h2>
+<h3 id="31-需求">3.1 需求</h3>
+<p>我们要使用Weex在原有项目实现部分界面，但是总是拿手机去扫码感觉很low，为什么不能像RN一样，修改了js文件，界面直接在真机刷新呢？但是官方并没有提供相关的技术支持（也可能是我没找到）。简而言之，今天要把weex的实时加载（RN的hot reload）这个功能开启一下，分享给大家。这方法比较笨。如果有更好的办法，希望下方留言。谢谢。</p>
+<h3 id="32-过程">3.2 过程</h3>
+<h4 id="321-前期准备">3.2.1 前期准备</h4>
+<p>首先，要有一个集成了weex项目的iOS 项目，具体的搭建流程可以参考这篇文章<a href="https://www.jianshu.com/p/d27786615aae">First:WEEX环境搭建+iOS现有项目集成</a>;</p>
+<h4 id="322-过程">3.2.2 过程</h4>
+<p>前面有很多过程，就不细谈了，大家都比较关心如何开启实时刷新，那就直接上干货。
+前提：手机和电脑在同一个局域网内。</p>
+<ul>
+<li>1.首先我们需要在pod中集成SRWebSocket，这个是为了加一个监听，监听文件的修改，并发送文件修改时的通知。在pod中复制以下代码.</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">pod <span class="s1">&#39;SocketRocket&#39;</span>, <span class="s1">&#39;0.4.2&#39;</span>
+</code></pre></div><ul>
+<li>2.然后我们需要在Viewcontroller中导入SocketRocket的库，并导入代理方法。端口我发现都是8082，weexdemo中写的也是8082，代码如下</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">openHotReload</span><span class="p">{</span>
+    
+    <span class="n">NSURL</span> <span class="o">*</span><span class="n">socketURL</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nl">URLWithString</span><span class="p">:[</span><span class="n">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&#34;ws://%@:%@&#34;</span><span class="p">,</span> <span class="cm">/*后面会说这个ip地址的由来*/</span><span class="p">,</span> <span class="s">@&#34;8082&#34;</span><span class="p">]];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">hotReloadSocket</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SRWebSocket</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithURL</span><span class="p">:</span><span class="n">socketURL</span> <span class="nl">protocols</span><span class="p">:</span><span class="l">@[</span><span class="s">@&#34;echo-protocol&#34;</span><span class="l">]</span><span class="p">];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">hotReloadSocket</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">hotReloadSocket</span> <span class="n">open</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div><ul>
+<li>3.实现SocketRocket的代理方法</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webSocket:</span><span class="p">(</span><span class="n">SRWebSocket</span> <span class="o">*</span><span class="p">)</span><span class="nv">webSocket</span> <span class="nf">didReceiveMessage:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">message</span><span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">([</span><span class="s">@&#34;refresh&#34;</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="n">message</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="nb">self</span> <span class="n">initWeexView</span><span class="p">];</span><span class="c1">//这里是要自己初始化的weexview，下面给一个简单的weexview的实现
+</span><span class="c1"></span>    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">initWeexView</span><span class="p">{</span>
+    <span class="n">_instance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WXSDKInstance</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+    <span class="n">_instance</span><span class="p">.</span><span class="n">viewController</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
+    <span class="n">_instance</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+    
+    
+    <span class="k">__weak</span> <span class="k">typeof</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
+    <span class="n">_instance</span><span class="p">.</span><span class="n">onCreate</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">view</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">weexView</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
+        <span class="n">weakSelf</span><span class="p">.</span><span class="n">weexView</span> <span class="o">=</span> <span class="n">view</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview</span><span class="p">:</span><span class="n">weakSelf</span><span class="p">.</span><span class="n">weexView</span><span class="p">];</span>
+
+    <span class="p">};</span>
+    
+    <span class="n">_instance</span><span class="p">.</span><span class="n">onFailed</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//process failure
+</span><span class="c1"></span>    <span class="p">};</span>
+    
+    <span class="n">_instance</span><span class="p">.</span><span class="n">renderFinish</span> <span class="o">=</span> <span class="o">^</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">view</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">};</span>
+    <span class="p">;</span>
+    <span class="c1">//实时刷新，注意这个地方的后面的dist/App.weex.js，是你的vue文件的路径和名字。
+</span><span class="c1"></span>    <span class="p">[</span><span class="n">_instance</span> <span class="nl">renderWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nl">URLWithString</span><span class="p">:</span><span class="s">@&#34;http:///*这个地址后面会说*//dist/App.weex.js&#34;</span><span class="p">]</span> <span class="nl">options</span><span class="p">:</span><span class="nb">nil</span> <span class="nl">data</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+
+<span class="p">}</span>
+</code></pre></div><ul>
+<li>4.实现hot reload，我们需要一个ip地址。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">1. 首先cd到你自己写的vue文件。
+2. 在终端输入 weex preview /*你的vue文件*/
+这时会看到弹出一个浏览器。
+3. 这个浏览器前面的ip地址就是我们需要的ip地址。那么文件的路径是什么呢？点击那个大的二维码，看一下url，里面有文件路径。
+</code></pre></div><ul>
+<li>
+<p>5.替换上面提到的路径以及ip地址。</p>
+</li>
+<li>
+<p>6.运行程序。随便修改vue文件，command+s保存一下，不出意外手机就会跟着刷新了。</p>
+</li>
+</ul>
+<h2 id="四-踩坑">四： 踩坑</h2>
+<h3 id="41--ip地址">4.1  IP地址</h3>
+<ol>
+<li>
+<p>要同一个局域网下。</p>
+</li>
+<li>
+<p>如果实在不知道路径，可以点一下那个大大的二维码，上面的URL就是本地编译的jsbundle文件</p>
+</li>
+<li>
+<p><del>websocket监听的是8082端口。render的是8081。别搞错。</del></p>
+<p><strong>修正：这里的监听的端口是会变化的。不一定是8082，8081。render的端口就在URL中，监听的端口比较隐蔽。我有必要说一下如何确定监听端口。</strong></p>
+</li>
+</ol>
+<p>还记的之前输入weex preview ..vue那个命令行么？会弹出一个页面，我们用chrome，进入调试界面。我们点击NetWork，在header中可以找到类似于Request URL: ws://192.168.10.238:8083/这样的东西。
+后面的8083就是socket监听的端口。</p>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/weex/">weex</a><a class="category" href="/categories/cross-platform/">cross-platform</a></span>
+                
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/js/medium-zoom.min.2d6fd0be87fa98f0c9b4dc2536b312bbca48757f584f6ea1f394abc9bcc38fbc.js"
+        integrity="sha256-LW/Qvof6mPDJtNwlNrMSu8pIdX9YT26h85SrybzDj7w="
+        crossorigin="anonymous"></script></body>
+
+</html>

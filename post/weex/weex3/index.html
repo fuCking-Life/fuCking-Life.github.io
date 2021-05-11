@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+
+    <title> Ermao(二毛) | weex(三)weex &amp; Native交互 </title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="iOS developer/Bored constantly
+Welcome to my site.
+Go to &#34; About me&#34; if you want to know more details.
+">
+    
+    <link rel="stylesheet"
+          href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
+          integrity="sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+        integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="/post/weex/weex3/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="/js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js"
+            integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="
+            crossorigin="anonymous"></script>
+
+    
+        
+        
+        <script type="text/javascript"
+                src="/js/anatole-theme-switcher.min.47918423907d577c1f04c2fd28730186eca486fb18e52fc882c3c7ad5f2540b1.js"
+                integrity="sha256-R5GEI5B9V3wfBML9KHMBhuykhvsY5S/IgsPHrV8lQLE="
+                crossorigin="anonymous"></script>
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="weex(三)weex &amp; Native交互"/>
+<meta name="twitter:description" content="一：写在前面 在深入使用weex的过程中，发现了不少问题。等以后再和大家分享，今天聊一下weex和native的交互。 weex和native的交互可以大致分为三类，每一类都给大家举个🌰。 具体分类如下。
+1. js调用native
+2. native调用js
+3. js调用native处理完成后回调js"/>
+
+
+    
+
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Hey. I&#39;m Ermao.</a></h3>
+            <div class="description">
+                <p>iOS developer/Bored constantly<br>Welcome to my site.<br>Go to " About me" if you want to know more details.<br></p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/fuCking-Life/" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:464514962@qq.com" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Ermao(二毛)  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About me</a></li>
+        
+        
+        
+            <li class="theme-switch-item">
+                <a class="theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h3>weex(三)weex &amp; Native交互</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Tue, Jun 5, 2018 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">200 Words|Read in about 1 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
+                
+
+            </div>
+
+            <h2 id="一写在前面">一：写在前面</h2>
+<p>在深入使用weex的过程中，发现了不少问题。等以后再和大家分享，今天聊一下weex和native的交互。
+weex和native的交互可以大致分为三类，每一类都给大家举个🌰。
+具体分类如下。</p>
+<p><strong>1. js调用native</strong></p>
+<p><strong>2. native调用js</strong></p>
+<p><strong>3. js调用native处理完成后回调js</strong></p>
+<p>这里所列举的分类有个共同点，就是需要跟写js的同事商量好一套行为准则。具体来说就是需要方法名相同。参数之间也要规定好。后面我会讲到。给一个范例。</p>
+<p>ps：我没有太监，只是最近比较忙。</p>
+<h2 id="二js调用native">二：js调用native</h2>
+<h3 id="21-情景假设">2.1 情景假设</h3>
+<p>假设前台同事写好了js代码，代码里面实现了一个listview，native的同事需要知道当页面点击的时候，你点击了哪一个cell/item，需要对应的id去做一些本地的操作。</p>
+<h3 id="22-具体实现">2.2 具体实现</h3>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">1.创建一个实现了&lt;WXModuleProtocol&gt;接口的类。
+2.在类中实现WX_EXPORT_METHOD(@selector/*你的方法名*/);
+3.实现对应的方法。
+4.在weex engine init后将该类注册。
+</code></pre></div><h3 id="23-举个">2.3 举个🌰</h3>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//1.我们首先创建一个类，它实现了接口&lt;WXModuleProtocol&gt;
+</span><span class="c1"></span><span class="k">@interface</span> <span class="nc">WeexEventModule</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">WXModuleProtocol</span><span class="o">&gt;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">//2.我们将需要实现的代码暴露出去。
+</span><span class="c1"></span><span class="n">WX_EXPORT_METHOD</span><span class="p">(</span><span class="k">@selector</span><span class="p">(</span><span class="nl">jsCalledNativeGotoProgramDetailWithProgramID</span><span class="p">:));</span>
+
+<span class="c1">//3.实现对应的方法
+</span><span class="c1"></span><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">jsCalledNativeGotoProgramDetailWithProgramID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">object</span><span class="p">{</span>
+    <span class="cm">/*do something*/</span>
+
+    <span class="cm">/*object是js同事传过来给你的东西*/</span>
+<span class="p">}</span>
+
+<span class="c1">//4.在weex engine init的地方注册module，@&#34;event&#34;是组件名。
+</span><span class="c1">//js同事可以通过weex.require(&#34;event&#34;).方法名来调用你定义好的方法
+</span><span class="c1"></span><span class="p">[</span><span class="n">WXSDKEngine</span> <span class="nl">registerModule</span><span class="p">:</span><span class="s">@&#34;event&#34;</span> <span class="nl">withClass</span><span class="p">:[</span><span class="n">WeexEventModule</span> <span class="k">class</span><span class="p">]]</span>
+
+</code></pre></div><p>##三：native调用js</p>
+<h3 id="31-情景假设">3.1 情景假设：</h3>
+<p>假设在我们navigationbar上面有个小按钮，点击之后，要告知下方的js界面请求接口刷新数据。</p>
+<h3 id="32-具体实现">3.2 具体实现</h3>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">1.调用instance的fireGlobalEvent方法，注册一个事件，参数有两个，第一个是事件名，第二个是传递的参数。
+2.在具体的地方出发这个方法即可。
+</code></pre></div><h3 id="33-举个">3.3 举个🌰</h3>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//1.首先我们创建一个方法。
+</span><span class="c1"></span>
+<span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">refreshWeexPage:</span><span class="p">(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notif</span><span class="p">{</span>
+    <span class="n">NSDictionary</span> <span class="o">*</span> <span class="n">dict</span> <span class="o">=</span> <span class="n">notif</span><span class="p">.</span><span class="n">userInfo</span><span class="p">;</span>
+    <span class="c1">//两个参数，第一个事件名，第二个参数值
+</span><span class="c1"></span>    <span class="p">[</span><span class="n">weexInstance</span> <span class="nl">fireGlobalEvent</span><span class="p">:</span><span class="s">@&#34;geolocation&#34;</span> <span class="nl">params</span><span class="p">:</span><span class="n">dict</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">//2.调用这个方法。
+</span><span class="c1"></span>
+<span class="c1">//3.前端同事需要实现。
+</span><span class="c1"></span>
+ <span class="n">var</span> <span class="n">globalEvent</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="p">@</span><span class="n">weex</span><span class="o">-</span><span class="n">module</span><span class="o">/</span><span class="n">globalEvent</span><span class="err">&#39;</span><span class="p">);</span>
+           <span class="n">globalEvent</span><span class="p">.</span><span class="n">addEventListener</span><span class="p">(</span><span class="s">&#34;geolocation&#34;</span><span class="p">,</span><span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">){</span>
+                <span class="c1">//refresh page or do something
+</span><span class="c1"></span>
+<span class="p">});</span>
+</code></pre></div><h2 id="四js调用native-再回调js">四：js调用native 再回调js</h2>
+<h3 id="41-情景假设">4.1 情景假设</h3>
+<p>当js界面create的时候，js告诉我们，一会儿js要去请求数据，需要一些设备信息，什么uuid，什么devicetype，分辨率啊之类的东西。就需要一个这样的过程。即js-&gt;native-&gt;js。</p>
+<h3 id="42-具体实现">4.2 具体实现</h3>
+<p>步骤类似于js-&gt;native，稍有不同。</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">1.创建一个实现了&lt;WXModuleProtocol&gt;接口的类。
+2.实现一个含有(WXModuleKeepAliveCallback)的方法。
+3.在类中注册WX_EXPORT_METHOD(@selector/*上面提到的方法*/);
+4.在weex engine init后将该类注册。
+</code></pre></div><h3 id="43-举个">4.3 举个🌰</h3>
+<div class="highlight"><pre class="chroma"><code class="language-objc" data-lang="objc"><span class="c1">//按照我们的情景假设。
+</span><span class="c1">//1.我们首先创建一个类，它实现了接口&lt;WXModuleProtocol&gt;
+</span><span class="c1"></span><span class="k">@interface</span> <span class="nc">WeexEventModule</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">WXModuleProtocol</span><span class="o">&gt;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">//2.实现一个包含WXModuleKeepAliveCallback的方法。
+</span><span class="c1"></span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">jsCalledNativeWhenRenderFinished</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">dict</span> <span class="nl">callBack</span><span class="p">:(</span><span class="n">WXModuleKeepAliveCallback</span><span class="p">)</span><span class="n">callBack</span><span class="p">{</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">dataDict</span> <span class="o">=</span> <span class="l">@[]</span><span class="p">.</span><span class="n">mutableCopy</span><span class="p">;</span>
+    <span class="c1">//do something，
+</span><span class="c1"></span>    <span class="c1">//WXModuleKeepAliveCallback 第一个参数是返回给js的数据。
+</span><span class="c1"></span>    <span class="c1">//第二个是发送完消息是否销毁。不销毁的话会一直存在。
+</span><span class="c1"></span>    <span class="n">callBack</span><span class="p">(</span><span class="n">dataDict</span><span class="p">,</span><span class="nb">NO</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//4.在weex engine init的地方注册module，@&#34;event&#34;是组件名。
+</span><span class="c1">//js同事可以通过weex.require(&#34;event&#34;).方法名来调用你定义好的方法
+</span><span class="c1"></span><span class="p">[</span><span class="n">WXSDKEngine</span> <span class="nl">registerModule</span><span class="p">:</span><span class="s">@&#34;event&#34;</span> <span class="nl">withClass</span><span class="p">:[</span><span class="n">WeexEventModule</span> <span class="k">class</span><span class="p">]]</span>
+</code></pre></div><h2 id="五规则约定以及提醒">五：规则约定以及提醒</h2>
+<h3 id="51-规则约定">5.1 规则约定</h3>
+<p>你可以这样跟前台大哥定义你们的接口。这样的接口文档比较清晰，或许可以减少一点你们的沟通成本。因为无关平台特性，接口定义最好不要出现关于平台特性的代码。比如说iOS的NSString* 和Android的String。写好之后，为开发增加一份约束。Android，iOS 通用即可。</p>
+<p><img src="../../post_images/weex/1.png" alt="Snip20180605_1.png"></p>
+<h3 id="52-提醒">5.2 提醒</h3>
+<ol>
+<li>方法名保持一致</li>
+<li>事件的处理native端，我用的通知。不知道有没有什么更好的办法。</li>
+</ol>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/weex/">weex</a><a class="category" href="/categories/cross-platform/">cross-platform</a></span>
+                
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/js/medium-zoom.min.2d6fd0be87fa98f0c9b4dc2536b312bbca48757f584f6ea1f394abc9bcc38fbc.js"
+        integrity="sha256-LW/Qvof6mPDJtNwlNrMSu8pIdX9YT26h85SrybzDj7w="
+        crossorigin="anonymous"></script></body>
+
+</html>
