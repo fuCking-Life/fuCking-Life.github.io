@@ -6,7 +6,17 @@
     <description>Recent content on Fucking Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 23 Apr 2021 21:55:05 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 26 Apr 2021 14:12:01 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一些有用的网址合集</title>
+      <link>https://fuCking-Life.github.io/post/some_webs/</link>
+      <pubDate>Mon, 26 Apr 2021 14:12:01 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/some_webs/</guid>
+      <description> GCK&amp;rsquo;S FILE SIGNATURES TABLE 想查询某个资源是什么类型的往往需要文件头的几个字节来判断。这里就是类型和头字节的对照表。
+ </description>
+    </item>
+    
     <item>
       <title>iOS底层历险记-目录</title>
       <link>https://fuCking-Life.github.io/post/objc_essence_0/</link>
@@ -46,6 +56,16 @@ I used to be an iOS developer.</description>
       <description>本人电脑是mac，所以仅仅按照mac的安装步骤阐述。
 1. 安装git 和 brew 应该都要的，没有的请自行百度。
 2. 安装Hugo    brew install hugo // 下载hugo    hugo new site blog //初始化站点，一般是在Users/目录下    https://themes.</description>
+    </item>
+    
+    <item>
+      <title>iOS内存缓存的方案比较</title>
+      <link>https://fuCking-Life.github.io/post/memory_cache/</link>
+      <pubDate>Tue, 11 Dec 2018 17:34:38 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/memory_cache/</guid>
+      <description>主要关注这三个框架的内存缓存。以及LRU算法的实现。
+一：TMMemoryCache 1.1 TMMemoryCache简介 TMCache相比较于NSCache，新增了memoryCache的缓存大小，缓存时长的控制，进入后台和收到内存警告时的处理。 TMCache的内存缓存实现是用三个字典来实现的。第一个是存储缓存对象，第二个字典是用来存储缓存时效，第三个使用来存储缓存大小。 TMCache的内存缓存分为同步缓存和异步缓存。 全局维护了一个 concurrent queue ，所有的读写操作都放在这里面。运用了 dispatch_barrier_async来保证任务的顺序执行。在同步读写的方法中，运用信号量来保证线程的同步。</description>
     </item>
     
   </channel>
