@@ -13,9 +13,7 @@
       <pubDate>Sat, 10 Apr 2021 22:07:20 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/inithugo/</guid>
-      <description>本人电脑是mac，所以仅仅按照mac的安装步骤阐述。
-1. 安装git 和 brew 应该都要的，没有的请自行百度。
-2. 安装Hugo    brew install hugo // 下载hugo    hugo new site blog //初始化站点，一般是在Users/目录下    https://themes.</description>
+      <description>&lt;p&gt;Hugo是比较火的blog搭设框架，简单讲解安装和关联git数据。&lt;/p&gt;</description>
     </item>
     
   </channel>

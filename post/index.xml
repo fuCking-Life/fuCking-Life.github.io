@@ -13,9 +13,7 @@
       <pubDate>Sun, 04 Jul 2021 18:55:59 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</guid>
-      <description>从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。
-一. 组件化的必要性 项目在发展的过程中肯定是越来越大的，业务也是越来越复杂。就按照我司的情况来说，现在还是在业务的快速发展当中，但是代码量已经非常大，并且引用的第三方库已经超过100个了。对于编译和打包来说现在都是一种灾难。经过测试，本地跑一次项目时间大概在10分钟左右。严重拖慢了开发效率，并且代码之间的结构不明晰，冗余的资源较多(代)。期待组件化等可以带来的收益如下。
-  结构化代码，负责人可以负责对应的模块，对于该模块的代码熟悉程度高。    排除冗余资源，对应模块的负责人可以方便排除自己模块的冗余资源，在一定程度减少包体积。    提高编译速度，现在的代码都是全量编译的，是完全没有必要的。编译结果如果可以在各个模块开发结束时产生，主工程完全只需要集成各个模块的静态库就可以提高打包速度。    跟CI/CD结合，引入单元测试，规范coder编码规范，提高发版效率，及早发现问题。   二.</description>
+      <description>&lt;p&gt;从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -33,8 +31,7 @@
       <pubDate>Mon, 26 Apr 2021 14:12:01 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/some_webs/</guid>
-      <description>GCK&amp;rsquo;S FILE SIGNATURES TABLE 想查询某个资源是什么类型的往往需要文件头的几个字节来判断。这里就是类型和头字节的对照表。
-  http://iosres.com/ iOS的图片的尺寸，分辨率等信息</description>
+      <description>&lt;p&gt;一些有用的网址集合&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -63,9 +60,7 @@
       <pubDate>Sat, 10 Apr 2021 22:07:20 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/inithugo/</guid>
-      <description>本人电脑是mac，所以仅仅按照mac的安装步骤阐述。
-1. 安装git 和 brew 应该都要的，没有的请自行百度。
-2. 安装Hugo    brew install hugo // 下载hugo    hugo new site blog //初始化站点，一般是在Users/目录下    https://themes.</description>
+      <description>&lt;p&gt;Hugo是比较火的blog搭设框架，简单讲解安装和关联git数据。&lt;/p&gt;</description>
     </item>
     
     <item>
