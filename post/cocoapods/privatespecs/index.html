@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+
+    <title> Ermao(二毛) | cocoapods 私有库即私有组件搭建 </title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="iOS developer/Bored constantly
+Welcome to my site.
+Go to &#34; About me&#34; if you want to know more details.
+">
+    
+    <link rel="stylesheet"
+          href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
+          integrity="sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+        integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="/post/cocoapods/privatespecs/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="/js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js"
+            integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="
+            crossorigin="anonymous"></script>
+
+    
+        
+        
+        <script type="text/javascript"
+                src="/js/anatole-theme-switcher.min.47918423907d577c1f04c2fd28730186eca486fb18e52fc882c3c7ad5f2540b1.js"
+                integrity="sha256-R5GEI5B9V3wfBML9KHMBhuykhvsY5S/IgsPHrV8lQLE="
+                crossorigin="anonymous"></script>
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="cocoapods 私有库即私有组件搭建"/>
+<meta name="twitter:description" content="从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。
+一. 组件化的必要性 项目在发展的过程中肯定是越来越大的，业务也是越来越复杂。就按照我司的情况来说，现在还是在业务的快速发展当中，但是代码量已经非常大，并且引用的第三方库已经超过100个了。对于编译和打包来说现在都是一种灾难。经过测试，本地跑一次项目时间大概在10分钟左右。严重拖慢了开发效率，并且代码之间的结构不明晰，冗余的资源较多(代)。期待组件化等可以带来的收益如下。
+  结构化代码，负责人可以负责对应的模块，对于该模块的代码熟悉程度高。    排除冗余资源，对应模块的负责人可以方便排除自己模块的冗余资源，在一定程度减少包体积。    提高编译速度，现在的代码都是全量编译的，是完全没有必要的。编译结果如果可以在各个模块开发结束时产生，主工程完全只需要集成各个模块的静态库就可以提高打包速度。    跟CI/CD结合，引入单元测试，规范coder编码规范，提高发版效率，及早发现问题。   二."/>
+
+
+    
+
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Hey. I&#39;m Ermao.</a></h3>
+            <div class="description">
+                <p>iOS developer/Bored constantly<br>Welcome to my site.<br>Go to " About me" if you want to know more details.<br></p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/fuCking-Life/" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:464514962@qq.com" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Ermao(二毛)  2022 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About me</a></li>
+        
+        
+        
+            <li class="theme-switch-item">
+                <a class="theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h3>cocoapods 私有库即私有组件搭建</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Sun, Jul 4, 2021 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">300 Words|Read in about 2 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
+                
+
+            </div>
+
+            <p>从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。</p>
+<h3 id="一-组件化的必要性">一. 组件化的必要性</h3>
+<p>项目在发展的过程中肯定是越来越大的，业务也是越来越复杂。就按照我司的情况来说，现在还是在业务的快速发展当中，但是代码量已经非常大，并且引用的第三方库已经超过100个了。对于编译和打包来说现在都是一种灾难。经过测试，本地跑一次项目时间大概在10分钟左右。严重拖慢了开发效率，并且代码之间的结构不明晰，冗余的资源较多(代)。期待组件化等可以带来的收益如下。</p>
+<blockquote>
+<ol>
+<li>结构化代码，负责人可以负责对应的模块，对于该模块的代码熟悉程度高。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>排除冗余资源，对应模块的负责人可以方便排除自己模块的冗余资源，在一定程度减少包体积。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>提高编译速度，现在的代码都是全量编译的，是完全没有必要的。编译结果如果可以在各个模块开发结束时产生，主工程完全只需要集成各个模块的静态库就可以提高打包速度。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>跟CI/CD结合，引入单元测试，规范coder编码规范，提高发版效率，及早发现问题。</li>
+</ol>
+</blockquote>
+<h3 id="二--cocoapods-私有组件">二.  cocoapods 私有组件</h3>
+<h4 id="21-创建shellproject">2.1 创建ShellProject</h4>
+<p>顾名思义，这个是我们以后的壳工程。</p>
+<p><strong>职责：</strong></p>
+<ol>
+<li>负责集成所有的静态链接库。</li>
+<li>可以通过指定podfile某些库的本地位置，来本地调试。</li>
+</ol>
+<p><strong>步骤：</strong></p>
+<ol>
+<li>创建xcode工程</li>
+<li><code>pod init</code></li>
+<li><code>pod install</code></li>
+<li>初始化git，并且添加.gitignore文件</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"># Xcode
+.DS_Store
+build
+report.xml
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+*.xccheckout
+*.xcworkspace
+!default.xcworkspace
+#CocoaPods
+Pods
+xcschemes
+Lib
+</code></pre></div><ol start="4">
+<li>创建Lib文件，这里放你需要开发的代码。其实放到任何地方都可以，放到这里主要是让shellProject引用起来比较舒适而已，可以看到.gitignore文件也已经忽略了Lib文件夹。</li>
+</ol>
+<h4 id="22-创建自己的组件">2.2 创建自己的组件</h4>
+<ol>
+<li><code>cd Lib/</code></li>
+<li><code>pod lib create 组件名</code>，期间会弹出设置界面，按照自己的需求设置即可。</li>
+<li>设置完成后应该会自动打开，如果没有打开的话，可以点击example里的work space</li>
+<li>删除replaceme文件，创建自己需要的文件即可，注意路径放到classes目录下。</li>
+<li><code>pod install</code></li>
+</ol>
+<p>这时候可以查看podfile中的文件内容应该如下所示。</p>
+<div class="highlight"><pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">use_frameworks!</span>
+<span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;9.0&#39;</span>
+<span class="n">target</span> <span class="s1">&#39;PYNModualA_Example&#39;</span> <span class="k">do</span>
+  <span class="n">pod</span> <span class="s1">&#39;PYNModualA&#39;</span><span class="p">,</span> <span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s1">&#39;../&#39;</span>
+  <span class="n">target</span> <span class="s1">&#39;PYNModualA_Tests&#39;</span> <span class="k">do</span>
+    <span class="n">inherit!</span> <span class="ss">:search_paths</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><h4 id="23-shellproject-引用moduala">2.3 shellproject 引用ModualA</h4>
+<ol>
+<li><code>cd &lt;壳工程目录&gt;</code></li>
+<li><code>open Podfile</code></li>
+<li>修改Podfile如下</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">target</span> <span class="s1">&#39;CocoapodsShell&#39;</span> <span class="k">do</span>
+  <span class="c1"># Comment the next line if you don&#39;t want to use dynamic frameworks</span>
+  <span class="n">use_frameworks!</span>
+  <span class="c1"># Pods for CocoapodsShell</span>
+<span class="n">pod</span> <span class="s1">&#39;PYNModualA&#39;</span><span class="p">,</span><span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s1">&#39;Lib/你的私有库名字&#39;</span> <span class="c1">#这里可以换成你自己的Lib路径。</span>
+<span class="k">end</span>
+</code></pre></div><ol start="4">
+<li><code>pod install</code>，install结束之后可以看到shellproject中已经引入了本地的私有库。</li>
+</ol>
+<p>可以看到，如果我们修改了相关代码之后，可以立即生效，在shellproject中可以进行调试。</p>
+<h4 id="24-创建带有依赖的组件">2.4 创建带有依赖的组件</h4>
+<p>在实际开发中，肯定会遇到组件依赖的情况。</p>
+<ol>
+<li><code>cd Lib/你的组件</code></li>
+<li><code>open 你的组件名.podspec文件</code></li>
+</ol>
+<p><strong>以下分两种情况。</strong></p>
+<ol>
+<li>如果是已经发布的库。只需要在.podspec中如下配置即可，可以自行选择方式。</li>
+</ol>
+<p><a href="https://guides.cocoapods.org/syntax/podspec.html#dependency">详细可以点击官方文档</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">spec</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0&#39;</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0&#39;</span><span class="p">,</span> <span class="ss">:configurations</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Debug&#39;</span><span class="o">]</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0&#39;</span><span class="p">,</span> <span class="ss">:configurations</span> <span class="o">=&gt;</span> <span class="ss">:debug</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;RestKit/CoreData&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.20.0&#39;</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;MBProgressHUD&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.5&#39;</span>
+</code></pre></div><ol start="2">
+<li>如果是没有发布的库，只需要在.podspec中如下配置即可。
+<ol>
+<li><code>spec.dependency '你需要依赖的库'</code></li>
+<li><code>open Podfile</code></li>
+<li><code>pod '你要依赖的库', :path =&gt; '../../ModualA/'</code> ，这里的path 就是你需要依赖的库的路径。</li>
+</ol>
+</li>
+</ol>
+<p><code>pod install</code>,执行完之后就可以看到在你开发的库中就有ModualA了。</p>
+<h3 id="三-创建私有spec库">三. 创建私有.spec库</h3>
+<p>后面会开一篇文章专门讲cocoapods管理包的原理，其实说白了，cocoapods管理的一直都是podspec库。</p>
+<p>有两个路径比较重要。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">~/Library/Caches/Cocoapods <span class="c1"># 本地的cocoapods缓存库，只要是执行pod install的时候从远程拉下来的代码，等都会在这里存放。</span>
+~/.cocoapods/repos <span class="c1"># 下载下来的.sepc都会放在trunk中</span>
+</code></pre></div><p>接下来，开始创建私有的podspec仓库。</p>
+<ol>
+<li>远程创建git仓库，用来存放podspec</li>
+<li>终端执行 <code>pod repo add 私有仓库名字 git地址</code></li>
+</ol>
+<p>这样就把本地的私有的spec仓库跟远程仓库关联到了一起，后面可以直接将自己的库的spec存放到远端的spec仓库中。</p>
+<h3 id="四-发布私有组件">四. 发布私有组件</h3>
+<p>注意：如果组件A依赖组件B，那么首先需要发布组件B，再发布组件A。因为在发布组件库的时候会去远端拉取依赖组件，如果不发布就会出错</p>
+<ol>
+<li>创建git 远程仓库，用来存放私有组件</li>
+<li><code>cd 你的组件库</code></li>
+<li>执行git 本地和远端的关联操作。</li>
+<li>open 库名.spec</li>
+<li>修改如下地方</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">s</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span> <span class="c1"># 一般都是从0.0.1开始的</span>
+<span class="n">s</span><span class="o">.</span><span class="n">homepage</span> <span class="o">=</span> <span class="s1">&#39;xxxx&#39;</span> <span class="c1"># github地址</span>
+<span class="n">s</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;远端仓库地址&#39;</span> <span class="p">,</span><span class="err">后面不用变</span>
+</code></pre></div><ol start="6">
+<li><code>git tag 0.0.1</code> 跟上面的version一致</li>
+<li><code>git push origin 0.0.1</code> 将内容推送到远程tag版本</li>
+<li><code>pod repo push 刚才上面的podspec的名字 当前私有组件的名字.podspec</code></li>
+</ol>
+<p><strong>注意：在有依赖的情况下，需要指定源，因为执行这行指令的时候会去拉取远端的依赖，然后看是否可以编译通过，这也是为什么A依赖B的时候需要先将A发布的原因。</strong></p>
+<p><code>pod repo push &lt;repoName&gt; &lt;podspec&gt; --use-libraries --source='podspec源'</code></p>
+<p>不出意外会直接将spec  push到远程的spec仓库中。</p>
+<h3 id="五-shell-project更新">五. shell project更新</h3>
+<ol>
+<li><code>cd shellproject</code></li>
+<li>修改podfile，将组件地址去掉。</li>
+<li>添加podspec的源，即在顶部输入 <code>source 'podspec的git源'</code></li>
+<li><code>pod install</code></li>
+<li>提交工程到远端即可。</li>
+</ol>
+<h3 id="六-一些问题">六. 一些问题</h3>
+<p>Q1. 团队协作的开发流程是如何的？</p>
+<p>Q2.版本控制的问题？如何做到版本不会冲突？</p>
+</div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/cocoapods/">cocoapods</a></span>
+                
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/js/medium-zoom.min.2d6fd0be87fa98f0c9b4dc2536b312bbca48757f584f6ea1f394abc9bcc38fbc.js"
+        integrity="sha256-LW/Qvof6mPDJtNwlNrMSu8pIdX9YT26h85SrybzDj7w="
+        crossorigin="anonymous"></script></body>
+
+</html>

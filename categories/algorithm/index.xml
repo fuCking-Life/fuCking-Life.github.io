@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>algorithm on Fucking Life</title>
+    <link>https://fuCking-Life.github.io/categories/algorithm/</link>
+    <description>Recent content in algorithm on Fucking Life</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 13 May 2021 09:36:45 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/categories/algorithm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>shit_algorithm_index</title>
+      <link>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</link>
+      <pubDate>Thu, 13 May 2021 09:36:45 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</guid>
+      <description>&lt;p&gt;作为一个算法渣渣，看到算法题只想fuck它们，但是奈何还是需要刷，只能写点儿题解，收集点典型的题目勉强度日了。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

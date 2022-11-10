@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cocoapods on Fucking Life</title>
+    <link>https://fuCking-Life.github.io/categories/cocoapods/</link>
+    <description>Recent content in cocoapods on Fucking Life</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 04 Jul 2021 18:55:59 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/categories/cocoapods/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cocoapods 私有库即私有组件搭建</title>
+      <link>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</link>
+      <pubDate>Sun, 04 Jul 2021 18:55:59 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</guid>
+      <description>从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。
+一. 组件化的必要性 项目在发展的过程中肯定是越来越大的，业务也是越来越复杂。就按照我司的情况来说，现在还是在业务的快速发展当中，但是代码量已经非常大，并且引用的第三方库已经超过100个了。对于编译和打包来说现在都是一种灾难。经过测试，本地跑一次项目时间大概在10分钟左右。严重拖慢了开发效率，并且代码之间的结构不明晰，冗余的资源较多(代)。期待组件化等可以带来的收益如下。
+  结构化代码，负责人可以负责对应的模块，对于该模块的代码熟悉程度高。    排除冗余资源，对应模块的负责人可以方便排除自己模块的冗余资源，在一定程度减少包体积。    提高编译速度，现在的代码都是全量编译的，是完全没有必要的。编译结果如果可以在各个模块开发结束时产生，主工程完全只需要集成各个模块的静态库就可以提高打包速度。    跟CI/CD结合，引入单元测试，规范coder编码规范，提高发版效率，及早发现问题。   二.</description>
+    </item>
+    
+  </channel>
+</rss>
