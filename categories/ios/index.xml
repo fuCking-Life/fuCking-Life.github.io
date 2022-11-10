@@ -13,8 +13,7 @@
       <pubDate>Tue, 11 Dec 2018 17:34:38 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/memory_cache/</guid>
-      <description>主要关注这三个框架的内存缓存。以及LRU算法的实现。
-一：TMMemoryCache 1.1 TMMemoryCache简介 TMCache相比较于NSCache，新增了memoryCache的缓存大小，缓存时长的控制，进入后台和收到内存警告时的处理。 TMCache的内存缓存实现是用三个字典来实现的。第一个是存储缓存对象，第二个字典是用来存储缓存时效，第三个使用来存储缓存大小。 TMCache的内存缓存分为同步缓存和异步缓存。 全局维护了一个 concurrent queue ，所有的读写操作都放在这里面。运用了 dispatch_barrier_async来保证任务的顺序执行。在同步读写的方法中，运用信号量来保证线程的同步。</description>
+      <description>&lt;p&gt;&lt;strong&gt;主要关注这三个框架的内存缓存。以及LRU算法的实现。&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

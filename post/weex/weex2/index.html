@@ -56,8 +56,7 @@ Go to &#34; About me&#34; if you want to know more details.
 <meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
 
 <meta name="twitter:title" content="weex(二)weex实时更新实现"/>
-<meta name="twitter:description" content="一：写在前面 用过RN的都知道，RN有HotReload技术。而且修改一下RCTSocket.m（具体什么文件忘记了）文件中的localhost地址即可实现。但是Weex官方文档中并没有提及Weex 热加载的技术。是不是并不能实现呢？答案是否定的。在我翻阅了很多过时的陈旧的资料，以及Weexdemo后发现，weex也是可以实现热加载的。不知道是不是叫做hot reload，还是说只有RN的才是hot reload。我们暂时叫做实时更新吧。严谨一些。
-二：什么是Hot reload？以及实现原理 这里借鉴React Native 热加载（Hot Reload）原理简介 ，不知道weex的实时更新是否使用的和RN同样的技术。 warning:这一点埋个坑，以后来补。"/>
+<meta name="twitter:description" content="weex第二篇主要关于hotreload"/>
 
 
     
@@ -95,7 +94,7 @@ Go to &#34; About me&#34; if you want to know more details.
         
     </ul>
     <div class="footer">
-        <div class="by_farbox">&copy; Ermao(二毛)  2021 </div>
+        <div class="by_farbox">&copy; Ermao(二毛)  2022 </div>
     </div>
 </div>
 <div class="main">
@@ -156,7 +155,8 @@ Go to &#34; About me&#34; if you want to know more details.
 
             </div>
 
-            <h2 id="一写在前面">一：写在前面</h2>
+            <p>weex第二篇主要关于hotreload</p>
+<h2 id="一写在前面">一：写在前面</h2>
 <p>用过RN的都知道，RN有HotReload技术。而且修改一下RCTSocket.m（具体什么文件忘记了）文件中的localhost地址即可实现。但是Weex官方文档中并没有提及Weex 热加载的技术。是不是并不能实现呢？答案是否定的。在我翻阅了很多过时的陈旧的资料，以及Weexdemo后发现，weex也是可以实现热加载的。不知道是不是叫做hot reload，还是说只有RN的才是hot reload。我们暂时叫做实时更新吧。严谨一些。</p>
 <h2 id="二什么是hot-reload以及实现原理">二：什么是Hot reload？以及实现原理</h2>
 <p>这里借鉴<a href="https://www.jianshu.com/p/1fa6e9c0799f">React Native 热加载（Hot Reload）原理简介</a> ，不知道weex的实时更新是否使用的和RN同样的技术。
@@ -250,8 +250,7 @@ Go to &#34; About me&#34; if you want to know more details.
 </li>
 </ol>
 <p>还记的之前输入weex preview ..vue那个命令行么？会弹出一个页面，我们用chrome，进入调试界面。我们点击NetWork，在header中可以找到类似于Request URL: ws://192.168.10.238:8083/这样的东西。
-后面的8083就是socket监听的端口。</p>
-</div>
+后面的8083就是socket监听的端口。</p></div>
         <div class="post-footer">
             <div class="info">
                 <span class="separator"><a class="category" href="/categories/weex/">weex</a><a class="category" href="/categories/cross-platform/">cross-platform</a></span>

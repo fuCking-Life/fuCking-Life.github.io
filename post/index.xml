@@ -6,15 +6,35 @@
     <description>Recent content in Posts on Fucking Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 26 Apr 2021 14:12:01 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Jul 2021 18:55:59 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cocoapods 私有库即私有组件搭建</title>
+      <link>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</link>
+      <pubDate>Sun, 04 Jul 2021 18:55:59 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</guid>
+      <description>从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。
+一. 组件化的必要性 项目在发展的过程中肯定是越来越大的，业务也是越来越复杂。就按照我司的情况来说，现在还是在业务的快速发展当中，但是代码量已经非常大，并且引用的第三方库已经超过100个了。对于编译和打包来说现在都是一种灾难。经过测试，本地跑一次项目时间大概在10分钟左右。严重拖慢了开发效率，并且代码之间的结构不明晰，冗余的资源较多(代)。期待组件化等可以带来的收益如下。
+  结构化代码，负责人可以负责对应的模块，对于该模块的代码熟悉程度高。    排除冗余资源，对应模块的负责人可以方便排除自己模块的冗余资源，在一定程度减少包体积。    提高编译速度，现在的代码都是全量编译的，是完全没有必要的。编译结果如果可以在各个模块开发结束时产生，主工程完全只需要集成各个模块的静态库就可以提高打包速度。    跟CI/CD结合，引入单元测试，规范coder编码规范，提高发版效率，及早发现问题。   二.</description>
+    </item>
+    
+    <item>
+      <title>shit_algorithm_index</title>
+      <link>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</link>
+      <pubDate>Thu, 13 May 2021 09:36:45 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</guid>
+      <description>&lt;p&gt;作为一个算法渣渣，看到算法题只想fuck它们，但是奈何还是需要刷，只能写点儿题解，收集点典型的题目勉强度日了。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>一些有用的网址合集</title>
       <link>https://fuCking-Life.github.io/post/some_webs/</link>
       <pubDate>Mon, 26 Apr 2021 14:12:01 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/some_webs/</guid>
-      <description> GCK&amp;rsquo;S FILE SIGNATURES TABLE 想查询某个资源是什么类型的往往需要文件头的几个字节来判断。这里就是类型和头字节的对照表。
- </description>
+      <description>GCK&amp;rsquo;S FILE SIGNATURES TABLE 想查询某个资源是什么类型的往往需要文件头的几个字节来判断。这里就是类型和头字节的对照表。
+  http://iosres.com/ iOS的图片的尺寸，分辨率等信息</description>
     </item>
     
     <item>
@@ -54,8 +74,7 @@
       <pubDate>Tue, 11 Dec 2018 17:34:38 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/memory_cache/</guid>
-      <description>主要关注这三个框架的内存缓存。以及LRU算法的实现。
-一：TMMemoryCache 1.1 TMMemoryCache简介 TMCache相比较于NSCache，新增了memoryCache的缓存大小，缓存时长的控制，进入后台和收到内存警告时的处理。 TMCache的内存缓存实现是用三个字典来实现的。第一个是存储缓存对象，第二个字典是用来存储缓存时效，第三个使用来存储缓存大小。 TMCache的内存缓存分为同步缓存和异步缓存。 全局维护了一个 concurrent queue ，所有的读写操作都放在这里面。运用了 dispatch_barrier_async来保证任务的顺序执行。在同步读写的方法中，运用信号量来保证线程的同步。</description>
+      <description>&lt;p&gt;&lt;strong&gt;主要关注这三个框架的内存缓存。以及LRU算法的实现。&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -64,10 +83,7 @@
       <pubDate>Tue, 05 Jun 2018 09:19:59 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/weex/weex3/</guid>
-      <description>一：写在前面 在深入使用weex的过程中，发现了不少问题。等以后再和大家分享，今天聊一下weex和native的交互。 weex和native的交互可以大致分为三类，每一类都给大家举个🌰。 具体分类如下。
-1. js调用native
-2. native调用js
-3. js调用native处理完成后回调js</description>
+      <description>&lt;p&gt;weex与native的交互设计&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -76,8 +92,7 @@
       <pubDate>Mon, 21 May 2018 17:56:59 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/weex/weex2/</guid>
-      <description>一：写在前面 用过RN的都知道，RN有HotReload技术。而且修改一下RCTSocket.m（具体什么文件忘记了）文件中的localhost地址即可实现。但是Weex官方文档中并没有提及Weex 热加载的技术。是不是并不能实现呢？答案是否定的。在我翻阅了很多过时的陈旧的资料，以及Weexdemo后发现，weex也是可以实现热加载的。不知道是不是叫做hot reload，还是说只有RN的才是hot reload。我们暂时叫做实时更新吧。严谨一些。
-二：什么是Hot reload？以及实现原理 这里借鉴React Native 热加载（Hot Reload）原理简介 ，不知道weex的实时更新是否使用的和RN同样的技术。 warning:这一点埋个坑，以后来补。</description>
+      <description>&lt;p&gt;weex第二篇主要关于hotreload&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -86,9 +101,7 @@
       <pubDate>Thu, 17 May 2018 11:43:59 +0800</pubDate>
       
       <guid>https://fuCking-Life.github.io/post/weex/weex1/</guid>
-      <description>一. 环境搭建 以下搭建过程来源WEEX官网。做了简单的提炼和总结。以及一些坑点。
-如果只想去试试看的话，这里有个在线的编辑器可以使用，可以用这个尝试一下。
-1.1 安装homebrew + Node.js 这一部分可移步First：React native搭建记录。安装和配置是完全一样的。</description>
+      <description>&lt;p&gt;weex第一篇主要关于环境搭建&lt;/p&gt;</description>
     </item>
     
   </channel>

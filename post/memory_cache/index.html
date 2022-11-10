@@ -56,8 +56,7 @@ Go to &#34; About me&#34; if you want to know more details.
 <meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
 
 <meta name="twitter:title" content="iOS内存缓存的方案比较"/>
-<meta name="twitter:description" content="主要关注这三个框架的内存缓存。以及LRU算法的实现。
-一：TMMemoryCache 1.1 TMMemoryCache简介 TMCache相比较于NSCache，新增了memoryCache的缓存大小，缓存时长的控制，进入后台和收到内存警告时的处理。 TMCache的内存缓存实现是用三个字典来实现的。第一个是存储缓存对象，第二个字典是用来存储缓存时效，第三个使用来存储缓存大小。 TMCache的内存缓存分为同步缓存和异步缓存。 全局维护了一个 concurrent queue ，所有的读写操作都放在这里面。运用了 dispatch_barrier_async来保证任务的顺序执行。在同步读写的方法中，运用信号量来保证线程的同步。"/>
+<meta name="twitter:description" content="主要关注这三个框架的内存缓存。以及LRU算法的实现。"/>
 
 
     
@@ -95,7 +94,7 @@ Go to &#34; About me&#34; if you want to know more details.
         
     </ul>
     <div class="footer">
-        <div class="by_farbox">&copy; Ermao(二毛)  2021 </div>
+        <div class="by_farbox">&copy; Ermao(二毛)  2022 </div>
     </div>
 </div>
 <div class="main">
@@ -231,8 +230,7 @@ PINOperationQueue通过一个串行队列和一个并行队列，串行队列按
 <p>PinMemoryCache解决了TMMemoryCache大量使用并发队列和信号量导致的可能的死锁，以及线程间频繁切换造成的性能瓶颈问题。并且切实的区分了同步与异步的实现。通过锁来控制同步的实现。不再通过信号量。</p>
 <p>YYMemoryCache摒弃了多线程处理，通过将LRU算法的复杂度降低到o(1)，提高了框架的性能以及处理速度。</p>
 <p>以上三个框架的都是很好的框架，在不同的年代起到了不同的作用，随着技术的发展，慢慢的被完善了。</p>
-<p><img src="../post_images/cache/6.png" alt="image.png"></p>
-</div>
+<p><img src="../post_images/cache/6.png" alt="image.png"></p></div>
         <div class="post-footer">
             <div class="info">
                 <span class="separator"><a class="category" href="/categories/ios/">iOS</a></span>
