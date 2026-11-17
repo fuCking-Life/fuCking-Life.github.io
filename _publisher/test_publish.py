@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 import subprocess
 import sys
@@ -154,7 +155,7 @@ class PublisherTests(unittest.TestCase):
     def test_archive_and_homepage_round_trip_without_edits(self):
         home = (self.tmp / "index.html").read_text(encoding="utf-8")
         matches = list(publish.CARD_RE.finditer(home))
-        self.assertEqual(len(matches), 10)
+        self.assertEqual(len(matches), 12)
         gaps = [home[a.end() : b.start()] for a, b in zip(matches, matches[1:])]
         self.assertTrue(gaps)
         self.assertTrue(all(gap == gaps[0] for gap in gaps))
@@ -392,6 +393,233 @@ class PublisherTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(proc.returncode, 2)
+
+
+def sample_item(**overrides):
+    item = {
+        "id": "sample-item",
+        "date": "2026-11-17",
+        "seq": 1,
+        "source_brief": "lumi",
+        "title": "标题 <示例>",
+        "summary": "讲解正文",
+        "insight": {"heading": "对 Luna 的启发", "body": "启发正文"},
+        "relevance": 4,
+        "domains": ["语音 Agent"],
+        "types": ["技术解读"],
+        "tags": ["标签甲"],
+        "source": {"name": "Ada", "handle": "@ada", "identity": "研究员"},
+        "links": [{"label": "原帖", "url": "https://example.com/a"}],
+        "archive_url": "/post/lumi-2026-11-17/",
+        "posted_at": "11-16 20:05",
+    }
+    item.update(overrides)
+    return item
+
+
+class DigestTests(unittest.TestCase):
+    def test_card_field_order_and_escapes(self):
+        html = publish.render_item_card(sample_item(), 2)
+        order = [
+            "2026-11-17",
+            "当天日报第 2 条",
+            "相关度",
+            "标题 &lt;示例&gt;",
+            "讲解正文",
+            "对 Luna 的启发",
+            "启发正文",
+            ">标签甲<",
+            "来源 @ada · 研究员",
+            "原帖",
+            "归档",
+            "发帖日期 11-16 20:05",
+        ]
+        positions = [html.find(part) for part in order]
+        self.assertTrue(all(pos >= 0 for pos in positions), html)
+        self.assertEqual(positions, sorted(positions))
+        self.assertNotIn("报日", html)
+        self.assertNotIn("对座舱的启发", html)
+
+    def test_card_omits_missing_insight_and_same_day_posted_at(self):
+        raw = sample_item(insight=None, posted_at="2026-11-17", links=[], tags=[])
+        html = publish.render_item_card(raw, 1)
+        self.assertNotIn("blockquote", html)
+        self.assertNotIn("发帖日期", html)
+        self.assertIn("当天日报第 1 条", html)
+        self.assertIn(">归档</a>", html)
+
+    def test_upsert_replaces_by_id_and_assigns_seq(self):
+        first = sample_item(id="keep-me", seq=1, title="旧")
+        other = sample_item(id="other", seq=2, title="另一条", source_brief="agent-app")
+        incoming = sample_item(id="keep-me", seq=1, title="新")
+        fresh = sample_item(id="new-item", title="追加")
+        fresh.pop("seq")
+        merged = publish.upsert_items([first, other], [incoming, fresh])
+        ids = [item["id"] for item in merged]
+        self.assertEqual(ids, ["keep-me", "other", "new-item"])
+        self.assertEqual(merged[0]["title"], "新")
+        self.assertEqual(merged[1]["title"], "另一条")
+        self.assertEqual(merged[2]["seq"], 3)
+        updated = sample_item(id="new-item", title="追加")
+        updated.pop("seq")
+        again = publish.upsert_items(merged, [updated])
+        self.assertEqual([item["seq"] for item in again], [1, 2, 3])
+        self.assertEqual(publish.day_ordinals(merged)["other"], 2)
+
+    def test_rejects_bad_relevance_domain_and_duplicate(self):
+        bad = sample_item(relevance=True)
+        with self.assertRaises(publish.PublishError):
+            publish.validate_item(bad)
+        bad = sample_item(domains=["座舱"])
+        with self.assertRaises(publish.PublishError):
+            publish.validate_item(bad)
+        with self.assertRaises(publish.PublishError):
+            publish.upsert_items([], [sample_item(id="same"), sample_item(id="same", seq=2)])
+
+    def test_filters_and_search(self):
+        rows = [
+            sample_item(id="high", relevance=5, domains=["论文", "开源"], types=["论文"], tags=["甲"]),
+            sample_item(id="mid", relevance=3, domains=["论文"], types=["技术解读"], tags=["乙"],
+                        source={"name": "", "handle": "@JonPTaylor", "identity": ""}),
+        ]
+        rows = [publish.validate_item(row) for row in rows]
+        self.assertEqual(
+            [item["id"] for item in publish.filter_items(rows, min_relevance=5)],
+            ["high"],
+        )
+        both = publish.filter_items(rows, match="all", domains=["论文", "开源"])
+        self.assertEqual([item["id"] for item in both], ["high"])
+        either = publish.filter_items(rows, match="any", domains=["开源"], types=["技术解读"])
+        self.assertEqual({item["id"] for item in either}, {"high", "mid"})
+        found = publish.filter_items(rows, query="@jonptaylor")
+        self.assertEqual([item["id"] for item in found], ["mid"])
+        self.assertEqual(publish.filter_items(rows, query="甲"), [])
+
+    def test_seed_matches_the_drafts(self):
+        path = HERE / "drafts" / "items-2026-11-17.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        items = publish.upsert_items([], raw)
+        self.assertEqual(len(items), 17)
+        self.assertEqual(len({item["id"] for item in items}), 17)
+        self.assertTrue(all(item["date"] == "2026-11-17" for item in items))
+        titles = "\n".join(item["title"] for item in items)
+        self.assertEqual(titles.count("Voice Reader"), 1)
+        self.assertEqual(titles.count("Marimba"), 1)
+        self.assertEqual(sum("d1.2" in item["title"] for item in items), 1)
+        self.assertIn("Gurman", titles)
+        self.assertIn("Qwen4-Max", titles)
+        self.assertIn("WorkSpaces", titles)
+        blob = path.read_text(encoding="utf-8")
+        self.assertNotIn("报日", blob)
+        self.assertNotIn("对座舱的启发", blob)
+        self.assertIn("FastDialgoueSidon", blob)
+        self.assertIn("设计时器", blob)
+        lumi = [item for item in items if item["source_brief"] == "lumi"]
+        agent = [item for item in items if item["source_brief"] == "agent-app"]
+        self.assertEqual(len(lumi), 11)
+        self.assertEqual(len(agent), 6)
+        self.assertTrue(all(item["insight"]["heading"] == "对 Luna 的启发" for item in lumi))
+        self.assertTrue(all(item["insight"] is None for item in agent))
+        self.assertIn(5, {item["relevance"] for item in items})
+        self.assertIn(2, {item["relevance"] for item in items})
+        self.assertTrue(all(1 <= item["relevance"] <= 5 for item in items))
+        script = (SITE / "daily" / "feed.js").read_text(encoding="utf-8")
+        for name in publish.DOMAINS + publish.TYPES:
+            self.assertIn(json.dumps(name, ensure_ascii=False)[1:-1], script)
+        ordinals = publish.day_ordinals(items)
+        self.assertEqual(ordinals["lumi-2026-11-17-voice-reader"], 1)
+        self.assertEqual(ordinals["agent-app-2026-11-17-aws-workspaces"], 17)
+        for rel in ("daily/feed.js", "daily/feed.css", "_publisher/templates/daily.html"):
+            text = (SITE / rel).read_text(encoding="utf-8")
+            self.assertNotIn("报日", text, rel)
+        for rel in ("daily/feed.js", "_publisher/templates/daily.html"):
+            self.assertIn("日报", (SITE / rel).read_text(encoding="utf-8"), rel)
+
+    def test_sidebar_link_is_idempotent(self):
+        html = (SITE / "index.html").read_text(encoding="utf-8")
+        once = publish.insert_daily_nav(html)
+        twice = publish.insert_daily_nav(once)
+        self.assertEqual(once, twice)
+        self.assertEqual(once.count('href="/daily/"'), 2)
+        self.assertIn(">日报</a>", once)
+        self.assertGreaterEqual(once.find('href="/daily/"'), 0)
+        self.assertLess(once.find('href="/daily/"'), once.find('href="/post/"'))
+
+
+class DigestPublishTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="site-digest-"))
+        for name in ("index.html", "index.xml", "sitemap.xml", "404.html", "robots.txt"):
+            shutil.copy2(SITE / name, self.tmp / name)
+        for folder in ("post", "categories", "tags", "css", "js"):
+            shutil.copytree(SITE / folder, self.tmp / folder)
+        daily = self.tmp / "daily"
+        daily.mkdir()
+        shutil.copy2(SITE / "daily" / "feed.css", daily / "feed.css")
+        shutil.copy2(SITE / "daily" / "feed.js", daily / "feed.js")
+        self.frozen = [
+            "post/yy/yyasynclayer/index.html",
+            "post/inithugo/index.html",
+            "css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css",
+            "js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js",
+        ]
+        self.before = {rel: _sha(self.tmp / rel) for rel in self.frozen}
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def test_publish_items_upserts_and_leaves_old_posts(self):
+        seed = HERE / "drafts" / "items-2026-11-17.json"
+        proc = subprocess.run(
+            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(seed)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("published /daily/", proc.stdout)
+        stored = json.loads((self.tmp / "daily" / "items.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(stored), 17)
+        page = (self.tmp / "daily" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("搜索标题、讲解、来源", page)
+        self.assertIn("只看相关度不低于所选档的消息，", page)
+        self.assertIn("再点一次取消。", page)
+        self.assertNotIn("报日", page)
+        home = (self.tmp / "index.html").read_text(encoding="utf-8")
+        posts = (self.tmp / "post" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="/daily/"', home)
+        self.assertIn('href="/daily/"', posts)
+        sitemap = (self.tmp / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn("https://fuCking-Life.github.io/daily/", sitemap)
+        for rel in self.frozen:
+            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
+
+        proc = subprocess.run(
+            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(seed)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("no file changes", proc.stdout)
+
+        changed = sample_item(id="lumi-2026-11-17-voice-reader", seq=1, title="替换后的标题")
+        payload = self.tmp / "one.json"
+        payload.write_text(json.dumps([changed]), encoding="utf-8")
+        proc = subprocess.run(
+            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(payload)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        stored = json.loads((self.tmp / "daily" / "items.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(stored), 17)
+        titles = {item["id"]: item["title"] for item in stored}
+        self.assertEqual(titles["lumi-2026-11-17-voice-reader"], "替换后的标题")
+        self.assertIn("Qwen4-Max", " ".join(titles.values()))
+        for rel in self.frozen:
+            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
 
 
 if __name__ == "__main__":
