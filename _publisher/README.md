@@ -53,6 +53,86 @@ python3 _publisher/publish.py --input post.json
 
 `--body-file -` reads the body from stdin. `--dry-run` prints the files it would write. Publishing the same slug again replaces that post instead of adding a second copy. `--root` defaults to the repository root.
 
+## Daily feed
+
+`/daily/` is the filterable feed for these briefs. Long posts such as `/post/lumi-2026-11-17/` stay as archives. The page is static HTML, CSS, and JS in `daily/` (Jekyll publishes that directory). Hashed files in `css/` and `js/` are not part of the feed.
+
+Items live in `daily/items.json`. The feed shows a 领域 or 类型 only when at least one item uses it. Counts beside those names follow the current search, relevance, and date, and ignore the domain, type, and tag checkboxes. 相关度 is a 1–5 score against Yonas's interests: agents (architecture, harness, memory, planning, tool use and MCP, multi-agent, computer use, coding agents, long-horizon reliability), LLMs, physical AI / embodied intelligence, and on-device iOS voice agents (Luna). Do not mark every item as 5.
+
+`date` is the Asia/Shanghai calendar day of the digest (`YYYY-MM-DD`, no clock time).
+
+### Vocabulary
+
+Use these names as written. An item may have more than one 领域 and more than one 类型.
+
+领域:
+
+- 语音 Agent
+- 全双工
+- 打断与轮次
+- 语音识别 ASR
+- 语音合成 TTS
+- 端到端语音
+- 端侧
+- iOS
+- 苹果生态
+- 个人 Agent
+- Agent 架构
+- 工具与 MCP
+- 大模型
+- 多模态
+- 评测与榜单
+- 开源
+- 论文
+- 智能座舱
+
+类型:
+
+- 产品发布
+- 模型发布
+- 开源
+- 技术解读
+- 观点讨论
+- 评测结果
+- 论文
+- 行业数据
+
+`source_brief` is `lumi` or `agent-app`.
+
+### Item JSON
+
+`daily/items.json` is a list. The publisher upserts by `id` and rewrites that file plus `daily/index.html`. Pass a list, or an object with an `items` array. Unknown fields are rejected.
+
+```json
+{
+  "id": "lumi-2026-11-17-voice-reader",
+  "date": "2026-11-17",
+  "seq": 1,
+  "source_brief": "lumi",
+  "title": "一句话摘要。",
+  "summary": "讲解。",
+  "insight": {"heading": "对 Luna 的启发", "body": "只在来源里已有这段时填写。"},
+  "relevance": 4,
+  "domains": ["语音 Agent", "端侧"],
+  "types": ["模型发布"],
+  "tags": ["Pipecat"],
+  "source": {"name": "", "handle": "@JonPTaylor", "identity": ""},
+  "links": [{"label": "原帖", "url": "https://example.com/post"}],
+  "archive_url": "/post/lumi-2026-11-17/",
+  "posted_at": "11-16 20:05"
+}
+```
+
+`insight` may be omitted or `null`. `posted_at` is optional and is the source's own time string; leave it out when the digest date already says it. `seq` orders items inside the same day (当天日报第 N 条). If you omit `seq` on a new id, the publisher appends one. `source` needs a `name` or a `handle`. Link URLs are `http(s)` or a site path.
+
+Publish items alone:
+
+```bash
+python3 _publisher/publish.py --items _publisher/drafts/items-2026-11-17.json
+```
+
+An `--input` object may include both post fields and `items`. The archive post is written only when a markdown or HTML body is present. Item ids already in `daily/items.json` are replaced; other items stay. The Anatole menu and the left sidebar gain a 日报 link on pages the publisher rewrites, including the homepage and `/post/` from a digest publish. `daily/feed.css` and `daily/feed.js` must already be in the site; the publisher does not regenerate them.
+
 Check the script without touching this checkout:
 
 ```bash
@@ -73,8 +153,12 @@ For a new post the publisher writes or updates:
 | `sitemap.xml` | New post URL. `lastmod` on `/`, `/post/`, `/categories/`, the category, and any tags moves forward when the post is newer. |
 | `categories/<slug>/index.html` and `index.xml` | Created or updated, and the term is added to `categories/index.html` and `categories/index.xml`. |
 | `tags/<slug>/index.html` and `index.xml` | Same for each tag, including `tags/index.html` and `tags/index.xml`. |
+| `daily/items.json` | Digest items, upserted by `id` when `--items` or an `items` array is present. |
+| `daily/index.html` | The feed page, rewritten from `_publisher/templates/daily.html`. |
+| `index.html` and `post/index.html` | A digest publish also ensures the 日报 link is in the nav and sidebar. |
+| `sitemap.xml` | `/daily/` is added or its `lastmod` is set from the newest item date. |
 
-Hashed files under `css/` and `js/` are not rewritten. Existing post HTML is not rewritten. `/life/`, `/about/`, `/page/`, and `404.html` are left alone.
+Hashed files under `css/` and `js/` are not rewritten. Existing post HTML is not rewritten, except that a normal post publish still inserts the 日报 link into pages it already rewrites. `/life/`, `/about/`, `/page/`, and `404.html` are left alone. `daily/feed.css` and `daily/feed.js` are hand-written.
 
 ## Limits
 
@@ -87,3 +171,4 @@ Hashed files under `css/` and `js/` are not rewritten. Existing post HTML is not
 - `post/yy/yyasynclayer/` is not in the homepage, the posts archive, or the sitemap. It is left as it is.
 - The copyright line stays `© Ermao 2022`, matching every current page.
 - GitHub Pages publishes the `master` branch. This pull request does not change the live site until it is merged. After that, run the publisher, commit the HTML it writes, and push to `master`.
+- The daily feed reads `daily/items.json` in the browser. With one digest day the volume chart has a single bar; the publisher does not invent older dates. 当天日报第 N 条 is the item's place in that day's full list, not its place after filtering.

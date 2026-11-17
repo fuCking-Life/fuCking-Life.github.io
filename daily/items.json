@@ -1,0 +1,696 @@
+[
+  {
+    "id": "lumi-2026-11-17-voice-reader",
+    "date": "2026-11-17",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Pipecat 发布开源小模型 Voice Reader，在 CPU 上最快约 25 ms 流出情绪/语气结果。",
+    "summary": "INT8 约 28 MB（tiny 约 14 MB）。官方称准确率和 Google Decision 1 相当，而 Decision 1 这类通用决策模型会给每轮增加 100–200 ms。可以和读转写的 Tone Reader 一起用，更好区分讽刺和真诚。这正好对应 Luna 想用端上小分类器做话轮和语气判断、而不是把整段音频交给云端大模型的路线。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以先在 Mac / 再迁到 Core ML，用 14–28 MB 的音频小模型做「继续听 / 该接话 / 用户语气变了」，把云端 Decision 1 只留作对照或兜底。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "模型发布",
+      "开源"
+    ],
+    "tags": [
+      "Pipecat",
+      "Voice Reader",
+      "话轮"
+    ],
+    "source": {
+      "name": "",
+      "handle": "@JonPTaylor",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/JonPTaylor/status/2122300084595408923"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/pipecat-ai/pipecat-examples/tree/main/expressivity"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-16 20:05"
+  },
+  {
+    "id": "lumi-2026-11-17-liquid-d12",
+    "date": "2026-11-17",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "Liquid AI 发布托管决策模型 d1.2 / d1.2-ultra，输入可以是文本、图像和音频，输出是带校准概率的结构化答案。",
+    "summary": "模型不生成 token。d1.2-ultra 在 Artificial Analysis Decision Index v2.1 上得 75 分，排第一；官方内部测试里，声音类别（ESC-50）和语种（FLEURS，43 种）问题准确率约 95%–97%。当前只能走 API，他们说稍后会开放「同等能力」的开源权重，但现在还没有给出时间表。校准误差在 13 个基准、22,505 道题上，d1.2-ultra 为 0.8 个百分点，d1.2 为 1.2。对 Luna 的意义是：意图路由、是否说完、背景里有没有收音机或警报，都可以先做成「选择题 + 置信度阈值」，而不是再绕一轮生成。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "在端上权重到来之前，可以用托管 API 先验证「音频进、类型化决策出」这组问题（是否在对助手说话、要不要打断、意图类别），再决定哪些头值得做成 Core ML。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "多模态",
+      "评测与榜单"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "Liquid AI",
+      "d1.2",
+      "决策模型"
+    ],
+    "source": {
+      "name": "Liquid AI",
+      "handle": "@liquidai",
+      "identity": "@maximelabonne"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/liquidai/status/2122346077231923698"
+      },
+      {
+        "label": "后续说明",
+        "url": "https://x.com/liquidai/status/2122346098782343623"
+      },
+      {
+        "label": "博客",
+        "url": "https://www.liquid.ai/blog/d1-2"
+      },
+      {
+        "label": "文档",
+        "url": "https://docs.liquid.ai/lfm/models/d1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-16 23:08–11-17 03:33"
+  },
+  {
+    "id": "lumi-2026-11-17-marimba",
+    "date": "2026-11-17",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "arXiv 周一批次出现 Marimba：在冻结的 Qwen3-ASR 0.6B 特征上做类型化语音决策。",
+    "summary": "决策包括词是否出现、是否说完、语种、是否换说话人等。话轮结束头在 Smart Turn 自己的测试集上 AUROC 为 0.930，对照 Smart Turn v3.2 的 0.982；说话人变化检测 AUROC 为 0.966–0.980。代码和权重已公开。词表类问题用 ASR 假设打分（零样本 + Platt 校准），非词表问题用条件头，话轮结束则单独读第 18 层；8 秒窗口只跑一次冻结编码器。这很接近 Luna 的级联结构：先跑端上流式 ASR，再接一个不生成文本的小决策头。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "它把 end-of-turn 和「词是否说到」「是否换人」放在同一套类型化接口里，方便按失败模式分别设阈值。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "打断与轮次",
+      "论文",
+      "开源"
+    ],
+    "types": [
+      "论文",
+      "开源"
+    ],
+    "tags": [
+      "Marimba",
+      "Qwen3-ASR",
+      "话轮"
+    ],
+    "source": {
+      "name": "arXiv",
+      "handle": "",
+      "identity": "Charcot-AI · 2611.18330"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.18330"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/Charcot-AI/marimba-api"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/charcot-ai/marimba"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-17-fend",
+    "date": "2026-11-17",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "FEND 面向外呼语音 agent 做远端检测，要在约 20 秒内区分真人、语音信箱、IVR 和对端也是 AI。",
+    "summary": "作者在 1,000 通真实外呼里统计到真人 48.1%、语音信箱 44.6%、对端 AI 6.9%、IVR 0.4%，认为传统 AMD 的「人/机器」两分不够用。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "场景是电话而不是车舱，但「先判断对面是谁再决定动作」和车里区分司机、乘客、电台的思路类似，可以借鉴多类别检测而不是单一 VAD。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音 Agent",
+      "论文"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "FEND",
+      "外呼"
+    ],
+    "source": {
+      "name": "arXiv",
+      "handle": "",
+      "identity": "2611.18050"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.18050"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-17-ediar",
+    "date": "2026-11-17",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "eDIAR 做无需重训的开放说话人流式日志化，说话人数量不再受槽位上限限制。",
+    "summary": "在固定槽位数的神经 diarizer 之上用 e-means 聚类，并强调长会议里每次更新的代价不随时长增长。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车里通常只有两三个人，未必需要这套「不限人数」的设计，但「流式、开放说话人、重叠语音仍能标谁在说」值得作为乘客/司机分离的参考文献。"
+    },
+    "relevance": 3,
+    "domains": [
+      "论文"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "eDIAR",
+      "说话人日志"
+    ],
+    "source": {
+      "name": "arXiv",
+      "handle": "",
+      "identity": "2611.18529"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.18529"
+      },
+      {
+        "label": "项目页",
+        "url": "https://kyudan1.github.io/eDIAR/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-17-mlx-audio",
+    "date": "2026-11-17",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Neywa-Labs/mlx-audio v0.6.6 在 Apple Silicon 的 MLX 栈里加入全双工、转写、人声分离和多组语音模型。",
+    "summary": "新增 Haru-4B 全双工 speech-to-speech、Fluid Speech Pro STT、FastDialgoueSidon 人声分离，以及 ZONOS3-Mini TTS、SOV-Transcribe-1 STT，并修了 Qwen3-ASR / Parakeet 的流式行为。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以在 Mac 上直接试 Haru 的打断和 backchannel，并用分离模型做「先把司机声音拆出来再进 VAD」的对照，不必先移植到 iOS。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "苹果生态",
+      "全双工",
+      "语音识别 ASR",
+      "语音合成 TTS",
+      "开源",
+      "打断与轮次"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "mlx-audio",
+      "Haru",
+      "Apple Silicon"
+    ],
+    "source": {
+      "name": "Neywa-Labs",
+      "handle": "",
+      "identity": "mlx-audio"
+    },
+    "links": [
+      {
+        "label": "发布",
+        "url": "https://github.com/Neywa-Labs/mlx-audio/releases/tag/v0.6.6"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-17 01:01"
+  },
+  {
+    "id": "lumi-2026-11-17-mlx-audio-swift",
+    "date": "2026-11-17",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "mlx-audio-swift v0.2.0 同步加入 ZONOS3-Mini TTS 与 SOV-Transcribe-1，这次没有把 Haru-4B 放进 Swift 包。",
+    "summary": "Swift 侧还包括 Qwen3-ASR 流式分块语种检测、Qwen3-TTS 语音分词器 RoPE 修复、Parakeet 密集检查点加载等。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这是目前最接近 iOS 的 MLX 语音层，适合先评 ZONOS3-Mini / Qwen3-TTS 的端上播报，以及 Qwen3-ASR、Parakeet 的流式转写。"
+    },
+    "relevance": 4,
+    "domains": [
+      "iOS",
+      "端侧",
+      "苹果生态",
+      "语音合成 TTS",
+      "语音识别 ASR",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "mlx-audio-swift",
+      "iOS"
+    ],
+    "source": {
+      "name": "Neywa-Labs",
+      "handle": "",
+      "identity": "mlx-audio-swift"
+    },
+    "links": [
+      {
+        "label": "发布",
+        "url": "https://github.com/Neywa-Labs/mlx-audio-swift/releases/tag/v0.2.0"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-17 00:38"
+  },
+  {
+    "id": "lumi-2026-11-17-llama-cpp-tts",
+    "date": "2026-11-17",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "@ngxson 预告 llama.cpp 会再接入更多 TTS 模型，窗口内的构建说明里还没有对应的语音变更记录。",
+    "summary": "帖子配了一张模型列表截图。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以继续把 llama.cpp 当作 Mac 上的 TTS / 本地 Realtime 对照，等具体模型名进 changelog 再测。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音合成 TTS",
+      "开源",
+      "端侧"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "llama.cpp",
+      "TTS"
+    ],
+    "source": {
+      "name": "",
+      "handle": "@ngxson",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/ngxson/status/2122131200777375749"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-16 08:54"
+  },
+  {
+    "id": "lumi-2026-11-17-sherpa-onnx",
+    "date": "2026-11-17",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "k2-fsa/sherpa-onnx 发布强制对齐的 Android APK 和 WASM 静态网页包。",
+    "summary": "这是昨天对齐模型的配套应用。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "仍然主要方便给录音打词级时间戳，不是运行时必选项。"
+    },
+    "relevance": 2,
+    "domains": [
+      "开源",
+      "端侧"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "sherpa-onnx",
+      "强制对齐"
+    ],
+    "source": {
+      "name": "k2-fsa",
+      "handle": "",
+      "identity": "sherpa-onnx"
+    },
+    "links": [
+      {
+        "label": "apk-fa",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/apk-fa"
+      },
+      {
+        "label": "react-fa",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/react-fa"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": ""
+  },
+  {
+    "id": "lumi-2026-11-17-livekit",
+    "date": "2026-11-17",
+    "seq": 10,
+    "source_brief": "lumi",
+    "title": "LiveKit Agents 在 G2 与 Bluejay 的评测里，6 个语音 AI 平台中单次成功率和五次一致性均为最高。",
+    "summary": "90 个商务任务各跑 5 次，LiveKit Agents 单次成功率 89.1%、五次一致性 73.3%。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "再次提醒不要只看单次通过率；导航场景同样应该用 pass⁵（或至少 pass³）衡量「改路线、打断、确认」会不会偶尔失败。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "评测与榜单"
+    ],
+    "types": [
+      "评测结果"
+    ],
+    "tags": [
+      "LiveKit",
+      "评测"
+    ],
+    "source": {
+      "name": "LiveKit",
+      "handle": "@livekit",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/livekit/status/2122363572067921946"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-17 00:18"
+  },
+  {
+    "id": "lumi-2026-11-17-sophon",
+    "date": "2026-11-17",
+    "seq": 11,
+    "source_brief": "lumi",
+    "title": "Sophon-Realtime 4B v1.4.0 以 Apache-2.0 开源，提供 Flash / Tag / E2E 三个构建。",
+    "summary": "官方测得：Flash-4B 约 21 GB、可放进一张 24 GB 卡，首包音频 0.21 s；Tag-4B 在 Full-Duplex-Bench v1.0 四项平均 94.3，与 32B 的 94.0 相当，但 VoiceBench 62.4（32B 为 82.8）、Big Bench Audio 44.3%（32B 为 81.8%），会说话但知识明显更弱。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "它还是消费级 GPU 方案，上不了 iPhone，但可以作为全双工行为的开源对照；若只关心打断和接话，不必上 32B。"
+    },
+    "relevance": 3,
+    "domains": [
+      "全双工",
+      "端到端语音",
+      "开源",
+      "语音 Agent",
+      "评测与榜单"
+    ],
+    "types": [
+      "模型发布",
+      "开源",
+      "评测结果"
+    ],
+    "tags": [
+      "Sophon",
+      "全双工"
+    ],
+    "source": {
+      "name": "",
+      "handle": "@BKJinAI",
+      "identity": "adventists-ai/sophon-realtime"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/BKJinAI/status/2122300795966427456"
+      },
+      {
+        "label": "发布",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.4.0"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/adventists-ai/Sophon-Realtime-4B-Flash"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-17/",
+    "posted_at": "11-16 10:24"
+  },
+  {
+    "id": "agent-app-2026-11-17-siri-quota",
+    "date": "2026-11-17",
+    "seq": 12,
+    "source_brief": "agent-app",
+    "title": "苹果在 iOS / iPadOS / macOS 27.3 第二测试版里，为依赖服务端处理的 Siri AI 和 Apple Intelligence 设置免费每日额度，超额可走 iCloud+。",
+    "summary": "受限范围包括：依赖云端的多步、个人上下文 Siri AI 请求（例如根据日程和路况询问该何时出门）、Image Playground 以及相册中的清除、扩展、空间重构图等；Shortcuts 里使用 AFM Cloud / AFM Cloud Pro 的工作流；以及通过 Private Cloud Compute 调用苹果基础模型的第三方应用。单步基础指令（如设计时器、发一条短信）在额度用尽后仍可用。免费额度按设备计算、不结转，约在当地时间午夜重置。50GB iCloud+ 不加量；200GB 最高约 2 倍，2TB 约 5 倍，6TB 约 10 倍，12TB 约 20 倍，家庭共享从共享池中先到先得。各类功能的具体上限不同，苹果会在测试期调整，也尚未公布免费档的绝对次数。这对端侧很关键：复杂请求被明确算作云端能力，并开始计量。",
+    "insight": null,
+    "relevance": 4,
+    "domains": [
+      "iOS",
+      "苹果生态",
+      "端侧",
+      "个人 Agent"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Siri",
+      "Apple Intelligence",
+      "iCloud+"
+    ],
+    "source": {
+      "name": "MacRumors",
+      "handle": "",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://www.macrumors.com/2026/11/16/apple-icloud-paid-siri-ai-upgrade/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "agent-app-2026-11-17-ask-about-page",
+    "date": "2026-11-17",
+    "seq": 13,
+    "source_brief": "agent-app",
+    "title": "Safari 新增「Ask About Page」，Siri AI 可以读取整个网页，而不只是当前屏幕可见的部分。",
+    "summary": "例如从长菜单中找出所有无麸质选项，或根据一篇长攻略整理出行打包清单。这是对现有「屏幕智能」的扩展，更适合摘要和跨页检索。",
+    "insight": null,
+    "relevance": 3,
+    "domains": [
+      "iOS",
+      "苹果生态",
+      "个人 Agent"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Safari",
+      "Siri",
+      "屏幕智能"
+    ],
+    "source": {
+      "name": "MacRumors",
+      "handle": "",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://www.macrumors.com/2026/11/16/siri-ai-ask-about-page-safari/"
+      },
+      {
+        "label": "补充",
+        "url": "https://9to5mac.com/2026/11/16/everything-new-in-ios-27-3-beta-2-so-far/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "agent-app-2026-11-17-china-intelligence",
+    "date": "2026-11-17",
+    "seq": 14,
+    "source_brief": "agent-app",
+    "title": "中国区 Apple Intelligence 在 27.3 第二测试版扩展到 iPad 与 Mac。",
+    "summary": "继 iPhone 已在 27.3 首个测试版上线后，中国区开发者可在 iPadOS 27.3 和 macOS 27.3 第二测试版中试用，覆盖 M 系列 iPad / Mac，以及搭载 A17 Pro、A20 Pro 的 iPad mini。功能大致对应美国自 iOS 18.1 起的那一批（实时翻译、写作工具、视觉智能、相册清理、邮件和通知摘要等），但不包含 Siri AI、Siri 应用，以及 iOS 27 中较新的 Apple Intelligence 能力。Siri、写作工具等对接的是阿里云通义千问，公开版预计 12 月推出。",
+    "insight": null,
+    "relevance": 3,
+    "domains": [
+      "iOS",
+      "苹果生态",
+      "端侧"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Apple Intelligence",
+      "中国区",
+      "通义千问"
+    ],
+    "source": {
+      "name": "MacRumors",
+      "handle": "",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://www.macrumors.com/2026/11/16/ipad-mac-apple-intelligence-china/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "agent-app-2026-11-17-apple-glasses",
+    "date": "2026-11-17",
+    "seq": 15,
+    "source_brief": "agent-app",
+    "title": "彭博 Gurman 称，苹果计划在 2027 年 6 月的 WWDC 发布首款智能眼镜，并于当年年内出货。",
+    "summary": "首代没有 AR 显示，交互走 Siri 加摄像头；应用跑在配对的较新款 iPhone 上，不支持 Android。Gurman 称软件和 AI 仍落后于硬件，可能影响 2027 年上市时间。",
+    "insight": null,
+    "relevance": 2,
+    "domains": [
+      "苹果生态",
+      "iOS"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Apple Glasses",
+      "Gurman",
+      "Siri"
+    ],
+    "source": {
+      "name": "Gurman",
+      "handle": "",
+      "identity": "彭博"
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://www.macrumors.com/2026/11/15/apple-smart-glasses-hinge-on-siri/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11-15"
+  },
+  {
+    "id": "agent-app-2026-11-17-qwen4-max",
+    "date": "2026-11-17",
+    "seq": 16,
+    "source_brief": "agent-app",
+    "title": "阿里发布旗舰模型 Qwen4-Max，并预告将开源更小的 Qwen4。",
+    "summary": "11月16日发布的 Qwen4-Max 是通义家族迄今最强的模型：总参数 2.4 万亿的 MoE，每 token 激活 710 亿（官方称比同规模的 Qwen3.8-Max 少 25% 激活参数），具备原生视觉理解和 100 万 token 上下文。官方称其在编程、智能体任务和视觉推理上表现突出，Code Arena 排第 6；在其内部的 Work360 评测上整体优于 Qwen3.8-Max，在 High effort 推理下少用 35% token，单任务平均成本约降 60%。官方还提到长程智能体案例，包括连续 48 小时闭环工作并得到实验验证的芯片冷却分子，以及一次阿尔茨海默相关研究中自主完成 454 次工具调用。模型已在 QwenCloud 的 Token Plan 和 API 上线。较小规模的 Qwen4 开源权重即将向开发者发布，对后续端侧部署更有直接意义。以上能力与评测数字均来自阿里官方，尚未见独立复现。",
+    "insight": null,
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "多模态",
+      "Agent 架构",
+      "评测与榜单"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "Qwen",
+      "Qwen4-Max"
+    ],
+    "source": {
+      "name": "阿里云",
+      "handle": "",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max?_p_lc=1"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "agent-app-2026-11-17-aws-workspaces",
+    "date": "2026-11-17",
+    "seq": 17,
+    "source_brief": "agent-app",
+    "title": "AWS 为面向智能体的 WorkSpaces 增加身份登录、代操作和会话回放。",
+    "summary": "智能体可通过支持 OIDC 的身份提供商登录，并以登录用户的身份、权限和组策略代为操作（on-behalf-of）。会话回放把屏幕截图合成视频，并配上智能体动作的自然语言记录，存储在客户自己的 S3 中、用客户密钥加密。搭建方面，可用 Claude Code、Codex、Kiro 等编程助手，在 AWS MCP skills 引导下创建 WorkSpace，也可以用已有凭证直接接入 Bedrock AgentCore。",
+    "insight": null,
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "工具与 MCP"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "AWS",
+      "WorkSpaces",
+      "MCP"
+    ],
+    "source": {
+      "name": "AWS",
+      "handle": "",
+      "identity": ""
+    },
+    "links": [
+      {
+        "label": "来源",
+        "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-workspaces-AI-agents-connect-govern/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-17/",
+    "posted_at": "2026-11"
+  }
+]

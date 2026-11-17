@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>日报 · Fucking Life</title>
+    <meta name="description" content="Ermao 的日报。Lumi 和 agent-app 的每日简报，按相关度、领域和类型筛选。">
+    <link rel="canonical" href="/daily/">
+    <link rel="stylesheet" href="feed.css">
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="/">
+            <span class="brand-name">Fucking Life</span>
+            <span class="brand-sub">Ermao</span>
+        </a>
+        <nav class="views" aria-label="日报视图">
+            <button type="button" data-view="daily" class="is-active">日报</button>
+            <button type="button" data-view="all">全部消息</button>
+            <button type="button" data-view="tags">标签</button>
+        </nav>
+        <div class="top-tools">
+            <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
+            <form id="search-form" role="search">
+                <label class="sr-only" for="q">搜索标题、讲解、来源</label>
+                <input id="q" type="search" placeholder="搜索标题、讲解、来源" autocomplete="off" enterkeyhint="search">
+            </form>
+        </div>
+    </header>
+    <div class="layout">
+        <aside id="filters" class="filters" aria-label="筛选">
+            <div class="drawer-bar">
+                <strong>筛选</strong>
+                <button type="button" class="drawer-close" data-close-filters>完成</button>
+            </div>
+            <div class="filter-block">
+                <div class="match" role="group" aria-label="条件如何组合">
+                    <button type="button" data-match="all" class="is-active">全部满足</button>
+                    <button type="button" data-match="any">任一满足</button>
+                </div>
+                <p class="hint">作用于领域、类型、标签。</p>
+            </div>
+            <div class="filter-block">
+                <h2>相关度</h2>
+                <div class="dots" id="relevance-dots">
+                    <button type="button" data-rel="1" style="--dot:#6d28d9" aria-label="相关度 1"></button>
+                    <button type="button" data-rel="2" style="--dot:#7c3aed" aria-label="相关度 2"></button>
+                    <button type="button" data-rel="3" style="--dot:#2563eb" aria-label="相关度 3"></button>
+                    <button type="button" data-rel="4" style="--dot:#f59e0b" aria-label="相关度 4"></button>
+                    <button type="button" data-rel="5" style="--dot:#ea580c" aria-label="相关度 5"></button>
+                </div>
+                <p class="hint"><span>只看相关度不低于所选档的消息，</span><span>再点一次取消。</span></p>
+            </div>
+            <div class="filter-block">
+                <h2>领域</h2>
+                <div id="domain-list"></div>
+            </div>
+            <div class="filter-block">
+                <h2>类型</h2>
+                <div id="type-list"></div>
+            </div>
+        </aside>
+        <main class="stage">
+            <section class="chart-card" id="chart-card" aria-label="每日条数">
+                <h2>每日条数</h2>
+                <div id="chart"></div>
+            </section>
+            <div class="list-head">
+                <div>
+                    <h2 id="result-title">全部消息</h2>
+                    <div class="chips" id="chips"></div>
+                </div>
+                <div class="sort" role="group" aria-label="排序">
+                    <button type="button" data-sort="time" class="is-active">按时间</button>
+                    <button type="button" data-sort="relevance">按相关度</button>
+                </div>
+            </div>
+            <div class="tag-board" id="tag-board" hidden></div>
+            <div id="feed-list">
+                <p class="empty">正在加载日报…</p>
+            </div>
+        </main>
+    </div>
+    <noscript><p class="noscript">日报需要 JavaScript 才能筛选和展开卡片。</p></noscript>
+    <script src="feed.js"></script>
+</body>
+</html>

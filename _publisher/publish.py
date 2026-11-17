@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Insert one post into this already-built Anatole / Hugo 0.82 site.
+"""Insert posts and daily-digest items into this already-built Anatole site.
 
 The site on master is compiled HTML. This script does not run Hugo. It writes
 a new ``post/<slug>/index.html`` from the existing single-post chrome and
 splices that post into the homepage, the posts archive, RSS, the sitemap, and
-the category and tag pages.
+the category and tag pages. A JSON item list upserts ``daily/items.json`` and
+regenerates the ``/daily/`` feed.
 
 Run ``python3 _publisher/publish.py --help`` for the arguments. See
 ``_publisher/README.md`` for the files that change and the known limits.
@@ -68,8 +69,45 @@ MONTHS = [
 ]
 MONTH_INDEX = {name: i + 1 for i, name in enumerate(MONTHS)}
 
+# Fixed vocabularies for /daily/. Names stay in this order in the filter UI.
+DOMAINS = [
+    "语音 Agent",
+    "全双工",
+    "打断与轮次",
+    "语音识别 ASR",
+    "语音合成 TTS",
+    "端到端语音",
+    "端侧",
+    "iOS",
+    "苹果生态",
+    "个人 Agent",
+    "Agent 架构",
+    "工具与 MCP",
+    "大模型",
+    "多模态",
+    "评测与榜单",
+    "开源",
+    "论文",
+    "智能座舱",
+]
+TYPES = [
+    "产品发布",
+    "模型发布",
+    "开源",
+    "技术解读",
+    "观点讨论",
+    "评测结果",
+    "论文",
+    "行业数据",
+]
+SOURCE_BRIEFS = ("lumi", "agent-app")
+RELEVANCE_COLORS = ("#6d28d9", "#7c3aed", "#2563eb", "#f59e0b", "#ea580c")
+DAILY_ITEMS_REL = "daily/items.json"
+DAILY_INDEX_REL = "daily/index.html"
+
 HERE = Path(__file__).resolve().parent
 SINGLE_TEMPLATE = HERE / "templates" / "single.html"
+DAILY_TEMPLATE = HERE / "templates" / "daily.html"
 
 SHORT_TAIL = "\n                \n            \n"
 LONG_TAIL = SHORT_TAIL + "        "
@@ -1056,6 +1094,69 @@ def set_sitemap_lastmod(xml: str, loc: str, lastmod: str, mode: str) -> str:
     return xml[: match.start()] + updated + xml[match.end() :]
 
 
+def insert_daily_nav(html: str) -> str:
+    """Add the 日报 link to the Anatole menu and the left sidebar.
+
+    The menu is the top nav. The sidebar link sits under the bio. Pages
+    without that chrome, including the daily feed itself, are left as they are.
+    """
+    html = _insert_daily_menu_link(html)
+    html = _insert_daily_sidebar_link(html)
+    return html
+
+
+def _insert_daily_menu_link(html: str) -> str:
+    start = html.find('id="navMenu"')
+    if start < 0:
+        return html
+    end = html.find("</ul>", start)
+    if end < 0:
+        return html
+    block = html[start:end]
+    if 'href="/daily/"' in block:
+        return html
+    match = re.search(r'\n([ \t]*)<li><a\b[^>]*href="/post/"', block)
+    if not match:
+        return html
+    indent = match.group(1)
+    item = (
+        f'\n{indent}<li><a \n'
+        f'{indent}       href="/daily/"\n'
+        f'{indent}            \n'
+        f'{indent}       title="">日报</a></li>'
+    )
+    at = start + match.start()
+    return html[:at] + item + html[at:]
+
+
+def _insert_daily_sidebar_link(html: str) -> str:
+    start = html.find('<div class="sidebar')
+    if start < 0:
+        return html
+    end = html.find('<div class="main">', start)
+    if end < 0:
+        return html
+    if 'href="/daily/"' in html[start:end]:
+        return html
+    needle = (
+        "            </div>\n"
+        "        </div>\n"
+        "    </div>\n"
+        '    <ul class="social-links">'
+    )
+    at = html.find(needle, start)
+    if at < 0 or at > end:
+        return html
+    # Inline size overrides the theme rule that enlarges every link in .title.
+    link = (
+        '            <p><a href="/daily/" '
+        'style="font-size:15px;font-weight:650;letter-spacing:0;'
+        'text-transform:none;color:#2660ab">日报</a></p>\n'
+    )
+    insert_at = at + len("            </div>\n")
+    return html[:insert_at] + link + html[insert_at:]
+
+
 class SiteWriter:
     def __init__(self, root: Path, dry_run: bool) -> None:
         self.root = root
@@ -1063,6 +1164,8 @@ class SiteWriter:
         self.changed: list[str] = []
 
     def write(self, relative: str, text: str) -> None:
+        if relative.endswith(".html") and relative != DAILY_INDEX_REL:
+            text = insert_daily_nav(text)
         path = self.root / relative
         existing = path.read_text(encoding="utf-8") if path.is_file() else None
         if existing == text:
@@ -1144,6 +1247,401 @@ def _upsert_term(
         if old_title == xml_escape(name) and old_when >= post.when:
             return
     writer.write(index_xml_rel, upsert_feed(index_xml, name, term_link, post.when, ""))
+
+
+def _require_text(value, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise PublishError(f"item {field} must be a non-empty string")
+    return value.strip()
+
+
+def _string_list(value, field: str, allowed: list[str] | None, minimum: int) -> list[str]:
+    if not isinstance(value, list):
+        raise PublishError(f"item {field} must be a list")
+    out: list[str] = []
+    for entry in value:
+        if not isinstance(entry, str) or not entry.strip():
+            raise PublishError(f"item {field} contains an empty value")
+        name = entry.strip()
+        if allowed is not None and name not in allowed:
+            raise PublishError(f"item {field} has unknown value {name}")
+        if name not in out:
+            out.append(name)
+    if len(out) < minimum:
+        raise PublishError(f"item {field} needs at least {minimum} value")
+    return out
+
+
+def validate_item(raw) -> dict:
+    """Return one digest item in canonical form, or raise PublishError."""
+    if not isinstance(raw, dict):
+        raise PublishError("each item must be an object")
+    allowed = {
+        "id",
+        "date",
+        "seq",
+        "source_brief",
+        "title",
+        "summary",
+        "insight",
+        "relevance",
+        "domains",
+        "types",
+        "tags",
+        "source",
+        "links",
+        "archive_url",
+        "posted_at",
+    }
+    extra = sorted(set(raw) - allowed)
+    if extra:
+        raise PublishError("unknown item fields: " + ", ".join(extra))
+    ident = _require_text(raw.get("id"), "id")
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", ident):
+        raise PublishError(f"invalid item id {ident!r}")
+    date_text = _require_text(raw.get("date"), "date")
+    try:
+        datetime.strptime(date_text, "%Y-%m-%d")
+    except ValueError as exc:
+        raise PublishError(
+            f"item {ident} date must be YYYY-MM-DD in Asia/Shanghai"
+        ) from exc
+    if isinstance(raw.get("seq"), bool) or not isinstance(raw.get("seq"), int) or raw["seq"] < 1:
+        raise PublishError(f"item {ident} seq must be a positive integer")
+    brief = raw.get("source_brief")
+    if brief not in SOURCE_BRIEFS:
+        raise PublishError(f"item {ident} source_brief must be lumi or agent-app")
+    title = _require_text(raw.get("title"), "title")
+    summary = _require_text(raw.get("summary"), "summary")
+    insight_raw = raw.get("insight", None)
+    insight = None
+    if insight_raw not in (None, "", {}):
+        if not isinstance(insight_raw, dict):
+            raise PublishError(f"item {ident} insight must be an object")
+        heading = _require_text(insight_raw.get("heading"), "insight.heading")
+        body = _require_text(insight_raw.get("body"), "insight.body")
+        insight = {"heading": heading, "body": body}
+    relevance = raw.get("relevance")
+    if isinstance(relevance, bool) or not isinstance(relevance, int) or not 1 <= relevance <= 5:
+        raise PublishError(f"item {ident} relevance must be an integer from 1 to 5")
+    domains = _string_list(raw.get("domains"), "domains", DOMAINS, 1)
+    types = _string_list(raw.get("types"), "types", TYPES, 1)
+    tags = _string_list(raw.get("tags", []), "tags", None, 0)
+    source_raw = raw.get("source")
+    if not isinstance(source_raw, dict):
+        raise PublishError(f"item {ident} source must be an object")
+    source_allowed = {"name", "handle", "identity"}
+    source_extra = sorted(set(source_raw) - source_allowed)
+    if source_extra:
+        raise PublishError(
+            f"item {ident} source has unknown fields: " + ", ".join(source_extra)
+        )
+    source = {
+        "name": str(source_raw.get("name") or "").strip(),
+        "handle": str(source_raw.get("handle") or "").strip(),
+        "identity": str(source_raw.get("identity") or "").strip(),
+    }
+    if not source["name"] and not source["handle"]:
+        raise PublishError(f"item {ident} source needs a name or a handle")
+    links_raw = raw.get("links", [])
+    if not isinstance(links_raw, list):
+        raise PublishError(f"item {ident} links must be a list")
+    links = []
+    for link in links_raw:
+        if not isinstance(link, dict):
+            raise PublishError(f"item {ident} link must be an object")
+        label = _require_text(link.get("label"), "links.label")
+        url = _require_text(link.get("url"), "links.url")
+        if not (url.startswith("https://") or url.startswith("http://") or url.startswith("/")):
+            raise PublishError(f"item {ident} link url must be http(s) or a site path")
+        if url.startswith("//"):
+            raise PublishError(f"item {ident} link url is not a site path")
+        links.append({"label": label, "url": url})
+    archive = _require_text(raw.get("archive_url"), "archive_url")
+    if not archive.startswith("/") or archive.startswith("//"):
+        raise PublishError(f"item {ident} archive_url must be a site path")
+    posted = raw.get("posted_at", None)
+    if posted is None:
+        posted_at = ""
+    elif isinstance(posted, str):
+        posted_at = posted.strip()
+    else:
+        raise PublishError(f"item {ident} posted_at must be a string")
+    return {
+        "id": ident,
+        "date": date_text,
+        "seq": raw["seq"],
+        "source_brief": brief,
+        "title": title,
+        "summary": summary,
+        "insight": insight,
+        "relevance": relevance,
+        "domains": domains,
+        "types": types,
+        "tags": tags,
+        "source": source,
+        "links": links,
+        "archive_url": archive,
+        "posted_at": posted_at,
+    }
+
+
+def sort_items(items: list[dict]) -> list[dict]:
+    """Newest date first. Within a day, smaller seq comes first."""
+
+    def key(item: dict) -> tuple:
+        ordinal = datetime.strptime(item["date"], "%Y-%m-%d").toordinal()
+        return (-ordinal, item["seq"], item["id"])
+
+    return sorted(items, key=key)
+
+
+def day_ordinals(items: list[dict]) -> dict[str, int]:
+    """1-based position of each item inside its calendar day, ignoring filters."""
+    by_day: dict[str, list[dict]] = {}
+    for item in items:
+        by_day.setdefault(item["date"], []).append(item)
+    ordinals: dict[str, int] = {}
+    for rows in by_day.values():
+        ordered = sorted(rows, key=lambda item: (item["seq"], item["id"]))
+        for index, item in enumerate(ordered, start=1):
+            ordinals[item["id"]] = index
+    return ordinals
+
+
+def upsert_items(existing: list, incoming: list) -> list[dict]:
+    """Insert or replace items by id. Existing ids not in incoming stay put."""
+    if not isinstance(existing, list) or not isinstance(incoming, list):
+        raise PublishError("items must be a list")
+    current = [validate_item(item) for item in existing]
+    by_id = {item["id"]: item for item in current}
+    if len(by_id) != len(current):
+        raise PublishError("existing items contain a duplicate id")
+    seen: set[str] = set()
+    max_seq = max((item["seq"] for item in current), default=0)
+    prepared: list[dict] = []
+    for raw in incoming:
+        if not isinstance(raw, dict):
+            raise PublishError("each item must be an object")
+        ident = str(raw.get("id", "")).strip()
+        if ident in seen:
+            raise PublishError(f"duplicate item id {ident}")
+        seen.add(ident)
+        row = dict(raw)
+        if row.get("seq") in (None, ""):
+            if ident in by_id:
+                row["seq"] = by_id[ident]["seq"]
+            else:
+                max_seq += 1
+                row["seq"] = max_seq
+        prepared.append(validate_item(row))
+    incoming_ids = {item["id"] for item in prepared}
+    merged: list[dict] = []
+    replaced: set[str] = set()
+    for item in current:
+        if item["id"] in incoming_ids:
+            merged.append(next(row for row in prepared if row["id"] == item["id"]))
+            replaced.add(item["id"])
+        else:
+            merged.append(item)
+    for item in prepared:
+        if item["id"] not in replaced:
+            merged.append(item)
+    return sort_items(merged)
+
+
+def load_items_document(path: Path) -> list:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict) and "items" in data:
+        if not isinstance(data["items"], list):
+            raise PublishError("items must be a list")
+        return data["items"]
+    raise PublishError("items JSON must be a list or an object with an items array")
+
+
+def _source_line(source: dict) -> str:
+    handle = source["handle"]
+    name = source["name"]
+    identity = source["identity"]
+    if handle:
+        shown = handle if handle.startswith("@") else "@" + handle
+    else:
+        shown = name
+    parts = ["来源 " + shown]
+    if identity:
+        parts.append(identity)
+    elif name and handle:
+        parts.append(name)
+    return " · ".join(parts)
+
+
+def _relevance_markup(score: int) -> str:
+    color = RELEVANCE_COLORS[score - 1]
+    bars = []
+    for index in range(1, 6):
+        fill = color if index <= score else "#e6e1d8"
+        bars.append(
+            f'<i style="background:{fill}" data-score="{index}"></i>'
+        )
+    return (
+        f'<p class="relevance" data-relevance="{score}">'
+        f'<span class="relevance-label">相关度</span>'
+        f'<span class="relevance-bars">{"".join(bars)}</span>'
+        f'<span class="relevance-score">{score}</span>'
+        "</p>"
+    )
+
+
+def render_item_card(item: dict, ordinal: int) -> str:
+    """Render one card. Visible field order is part of the feed contract."""
+    item = validate_item(item)
+    title_href = item["links"][0]["url"] if item["links"] else item["archive_url"]
+    title = hugo_escape(item["title"])
+    brief = "Lumi" if item["source_brief"] == "lumi" else "agent-app"
+    parts = [
+        f'<article class="card" data-id="{hugo_escape(item["id"])}" data-relevance="{item["relevance"]}">',
+        '<p class="card-date">',
+        f'<time datetime="{item["date"]}">{hugo_escape(item["date"])}</time>',
+        f'<span class="brief">{brief}</span>',
+        f'<span class="ordinal">当天日报第 {ordinal} 条</span>',
+        "</p>",
+        _relevance_markup(item["relevance"]),
+        f'<h3 class="card-title"><a href="{hugo_escape(title_href)}">{title}</a></h3>',
+        f'<p class="card-summary">{hugo_escape(item["summary"])}</p>',
+    ]
+    insight = item["insight"]
+    if insight:
+        parts.append(
+            '<blockquote class="insight">'
+            f'<p class="insight-heading">{hugo_escape(insight["heading"])}</p>'
+            f'<p>{hugo_escape(insight["body"])}</p>'
+            "</blockquote>"
+        )
+    if item["tags"]:
+        pills = "".join(f"<li>{hugo_escape(tag)}</li>" for tag in item["tags"])
+        parts.append(f'<ul class="tags">{pills}</ul>')
+    parts.append(f'<p class="source">{hugo_escape(_source_line(item["source"]))}</p>')
+    link_rows = [
+        f'<li><a href="{hugo_escape(link["url"])}">{hugo_escape(link["label"])}</a></li>'
+        for link in item["links"]
+    ]
+    if item["archive_url"] and all(link["url"] != item["archive_url"] for link in item["links"]):
+        link_rows.append(
+            f'<li><a href="{hugo_escape(item["archive_url"])}">归档</a></li>'
+        )
+    if link_rows:
+        parts.append(f'<ul class="card-links">{"".join(link_rows)}</ul>')
+    posted = item["posted_at"]
+    if posted and posted != item["date"]:
+        parts.append(f'<p class="posted">发帖日期 {hugo_escape(posted)}</p>')
+    parts.append("</article>")
+    return "".join(parts)
+
+
+def item_search_text(item: dict) -> str:
+    parts = [item["title"], item["summary"]]
+    if item["insight"]:
+        parts.append(item["insight"]["heading"])
+        parts.append(item["insight"]["body"])
+    source = item["source"]
+    parts.extend([source["name"], source["handle"], source["identity"]])
+    return "\n".join(parts).casefold()
+
+
+def item_matches(
+    item: dict,
+    *,
+    query: str = "",
+    match: str = "all",
+    min_relevance: int = 0,
+    domains: list[str] | None = None,
+    types: list[str] | None = None,
+    tags: list[str] | None = None,
+    date: str = "",
+) -> bool:
+    """Whether one item passes the feed filters.
+
+    全部满足 requires every selected domain, type, and tag.
+    任一满足 requires at least one selected domain, type, or tag.
+    Relevance, date, and search always apply on top of that.
+    """
+    if match not in ("all", "any"):
+        raise PublishError("match must be all or any")
+    domains = list(domains or [])
+    types = list(types or [])
+    tags = list(tags or [])
+    if min_relevance and item["relevance"] < min_relevance:
+        return False
+    if date and item["date"] != date:
+        return False
+    needle = query.strip().casefold()
+    if needle and needle not in item_search_text(item):
+        return False
+    if not domains and not types and not tags:
+        return True
+    domain_hits = [name in item["domains"] for name in domains]
+    type_hits = [name in item["types"] for name in types]
+    tag_hits = [name in item["tags"] for name in tags]
+    hits = domain_hits + type_hits + tag_hits
+    if match == "any":
+        return any(hits)
+    return all(hits)
+
+
+def filter_items(items: list[dict], **kwargs) -> list[dict]:
+    return [item for item in items if item_matches(item, **kwargs)]
+
+
+def render_daily_page() -> str:
+    if not DAILY_TEMPLATE.is_file():
+        raise PublishError(f"missing template {DAILY_TEMPLATE}")
+    html = DAILY_TEMPLATE.read_text(encoding="utf-8")
+    if "@@" in html:
+        raise PublishError("daily template has an unfilled placeholder")
+    return html
+
+
+def _read_existing_items(root: Path) -> list:
+    path = root / DAILY_ITEMS_REL
+    if not path.is_file():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise PublishError("daily/items.json must be a list")
+    return data
+
+
+def publish_digest(root: Path, items: list, dry_run: bool = False) -> list[str]:
+    """Upsert digest items and regenerate /daily/ plus the items JSON."""
+    for relative in ("daily/feed.css", "daily/feed.js"):
+        if not (root / relative).is_file():
+            raise PublishError(f"missing {relative}")
+    merged = upsert_items(_read_existing_items(root), items)
+    writer = SiteWriter(root, dry_run)
+    payload = json.dumps(merged, ensure_ascii=False, indent=2) + "\n"
+    writer.write(DAILY_ITEMS_REL, payload)
+    writer.write(DAILY_INDEX_REL, render_daily_page())
+    for relative in ("index.html", "post/index.html"):
+        if (root / relative).is_file():
+            writer.write(relative, writer.read(relative))
+    if merged and (root / "sitemap.xml").is_file():
+        newest = max(item["date"] for item in merged)
+        sitemap = set_sitemap_lastmod(
+            writer.read("sitemap.xml"),
+            f"{SITE_BASE}/daily/",
+            sitemap_date(parse_when(newest)),
+            "set",
+        )
+        writer.write("sitemap.xml", sitemap)
+    return writer.changed
+
+
+def _wants_post(args: argparse.Namespace, payload: dict) -> bool:
+    if args.title or args.slug or args.body is not None or args.body_file or args.categories:
+        return True
+    return any(payload.get(key) for key in ("title", "slug", "body", "body_file"))
 
 
 def publish(root: Path, post: Post, dry_run: bool = False) -> list[str]:
@@ -1278,13 +1776,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="publish.py",
         description=(
-            "Publish one post into the static Anatole HTML site. "
+            "Publish one post, a list of daily-digest items, or both. "
             "A date without a time is 08:00 in Asia/Shanghai. "
-            "Publishing the same slug again replaces that post instead of duplicating it."
+            "Publishing the same slug or item id again replaces it instead of duplicating it."
         ),
     )
     parser.add_argument("--root", help="site root (default: repository root)")
-    parser.add_argument("--input", help="JSON object with title, date, slug, categories, tags, body or body_file")
+    parser.add_argument(
+        "--input",
+        help="JSON object for a post, an items array, or an object with both",
+    )
+    parser.add_argument(
+        "--items",
+        help="JSON list of digest items, or an object with an items array",
+    )
     parser.add_argument("--title")
     parser.add_argument("--date", help="YYYY-MM-DD or a datetime; naive values are Asia/Shanghai")
     parser.add_argument("--slug", help="URL path under /post/, such as lumi-2026-11-17")
@@ -1305,12 +1810,48 @@ def main(argv: list[str] | None = None) -> int:
     root = Path(args.root).resolve() if args.root else HERE.parent
     if not (root / "index.html").is_file():
         raise PublishError(f"{root} does not look like the site root (no index.html)")
-    post = load_post(args)
-    changed = publish(root, post, dry_run=args.dry_run)
+    payload: dict = {}
+    item_rows = None
+    if args.input:
+        raw = json.loads(Path(args.input).read_text(encoding="utf-8"))
+        if isinstance(raw, list):
+            payload = {"items": raw}
+        elif isinstance(raw, dict):
+            payload = raw
+        else:
+            raise PublishError("--input JSON must be an object or a list of items")
+    if args.items:
+        if payload.get("items"):
+            raise PublishError("pass items only once")
+        item_rows = load_items_document(Path(args.items))
+    elif "items" in payload:
+        item_rows = payload["items"]
+        if not isinstance(item_rows, list):
+            raise PublishError("items must be a list")
+    wants_post = _wants_post(args, payload)
+    if not wants_post and item_rows is None:
+        raise PublishError("a post body or an items list is required")
+    changed: list[str] = []
+    published_post = None
+    if wants_post:
+        published_post = load_post(args)
+        changed.extend(publish(root, published_post, dry_run=args.dry_run))
+    if item_rows is not None:
+        changed.extend(publish_digest(root, item_rows, dry_run=args.dry_run))
     action = "would update" if args.dry_run else "updated"
-    print(f"published {post.path}")
-    if changed:
-        for relative in changed:
+    if published_post is not None:
+        print(f"published {published_post.path}")
+    if item_rows is not None:
+        print("published /daily/")
+    seen: set[str] = set()
+    unique = []
+    for relative in changed:
+        if relative in seen:
+            continue
+        seen.add(relative)
+        unique.append(relative)
+    if unique:
+        for relative in unique:
             print(f"{action} {relative}")
     else:
         print("no file changes")
