@@ -49,7 +49,7 @@ class MarkdownTests(unittest.TestCase):
         html = publish.render_markdown(BODY)
         self.assertIn('<h1 id="固定标题">固定标题</h1>', html)
         self.assertIn('<h2 id="小节">小节</h2>', html)
-        self.assertIn("<ul><li>一</li><li>二</li></ul>", html)
+        self.assertIn("<ul><li><p>一</p></li><li><p>二</p></li></ul>", html)
         self.assertIn('class="language-python"', html)
         self.assertIn("print(1 &#43; 1)", html)
         self.assertIn('href="https://example.com/a&#43;b"', html)
@@ -59,6 +59,39 @@ class MarkdownTests(unittest.TestCase):
         html = publish.render_markdown("## 2.  安装Hugo\n\n## 2.1 创建ShellProject\n")
         self.assertIn('id="2--安装hugo"', html)
         self.assertIn('id="21-创建shellproject"', html)
+
+    def test_list_continuation_and_digest_meta(self):
+        html = publish.render_markdown(
+            "时间窗口：今天\n\n"
+            "覆盖范围：本周\n\n"
+            "2026年11月17日\n\n"
+            "## 今日重点\n\n"
+            "1. **标题**  \n"
+            "   续行仍在条目里。\n"
+            "   [帖子](https://example.com/a)\n"
+        )
+        html = publish.mark_digest_meta(html)
+        self.assertIn('<p class="digest-meta">时间窗口：今天</p>', html)
+        self.assertIn('<p class="digest-meta">覆盖范围：本周</p>', html)
+        self.assertIn('<p class="digest-meta">2026年11月17日</p>', html)
+        self.assertIn("<li><p><strong>标题</strong><br>\n续行仍在条目里。\n", html)
+        self.assertIn('href="https://example.com/a"', html)
+        self.assertLess(html.find("续行仍在条目里"), html.find("</li>"))
+        page = publish.render_single(
+            publish.Post(
+                title="t",
+                when=publish.parse_when("2026-11-17"),
+                slug="sample",
+                categories=[("日报", "日报")],
+                tags=[],
+                body_html=html,
+                summary_html="<p>时间窗口：今天</p>",
+                description="时间窗口：今天",
+            )
+        )
+        self.assertIn(".post .post-content { font-size: 15px; }", page)
+        self.assertIn(".post .post-content .digest-meta {", page)
+        self.assertIn('href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"', page)
 
     def test_more_separator_is_not_rendered(self):
         before, full = publish.split_more("摘要段落。\n\n<!--more-->\n\n正文段落。\n")

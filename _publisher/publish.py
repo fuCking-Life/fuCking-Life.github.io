@@ -23,6 +23,34 @@ from zoneinfo import ZoneInfo
 
 SITE_BASE = "https://fuCking-Life.github.io"
 TZ = ZoneInfo("Asia/Shanghai")
+DIGEST_TYPOGRAPHY_CSS = """
+.post .post-content { font-size: 15px; }
+.post .post-content p { line-height: 1.85; margin: 0.7em 0 1em; }
+.post .post-content li p { margin: 0.25em 0 0.6em; }
+.post .post-content h2 { font-size: 20px; font-weight: 650; margin: 2em 0 0.8em; padding-top: 0.4em; border-top: 1px solid #eee; }
+.post .post-content h2:first-of-type { border-top: 0; margin-top: 1.2em; padding-top: 0; }
+.post .post-content h3 { font-size: 17px; font-weight: 600; margin: 1.6em 0 0.6em; line-height: 1.45; }
+.post .post-content ol, .post .post-content ul { padding-left: 1.3em; margin: 0.4em 0 1em; }
+.post .post-content li { margin: 0.45em 0 0.9em; }
+.post .post-content a { color: #2f69b3; }
+.post .post-content blockquote {
+  border-left: 4px solid #3b6fd8;
+  background: #f6f8fc;
+  color: #334;
+  padding: 0.7em 1em;
+  margin: 0.9em 0 1.1em;
+  border-radius: 0 6px 6px 0;
+}
+.post .post-content blockquote p { margin: 0.35em 0; color: #334; line-height: 1.75; }
+.post .post-content .digest-meta {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0.2em 0 0.4em;
+}
+.post .post-content hr { border: 0; border-top: 1px solid #eee; margin: 2em 0 1em; }
+""".strip()
+_META_START = re.compile(r"^(?:时间窗口|覆盖范围|\d{4}年)")
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 MONTHS = [
     "Jan",
@@ -281,49 +309,90 @@ def _list_item(line: str) -> tuple[int, bool, str] | None:
     return indent, ordered, match.group(3)
 
 
+def _continuation(line: str, marker_indent: int) -> str | None:
+    if not line.strip():
+        return None
+    expanded = line.expandtabs(4)
+    indent = len(expanded) - len(expanded.lstrip(" "))
+    if indent <= marker_indent:
+        return None
+    stripped = expanded.lstrip(" ")
+    if stripped.startswith(("```", "~~~")) or re.match(r"#{1,6} ", stripped):
+        return None
+    return expanded[indent:]
+
+
 def _consume_list(lines: list[str], i: int, indent: int) -> tuple[tuple[bool, list], int]:
+    """Parse a list. Each item is a sequence of paragraph line-groups and nested lists."""
     ordered: bool | None = None
-    items: list[tuple[str, list]] = []
+    items: list[list] = []
     while i < len(lines):
         if not lines[i].strip():
             nxt = i + 1
             while nxt < len(lines) and not lines[nxt].strip():
                 nxt += 1
-            parsed = _list_item(lines[nxt]) if nxt < len(lines) else None
-            if parsed and parsed[0] >= indent:
+            if nxt >= len(lines) or not items:
+                break
+            parsed = _list_item(lines[nxt])
+            if parsed and parsed[0] == indent and (ordered is None or parsed[1] == ordered):
+                i = nxt
+                continue
+            if _continuation(lines[nxt], indent) is not None:
+                items[-1].append(["p", []])
                 i = nxt
                 continue
             break
         parsed = _list_item(lines[i])
-        if not parsed:
-            break
-        item_indent, is_ordered, text = parsed
-        if item_indent < indent:
-            break
-        if item_indent > indent:
-            if not items:
+        if parsed and parsed[0] == indent:
+            item_indent, is_ordered, text = parsed
+            del item_indent
+            if ordered is None:
+                ordered = is_ordered
+            elif is_ordered != ordered:
                 break
-            nested, i = _consume_list(lines, i, item_indent)
-            items[-1][1].append(nested)
+            items.append([["p", [text]]])
+            i += 1
             continue
-        if ordered is None:
-            ordered = is_ordered
-        elif is_ordered != ordered:
-            break
-        items.append((text, []))
-        i += 1
+        if parsed and parsed[0] > indent and items:
+            nested, i = _consume_list(lines, i, parsed[0])
+            items[-1].append(["list", nested])
+            continue
+        continued = _continuation(lines[i], indent) if items else None
+        if continued is not None:
+            blocks = items[-1]
+            if not blocks or blocks[-1][0] != "p":
+                blocks.append(["p", []])
+            blocks[-1][1].append(continued)
+            i += 1
+            continue
+        break
     return (bool(ordered), items), i
+
+
+def _render_paragraph(lines: list[str]) -> str:
+    rendered: list[str] = []
+    usable = [line for line in lines if line.strip()]
+    for index, line in enumerate(usable):
+        hard_break = line.endswith("  ")
+        rendered.append(render_inline(line.strip()))
+        if index != len(usable) - 1:
+            rendered.append("<br>\n" if hard_break else "\n")
+    return "<p>" + "".join(rendered) + "</p>"
 
 
 def _render_list(node: tuple[bool, list]) -> str:
     ordered, items = node
     tag = "ol" if ordered else "ul"
     parts = [f"<{tag}>"]
-    for text, children in items:
-        inner = render_inline(text)
-        for child in children:
-            inner += _render_list(child)
-        parts.append(f"<li>{inner}</li>")
+    for blocks in items:
+        chunks: list[str] = []
+        for kind, payload in blocks:
+            if kind == "p":
+                if payload:
+                    chunks.append(_render_paragraph(payload))
+            else:
+                chunks.append(_render_list(payload))
+        parts.append("<li>" + "".join(chunks) + "</li>")
     parts.append(f"</{tag}>")
     return "".join(parts)
 
@@ -438,8 +507,26 @@ def render_markdown(source: str) -> str:
         while i < len(lines) and lines[i].strip() and not block_start(lines[i]):
             buf.append(lines[i])
             i += 1
-        html.append("<p>" + "\n".join(render_inline(part) for part in buf) + "</p>")
+        html.append(_render_paragraph(buf))
     return "\n".join(html)
+
+
+def mark_digest_meta(html: str) -> str:
+    """Mark the opening time-window, coverage, and dated lines."""
+    parts = re.split(r"(?=<h[1-6][\s>])", html, maxsplit=1)
+    head = parts[0]
+    tail = parts[1] if len(parts) > 1 else ""
+
+    def repl(match: re.Match[str]) -> str:
+        open_tag, inner = match.group(1), match.group(2)
+        if "digest-meta" in open_tag:
+            return match.group(0)
+        if _META_START.match(plain_text(inner).lstrip()):
+            return f'<p class="digest-meta">{inner}</p>'
+        return match.group(0)
+
+    head = re.sub(r"(<p\b[^>]*>)(.*?)(</p>)", repl, head, flags=re.S)
+    return head + tail
 
 
 def split_more(source: str) -> tuple[str | None, str]:
@@ -540,6 +627,13 @@ def render_single(post: Post) -> str:
     html = html.replace("@@FOOTER@@", post.footer_html)
     if "@@" in html.replace("@@CONTENT@@", ""):
         raise PublishError("single-post template has an unfilled placeholder")
+    if "</head>" not in html:
+        raise PublishError("post template is missing </head>")
+    html = html.replace(
+        "</head>",
+        "<style>\n" + DIGEST_TYPOGRAPHY_CSS + "\n</style>\n</head>",
+        1,
+    )
     content = post.body_html.strip("\n")
     html = html.replace("@@CONTENT@@", content)
     return html
@@ -1161,6 +1255,7 @@ def load_post(args: argparse.Namespace) -> Post:
     else:
         body_html = render_markdown(full)
         summary_html = first_paragraph(render_markdown(before) if before else body_html)
+    body_html = mark_digest_meta(body_html)
     if summary_override:
         summary_html = "<p>" + hugo_escape(str(summary_override).strip()) + "</p>"
     if description_override:

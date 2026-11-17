@@ -31,6 +31,8 @@ Suggested URLs:
 
 The body is Markdown unless you pass `--format html` or set `"format": "html"` in JSON. The theme already prints the title, so the body should start with the text rather than a heading that repeats the title. Put `<!--more-->` on its own line to choose the listing summary; otherwise the summary is the first paragraph. `--summary` and `--description` override those.
 
+Each new post page includes a `<style>` block for digest typography. Hashed files in `css/` and `js/` are not rewritten. Opening paragraphs that start with `时间窗口`, `覆盖范围`, or a date such as `2026年` are marked `class="digest-meta"`.
+
 JSON input (flags override the same fields when you pass them):
 
 ```bash
