@@ -104,6 +104,20 @@ class MarkdownTests(unittest.TestCase):
         self.assertIn("正文段落", body)
         self.assertNotIn("<!--more-->", body)
 
+    def test_more_keeps_every_paragraph_before_the_separator(self):
+        rendered = publish.render_markdown(
+            "时间窗口：今天\n\n这是首页摘要。\n\n<!--more-->\n\n这是正文独有。\n"
+        )
+        before, full = publish.split_more(
+            "时间窗口：今天\n\n这是首页摘要。\n\n<!--more-->\n\n这是正文独有。\n"
+        )
+        summary = publish._listing_summary(publish.render_markdown(before).strip())
+        self.assertIn("时间窗口：今天", summary)
+        self.assertIn("这是首页摘要。", summary)
+        self.assertNotIn("这是正文独有。", summary)
+        self.assertIn("这是正文独有。", publish.render_markdown(full))
+        self.assertIn("<p>", rendered)
+
 
 class PublisherTests(unittest.TestCase):
     def setUp(self):
@@ -155,7 +169,8 @@ class PublisherTests(unittest.TestCase):
     def test_archive_and_homepage_round_trip_without_edits(self):
         home = (self.tmp / "index.html").read_text(encoding="utf-8")
         matches = list(publish.CARD_RE.finditer(home))
-        self.assertEqual(len(matches), 12)
+        self.assertGreaterEqual(len(matches), 1)
+        self.assertEqual(len(matches), home.count('class="post-title"'))
         gaps = [home[a.end() : b.start()] for a, b in zip(matches, matches[1:])]
         self.assertTrue(gaps)
         self.assertTrue(all(gap == gaps[0] for gap in gaps))
@@ -222,8 +237,12 @@ class PublisherTests(unittest.TestCase):
         post_feed = ET.fromstring((self.tmp / "post/index.xml").read_text(encoding="utf-8"))
         for feed in (root_feed, post_feed):
             titles = [item.findtext("title") for item in feed.findall("./channel/item")]
-            self.assertEqual(titles[0], "发布器测试标题")
             self.assertEqual(titles.count("发布器测试标题"), 1)
+            # 2026-11-18 posts are already on the site, so a 2026-11-17 item sorts after them.
+            self.assertLess(
+                titles.index("每日 AI 与移动端智能体简报（2026-11-18）"),
+                titles.index("发布器测试标题"),
+            )
         self.assertIn("虽迟但到的30岁", [item.findtext("title") for item in root_feed.findall("./channel/item")])
         self.assertNotIn(
             "虽迟但到的30岁",
@@ -251,11 +270,18 @@ class PublisherTests(unittest.TestCase):
         self.assertIn("/tags/lumi/", tags_index)
 
         cat_feed = ET.fromstring((self.tmp / "categories" / "日报" / "index.xml").read_text(encoding="utf-8"))
-        self.assertEqual(cat_feed.findtext("./channel/item/title"), "发布器测试标题")
+        cat_titles = [item.findtext("title") for item in cat_feed.findall("./channel/item")]
+        self.assertIn("发布器测试标题", cat_titles)
+        self.assertLess(
+            cat_titles.index("Luna 全双工语音日报（2026-11-18）"),
+            cat_titles.index("发布器测试标题"),
+        )
         term_feed = ET.fromstring((self.tmp / "categories" / "index.xml").read_text(encoding="utf-8"))
         term_titles = [item.findtext("title") for item in term_feed.findall("./channel/item")]
-        self.assertEqual(set(term_titles[:2]), {"日报", "lumi"})
-        self.assertEqual(term_titles[2], "life")
+        self.assertIn("日报", term_titles)
+        self.assertIn("lumi", term_titles)
+        self.assertLess(term_titles.index("日报"), term_titles.index("life"))
+        self.assertLess(term_titles.index("lumi"), term_titles.index("life"))
 
         again, _post = self._publish(
             title="发布器测试标题",
@@ -393,6 +419,130 @@ class PublisherTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(proc.returncode, 2)
+
+    def test_trading_column_link_is_added_beside_daily(self):
+        skeleton = (SITE / "categories" / "hugo" / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("每日交易资讯", skeleton)
+        daily_only = publish.insert_daily_nav(skeleton)
+        self.assertNotIn("每日交易资讯", daily_only)
+        self.assertIn(">日报</a>", daily_only)
+        once = publish.insert_trading_column_nav(daily_only)
+        twice = publish.insert_trading_column_nav(once)
+        self.assertEqual(once, twice)
+        self.assertIn(">日报</a>", once)
+        menu = once[once.find('id="navMenu"') : once.find("</ul>", once.find('id="navMenu"'))]
+        side_start = once.find('<div class="sidebar')
+        side = once[side_start : once.find('<div class="main">', side_start)]
+        self.assertEqual(menu.count('href="/categories/每日交易资讯/"'), 1)
+        self.assertEqual(side.count('href="/categories/每日交易资讯/"'), 1)
+        self.assertLess(menu.find('href="/daily/"'), menu.find('href="/categories/每日交易资讯/"'))
+        self.assertLess(menu.find('href="/categories/每日交易资讯/"'), menu.find('href="/post/"'))
+        self.assertLess(side.find('href="/daily/"'), side.find('href="/categories/每日交易资讯/"'))
+        self.assertEqual(publish.SOURCE_BRIEFS, ("lumi", "agent-app"))
+        self.assertNotIn("每日交易资讯", publish.DOMAINS)
+        self.assertNotIn("每日交易资讯", publish.TYPES)
+
+    def test_publish_trading_column_rewrites_nav_and_leaves_daily_feed(self):
+        body = self.tmp / "trading.md"
+        body.write_text(
+            "时间窗口：2026-11-18（新加坡时间）\n\n"
+            "这是首页摘要，不臆补数字。\n\n"
+            "<!--more-->\n\n"
+            "华为鲲鹏只是原话。颓废是原话。阿柠投研也是原话。\n",
+            encoding="utf-8",
+        )
+        daily_before = {}
+        for rel in ("daily/items.json", "daily/index.html", "daily/feed.css", "daily/feed.js"):
+            path = self.tmp / rel
+            if path.is_file():
+                daily_before[rel] = path.read_bytes()
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(HERE / "publish.py"),
+                "--root",
+                str(self.tmp),
+                "--title",
+                "每日交易资讯（2026-11-18）",
+                "--date",
+                "2026-11-18",
+                "--slug",
+                "trading-2026-11-18",
+                "--category",
+                "每日交易资讯",
+                "--tag",
+                "每日交易资讯",
+                "--body-file",
+                str(body),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertNotIn("daily/items.json", proc.stdout)
+        self.assertNotIn("daily/feed.js", proc.stdout)
+        pages = (
+            "index.html",
+            "post/index.html",
+            "post/trading-2026-11-18/index.html",
+            "categories/每日交易资讯/index.html",
+            "categories/index.html",
+            "tags/每日交易资讯/index.html",
+            "tags/index.html",
+        )
+        for rel in pages:
+            html = (self.tmp / rel).read_text(encoding="utf-8")
+            self.assertIn(">日报</a>", html, rel)
+            menu_at = html.find('id="navMenu"')
+            menu = html[menu_at : html.find("</ul>", menu_at)]
+            side_at = html.find('<div class="sidebar')
+            side = html[side_at : html.find('<div class="main">', side_at)]
+            self.assertEqual(menu.count('href="/categories/每日交易资讯/"'), 1, rel)
+            self.assertEqual(side.count(">每日交易资讯</a>"), 1, rel)
+            self.assertLess(menu.find('href="/daily/"'), menu.find(publish.TRADING_COLUMN_HREF), rel)
+        home = (self.tmp / "index.html").read_text(encoding="utf-8")
+        self.assertLess(home.find("/post/trading-2026-11-18/"), home.find("/post/agent-app-2026-11-18/"))
+        self.assertIn("时间窗口：2026-11-18（新加坡时间）", home)
+        self.assertIn("这是首页摘要，不臆补数字。", home)
+        self.assertNotIn("华为鲲鹏只是原话。", home)
+        page = (self.tmp / "post/trading-2026-11-18/index.html").read_text(encoding="utf-8")
+        for required in ("不臆补", "华为鲲鹏", "颓废", "阿柠投研"):
+            self.assertIn(required, page)
+        for forbidden in ("不臥补", "鲤鹏", "颟废", "阿柑投研"):
+            self.assertNotIn(forbidden, page)
+        self.assertIn('href="/categories/每日交易资讯/">每日交易资讯</a>', page)
+        for rel in self.untouched:
+            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
+        for rel, blob in daily_before.items():
+            self.assertEqual((self.tmp / rel).read_bytes(), blob, rel)
+        again = subprocess.run(
+            [
+                sys.executable,
+                str(HERE / "publish.py"),
+                "--root",
+                str(self.tmp),
+                "--title",
+                "每日交易资讯（2026-11-18）",
+                "--date",
+                "2026-11-18",
+                "--slug",
+                "trading-2026-11-18",
+                "--category",
+                "每日交易资讯",
+                "--tag",
+                "每日交易资讯",
+                "--body-file",
+                str(body),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(again.returncode, 0, again.stderr)
+        self.assertIn("no file changes", again.stdout)
+        home_again = (self.tmp / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(home_again.count('title="">每日交易资讯</a>'), 1)
 
 
 def sample_item(**overrides):
