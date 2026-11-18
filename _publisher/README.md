@@ -24,12 +24,15 @@ Suggested URLs:
 
 - `/post/lumi-YYYY-MM-DD/` with category `日报` and tag `lumi`
 - `/post/agent-app-YYYY-MM-DD/` with category `日报` and tag `agent-app`
+- `/post/trading-YYYY-MM-DD/` with category `每日交易资讯` and tag `每日交易资讯`
+
+`每日交易资讯` is a separate column at `/categories/每日交易资讯/`. It is not part of the `/daily/` feed. Publishing a post with that category or tag adds a nav item and a sidebar link labeled `每日交易资讯` on the pages that publish rewrites (the homepage, `/post/`, the new post, and the category and tag pages). The link target is `/categories/每日交易资讯/`. The `日报` link stays. This does not change the `/daily/` vocabulary or `source_brief`.
 
 `--category` and `--tag` can be repeated. A category is required. Tags are optional. The visible name is kept (`Agent App` stays `Agent App`) and the directory is a lowercase slug (`agent-app`, `日报`).
 
 `--date` is interpreted in Asia/Shanghai. A date with no clock time uses 08:00:00. A value that already has a zone (`2026-11-17T00:30:00Z`) is converted to Shanghai time.
 
-The body is Markdown unless you pass `--format html` or set `"format": "html"` in JSON. The theme already prints the title, so the body should start with the text rather than a heading that repeats the title. Put `<!--more-->` on its own line to choose the listing summary; otherwise the summary is the first paragraph. `--summary` and `--description` override those.
+The body is Markdown unless you pass `--format html` or set `"format": "html"` in JSON. The theme already prints the title, so the body should start with the text rather than a heading that repeats the title. Put `<!--more-->` on its own line to choose the listing summary (every paragraph before that line); otherwise the summary is the first paragraph. `--summary` and `--description` override those.
 
 Each new post page includes a `<style>` block for digest typography. Hashed files in `css/` and `js/` are not rewritten. Opening paragraphs that start with `时间窗口`, `覆盖范围`, or a date such as `2026年` are marked `class="digest-meta"`.
 
@@ -156,6 +159,7 @@ For a new post the publisher writes or updates:
 | `daily/items.json` | Digest items, upserted by `id` when `--items` or an `items` array is present. |
 | `daily/index.html` | The feed page, rewritten from `_publisher/templates/daily.html`. |
 | `index.html` and `post/index.html` | A digest publish also ensures the 日报 link is in the nav and sidebar. |
+| rewritten HTML pages | A post whose category or tag is 每日交易资讯 also gains that nav and sidebar link, pointing at `/categories/每日交易资讯/`. The 日报 link stays. |
 | `sitemap.xml` | `/daily/` is added or its `lastmod` is set from the newest item date. |
 
 Hashed files under `css/` and `js/` are not rewritten. Existing post HTML is not rewritten, except that a normal post publish still inserts the 日报 link into pages it already rewrites. `/life/`, `/about/`, `/page/`, and `404.html` are left alone. `daily/feed.css` and `daily/feed.js` are hand-written.

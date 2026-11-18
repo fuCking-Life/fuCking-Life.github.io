@@ -575,12 +575,23 @@ def split_more(source: str) -> tuple[str | None, str]:
 
 
 def first_paragraph(html: str) -> str:
-    match = re.search(r"<p>.*?</p>", html, re.S)
+    match = re.search(r"<p\b[^>]*>.*?</p>", html, re.S)
     if match:
         return match.group(0)
     text = re.sub(r"<[^>]+>", " ", html)
     text = re.sub(r"\s+", " ", text).strip()
     return "<p>" + hugo_escape(text[:280]) + "</p>"
+
+
+def _listing_summary(html: str) -> str:
+    """Listing text chosen by ``<!--more-->``.
+
+    One paragraph stays the first paragraph. Several paragraphs before the
+    separator are all part of the homepage summary.
+    """
+    if len(re.findall(r"<p\b", html)) > 1:
+        return html.strip()
+    return first_paragraph(html)
 
 
 def plain_text(html: str) -> str:
@@ -1094,6 +1105,15 @@ def set_sitemap_lastmod(xml: str, loc: str, lastmod: str, mode: str) -> str:
     return xml[: match.start()] + updated + xml[match.end() :]
 
 
+# Column on the Anatole chrome. It is not a /daily/ domain, type, or source_brief.
+TRADING_COLUMN = "每日交易资讯"
+TRADING_COLUMN_HREF = "/categories/每日交易资讯/"
+
+
+def _uses_trading_column(post: Post) -> bool:
+    return any(name == TRADING_COLUMN for name, _slug in post.categories + post.tags)
+
+
 def insert_daily_nav(html: str) -> str:
     """Add the 日报 link to the Anatole menu and the left sidebar.
 
@@ -1157,15 +1177,96 @@ def _insert_daily_sidebar_link(html: str) -> str:
     return html[:insert_at] + link + html[insert_at:]
 
 
+def insert_trading_column_nav(html: str) -> str:
+    """Add the 每日交易资讯 link beside 日报 on rewritten Anatole pages.
+
+    The menu item and the sidebar link point at the category index. Pages
+    that already have the link are left unchanged. The 日报 link stays.
+    """
+    html = _insert_trading_menu_link(html)
+    html = _insert_trading_sidebar_link(html)
+    return html
+
+
+def _trading_menu_item(indent: str) -> str:
+    return (
+        f'\n{indent}<li><a \n'
+        f'{indent}       href="{TRADING_COLUMN_HREF}"\n'
+        f'{indent}            \n'
+        f'{indent}       title="">{TRADING_COLUMN}</a></li>'
+    )
+
+
+def _insert_trading_menu_link(html: str) -> str:
+    start = html.find('id="navMenu"')
+    if start < 0:
+        return html
+    end = html.find("</ul>", start)
+    if end < 0:
+        return html
+    block = html[start:end]
+    if TRADING_COLUMN_HREF in block:
+        return html
+    daily_end = block.find('title="">日报</a></li>')
+    if daily_end >= 0:
+        li_at = block.rfind("<li>", 0, daily_end)
+        line_start = block.rfind("\n", 0, li_at if li_at >= 0 else daily_end) + 1
+        indent = re.match(r"[ \t]*", block[line_start:]).group(0)
+        at = start + daily_end + len('title="">日报</a></li>')
+        return html[:at] + _trading_menu_item(indent) + html[at:]
+    match = re.search(r'\n([ \t]*)<li><a\b[^>]*href="/post/"', block)
+    if not match:
+        return html
+    at = start + match.start()
+    return html[:at] + _trading_menu_item(match.group(1)) + html[at:]
+
+
+def _insert_trading_sidebar_link(html: str) -> str:
+    start = html.find('<div class="sidebar')
+    if start < 0:
+        return html
+    end = html.find('<div class="main">', start)
+    if end < 0:
+        return html
+    if TRADING_COLUMN_HREF in html[start:end]:
+        return html
+    link = (
+        f'            <p><a href="{TRADING_COLUMN_HREF}" '
+        'style="font-size:15px;font-weight:650;letter-spacing:0;'
+        f'text-transform:none;color:#2660ab">{TRADING_COLUMN}</a></p>\n'
+    )
+    marker = ">日报</a></p>"
+    at = html.find(marker, start)
+    if 0 <= at < end:
+        insert_at = at + len(marker)
+        if html[insert_at:insert_at + 1] == "\n":
+            insert_at += 1
+        return html[:insert_at] + link + html[insert_at:]
+    needle = (
+        "            </div>\n"
+        "        </div>\n"
+        "    </div>\n"
+        '    <ul class="social-links">'
+    )
+    found = html.find(needle, start)
+    if found < 0 or found > end:
+        return html
+    insert_at = found + len("            </div>\n")
+    return html[:insert_at] + link + html[insert_at:]
+
+
 class SiteWriter:
-    def __init__(self, root: Path, dry_run: bool) -> None:
+    def __init__(self, root: Path, dry_run: bool, trading_column: bool = False) -> None:
         self.root = root
         self.dry_run = dry_run
+        self.trading_column = trading_column
         self.changed: list[str] = []
 
     def write(self, relative: str, text: str) -> None:
         if relative.endswith(".html") and relative != DAILY_INDEX_REL:
             text = insert_daily_nav(text)
+            if self.trading_column:
+                text = insert_trading_column_nav(text)
         path = self.root / relative
         existing = path.read_text(encoding="utf-8") if path.is_file() else None
         if existing == text:
@@ -1645,7 +1746,7 @@ def _wants_post(args: argparse.Namespace, payload: dict) -> bool:
 
 
 def publish(root: Path, post: Post, dry_run: bool = False) -> list[str]:
-    writer = SiteWriter(root, dry_run)
+    writer = SiteWriter(root, dry_run, trading_column=_uses_trading_column(post))
     writer.write(f"post/{post.slug}/index.html", render_single(post))
     writer.write("index.html", replace_homepage(writer.read("index.html"), post))
     writer.write(
@@ -1749,10 +1850,13 @@ def load_post(args: argparse.Namespace) -> Post:
     if fmt == "html":
         body_html = full.strip()
         summary_source = (before or "").strip()
-        summary_html = first_paragraph(summary_source) if summary_source else first_paragraph(body_html)
+        summary_html = _listing_summary(summary_source) if summary_source else first_paragraph(body_html)
     else:
         body_html = render_markdown(full)
-        summary_html = first_paragraph(render_markdown(before) if before else body_html)
+        if before:
+            summary_html = _listing_summary(render_markdown(before).strip())
+        else:
+            summary_html = first_paragraph(body_html)
     body_html = mark_digest_meta(body_html)
     if summary_override:
         summary_html = "<p>" + hugo_escape(str(summary_override).strip()) + "</p>"
