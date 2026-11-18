@@ -28,6 +28,18 @@ Suggested URLs:
 
 `每日交易资讯` is a separate column at `/categories/每日交易资讯/`. It is not part of the `/daily/` feed. Publishing a post with that category or tag adds a nav item and a sidebar link labeled `每日交易资讯` on the pages that publish rewrites (the homepage, `/post/`, the new post, and the category and tag pages). The link target is `/categories/每日交易资讯/`. The `日报` link stays. This does not change the `/daily/` vocabulary or `source_brief`.
 
+`Agent 学习笔记` is a second column at `/categories/agent-学习笔记/`, for notes from learning agent design. Suggested URL: `/post/learn-agent-YYYY-MM-DD/` with category `Agent 学习笔记`, and tags for the project or topic (`TradingAgents`, `LangGraph`). Its nav item and sidebar link follow `每日交易资讯`. Once a column's category page exists, every publish keeps that column's link on the pages it rewrites, whatever the post's own category, so new pages carry the full nav.
+
+A learning-notes post gets its own styles on top of the digest typography: the opening `覆盖范围` line as a lead, numbered `##` lessons, tables and code blocks, and colors that follow the theme switch. A blockquote that opens with one of these bold labels becomes a callout:
+
+```markdown
+> **原则：** 需要判断力的决策交给模型。   (green; also 要点, 我的理解)
+> **思考题：** 为什么这样设计？           (amber)
+> **修正：** 不是反思。                   (red)
+```
+
+Other blockquotes stay plain.
+
 `--category` and `--tag` can be repeated. A category is required. Tags are optional. The visible name is kept (`Agent App` stays `Agent App`) and the directory is a lowercase slug (`agent-app`, `日报`).
 
 `--date` is interpreted in Asia/Shanghai. A date with no clock time uses 08:00:00. A value that already has a zone (`2026-11-17T00:30:00Z`) is converted to Shanghai time.

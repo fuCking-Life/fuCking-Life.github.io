@@ -544,6 +544,69 @@ class PublisherTests(unittest.TestCase):
         home_again = (self.tmp / "index.html").read_text(encoding="utf-8")
         self.assertEqual(home_again.count('title="">每日交易资讯</a>'), 1)
 
+    def test_publish_learning_column_styles_its_page_and_follows_trading_in_nav(self):
+        body = self.tmp / "learn.md"
+        body.write_text(
+            "覆盖范围：TradingAgents 学习记录。\n\n"
+            "## 第一课\n\n"
+            "> **原则：** 需要判断力的决策交给模型。\n\n"
+            "> **思考题：** 为什么这样设计？\n\n"
+            "> **修正：** 不是反思。\n\n"
+            "> **随手记：** 普通引用。\n",
+            encoding="utf-8",
+        )
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(HERE / "publish.py"),
+                "--root",
+                str(self.tmp),
+                "--title",
+                "Agent 学习笔记（2026-11-19）",
+                "--date",
+                "2026-11-19",
+                "--slug",
+                "learn-agent-2026-11-19",
+                "--category",
+                "Agent 学习笔记",
+                "--body-file",
+                str(body),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("categories/agent-学习笔记/index.html", proc.stdout)
+        page = (self.tmp / "post/learn-agent-2026-11-19/index.html").read_text(encoding="utf-8")
+        self.assertIn("counter(lesson", page)
+        self.assertIn("html[data-theme=dark] .post .post-content", page)
+        self.assertIn('<blockquote class="ln-key">', page)
+        self.assertIn('<blockquote class="ln-ask">', page)
+        self.assertIn('<blockquote class="ln-fix">', page)
+        self.assertEqual(page.count("<blockquote>"), 1)
+        self.assertIn('<p class="digest-meta">覆盖范围', page)
+        for rel in ("index.html", "post/index.html", "post/learn-agent-2026-11-19/index.html"):
+            html = (self.tmp / rel).read_text(encoding="utf-8")
+            menu_at = html.find('id="navMenu"')
+            menu = html[menu_at : html.find("</ul>", menu_at)]
+            side_at = html.find('<div class="sidebar')
+            side = html[side_at : html.find('<div class="main">', side_at)]
+            self.assertEqual(menu.count(publish.LEARNING_COLUMN_HREF), 1, rel)
+            self.assertEqual(side.count(publish.LEARNING_COLUMN_HREF), 1, rel)
+            self.assertLess(menu.find(publish.LEARNING_COLUMN_HREF), menu.find('href="/post/"'), rel)
+            if publish.TRADING_COLUMN_HREF in menu:
+                self.assertLess(menu.find(publish.TRADING_COLUMN_HREF), menu.find(publish.LEARNING_COLUMN_HREF), rel)
+                self.assertLess(side.find(publish.TRADING_COLUMN_HREF), side.find(publish.LEARNING_COLUMN_HREF), rel)
+        trading = (self.tmp / "post/trading-2026-11-18/index.html").read_text(encoding="utf-8")
+        self.assertNotIn("counter(lesson", trading)
+
+    def test_learning_callouts_leave_other_blockquotes(self):
+        html = "<blockquote>\n<p><strong>思考题：</strong> 问</p>\n</blockquote>\n<blockquote>\n<p>普通</p>\n</blockquote>"
+        marked = publish.mark_learning_callouts(html)
+        self.assertIn('<blockquote class="ln-ask">', marked)
+        self.assertIn("<blockquote>\n<p>普通</p>", marked)
+
 
 def sample_item(**overrides):
     item = {

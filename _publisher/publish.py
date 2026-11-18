@@ -678,12 +678,16 @@ def render_single(post: Post) -> str:
         raise PublishError("single-post template has an unfilled placeholder")
     if "</head>" not in html:
         raise PublishError("post template is missing </head>")
+    css = DIGEST_TYPOGRAPHY_CSS
+    content = post.body_html.strip("\n")
+    if _uses_column(post, LEARNING_COLUMN):
+        css += "\n" + LEARNING_NOTES_CSS
+        content = mark_learning_callouts(content)
     html = html.replace(
         "</head>",
-        "<style>\n" + DIGEST_TYPOGRAPHY_CSS + "\n</style>\n</head>",
+        "<style>\n" + css + "\n</style>\n</head>",
         1,
     )
-    content = post.body_html.strip("\n")
     html = html.replace("@@CONTENT@@", content)
     return html
 
@@ -1105,13 +1109,61 @@ def set_sitemap_lastmod(xml: str, loc: str, lastmod: str, mode: str) -> str:
     return xml[: match.start()] + updated + xml[match.end() :]
 
 
-# Column on the Anatole chrome. It is not a /daily/ domain, type, or source_brief.
+# Columns on the Anatole chrome, in nav order after 日报. They are not /daily/
+# domains, types, or source_briefs.
 TRADING_COLUMN = "每日交易资讯"
 TRADING_COLUMN_HREF = "/categories/每日交易资讯/"
+LEARNING_COLUMN = "Agent 学习笔记"
+LEARNING_COLUMN_HREF = "/categories/agent-学习笔记/"
+COLUMNS = ((TRADING_COLUMN, TRADING_COLUMN_HREF), (LEARNING_COLUMN, LEARNING_COLUMN_HREF))
+
+# Learning notes: a lead line, numbered lessons, and callouts a blockquote opens
+# with in bold (思考题, 原则, 要点, 我的理解, 修正). Colors follow the theme switch.
+LEARNING_NOTES_CSS = """
+.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
+html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
+.post .post-content p, .post .post-content li { color: var(--ln-ink); }
+.post .post-content .digest-meta { color: var(--ln-muted); border-left: 3px solid var(--ln-accent); padding-left: 0.8em; }
+.post .post-content h2 { counter-increment: lesson; border-top: 1px solid var(--ln-rule); }
+.post .post-content h2::before { content: counter(lesson, decimal-leading-zero); display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: var(--ln-accent); margin-bottom: 0.3em; }
+.post .post-content h3 { color: var(--ln-ink); }
+.post .post-content strong { color: var(--ln-ink); }
+.post .post-content code { background: var(--ln-code-bg); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.92em; }
+.post .post-content pre code { padding: 0; background: none; }
+.post .post-content .highlight pre { background: var(--ln-code-bg); border: 1px solid var(--ln-rule); border-radius: 8px; padding: 0.9em 1em; line-height: 1.6; font-size: 13px; }
+.post .post-content table { border-collapse: collapse; width: 100%; margin: 1em 0 1.3em; font-size: 14px; }
+.post .post-content th, .post .post-content td { border: 1px solid var(--ln-rule); padding: 0.5em 0.7em; text-align: left; vertical-align: top; color: var(--ln-ink); }
+.post .post-content th { background: var(--ln-code-bg); font-weight: 650; }
+.post .post-content blockquote { background: var(--ln-code-bg); border-left-color: var(--ln-rule); }
+.post .post-content blockquote p { color: var(--ln-ink); }
+.post .post-content blockquote.ln-key { border-left-color: var(--ln-accent); background: var(--ln-accent-soft); }
+.post .post-content blockquote.ln-key > p:first-child strong:first-child { color: var(--ln-accent); }
+.post .post-content blockquote.ln-ask { border-left-color: var(--ln-ask); background: var(--ln-ask-soft); }
+.post .post-content blockquote.ln-ask > p:first-child strong:first-child { color: var(--ln-ask); }
+.post .post-content blockquote.ln-fix { border-left-color: var(--ln-fix); background: var(--ln-fix-soft); }
+.post .post-content blockquote.ln-fix > p:first-child strong:first-child { color: var(--ln-fix); }
+""".strip()
+_CALLOUTS = {"原则": "ln-key", "要点": "ln-key", "我的理解": "ln-key", "思考题": "ln-ask", "修正": "ln-fix"}
+_CALLOUT_RE = re.compile(r"<blockquote>(\s*<p><strong>([^<]+)</strong>)")
+
+
+def _uses_column(post: Post, column: str) -> bool:
+    return any(name == column for name, _slug in post.categories + post.tags)
 
 
 def _uses_trading_column(post: Post) -> bool:
-    return any(name == TRADING_COLUMN for name, _slug in post.categories + post.tags)
+    return _uses_column(post, TRADING_COLUMN)
+
+
+def mark_learning_callouts(html: str) -> str:
+    """Class a blockquote by the bold word it opens with, such as **思考题**."""
+
+    def repl(match: re.Match[str]) -> str:
+        label = match.group(2).strip().rstrip("：:")
+        cls = _CALLOUTS.get(label)
+        return f'<blockquote class="{cls}">{match.group(1)}' if cls else match.group(0)
+
+    return _CALLOUT_RE.sub(repl, html)
 
 
 def insert_daily_nav(html: str) -> str:
@@ -1178,26 +1230,34 @@ def _insert_daily_sidebar_link(html: str) -> str:
 
 
 def insert_trading_column_nav(html: str) -> str:
-    """Add the 每日交易资讯 link beside 日报 on rewritten Anatole pages.
+    """Add the 每日交易资讯 link beside 日报 on rewritten Anatole pages."""
+    return insert_column_nav(html, TRADING_COLUMN, TRADING_COLUMN_HREF)
 
-    The menu item and the sidebar link point at the category index. Pages
-    that already have the link are left unchanged. The 日报 link stays.
+
+def insert_column_nav(html: str, name: str, href: str) -> str:
+    """Add a column's menu item and sidebar link on rewritten Anatole pages.
+
+    Both point at the column's category index and follow 日报 and the columns
+    listed before it in COLUMNS. Pages that already have the link are left
+    unchanged. The 日报 link stays.
     """
-    html = _insert_trading_menu_link(html)
-    html = _insert_trading_sidebar_link(html)
+    names = [column for column, _href in COLUMNS]
+    before = ["日报"] + names[: names.index(name)] if name in names else ["日报"]
+    html = _insert_column_menu_link(html, name, href, before)
+    html = _insert_column_sidebar_link(html, name, href, before)
     return html
 
 
-def _trading_menu_item(indent: str) -> str:
+def _column_menu_item(indent: str, name: str, href: str) -> str:
     return (
         f'\n{indent}<li><a \n'
-        f'{indent}       href="{TRADING_COLUMN_HREF}"\n'
+        f'{indent}       href="{href}"\n'
         f'{indent}            \n'
-        f'{indent}       title="">{TRADING_COLUMN}</a></li>'
+        f'{indent}       title="">{name}</a></li>'
     )
 
 
-def _insert_trading_menu_link(html: str) -> str:
+def _insert_column_menu_link(html: str, name: str, href: str, before: list[str]) -> str:
     start = html.find('id="navMenu"')
     if start < 0:
         return html
@@ -1205,43 +1265,47 @@ def _insert_trading_menu_link(html: str) -> str:
     if end < 0:
         return html
     block = html[start:end]
-    if TRADING_COLUMN_HREF in block:
+    if href in block:
         return html
-    daily_end = block.find('title="">日报</a></li>')
-    if daily_end >= 0:
-        li_at = block.rfind("<li>", 0, daily_end)
-        line_start = block.rfind("\n", 0, li_at if li_at >= 0 else daily_end) + 1
+    for previous in reversed(before):
+        marker = f'title="">{previous}</a></li>'
+        prev_end = block.find(marker)
+        if prev_end < 0:
+            continue
+        li_at = block.rfind("<li>", 0, prev_end)
+        line_start = block.rfind("\n", 0, li_at if li_at >= 0 else prev_end) + 1
         indent = re.match(r"[ \t]*", block[line_start:]).group(0)
-        at = start + daily_end + len('title="">日报</a></li>')
-        return html[:at] + _trading_menu_item(indent) + html[at:]
+        at = start + prev_end + len(marker)
+        return html[:at] + _column_menu_item(indent, name, href) + html[at:]
     match = re.search(r'\n([ \t]*)<li><a\b[^>]*href="/post/"', block)
     if not match:
         return html
     at = start + match.start()
-    return html[:at] + _trading_menu_item(match.group(1)) + html[at:]
+    return html[:at] + _column_menu_item(match.group(1), name, href) + html[at:]
 
 
-def _insert_trading_sidebar_link(html: str) -> str:
+def _insert_column_sidebar_link(html: str, name: str, href: str, before: list[str]) -> str:
     start = html.find('<div class="sidebar')
     if start < 0:
         return html
     end = html.find('<div class="main">', start)
     if end < 0:
         return html
-    if TRADING_COLUMN_HREF in html[start:end]:
+    if href in html[start:end]:
         return html
     link = (
-        f'            <p><a href="{TRADING_COLUMN_HREF}" '
+        f'            <p><a href="{href}" '
         'style="font-size:15px;font-weight:650;letter-spacing:0;'
-        f'text-transform:none;color:#2660ab">{TRADING_COLUMN}</a></p>\n'
+        f'text-transform:none;color:#2660ab">{name}</a></p>\n'
     )
-    marker = ">日报</a></p>"
-    at = html.find(marker, start)
-    if 0 <= at < end:
-        insert_at = at + len(marker)
-        if html[insert_at:insert_at + 1] == "\n":
-            insert_at += 1
-        return html[:insert_at] + link + html[insert_at:]
+    for previous in reversed(before):
+        marker = f">{previous}</a></p>"
+        at = html.find(marker, start)
+        if 0 <= at < end:
+            insert_at = at + len(marker)
+            if html[insert_at:insert_at + 1] == "\n":
+                insert_at += 1
+            return html[:insert_at] + link + html[insert_at:]
     needle = (
         "            </div>\n"
         "        </div>\n"
@@ -1256,17 +1320,17 @@ def _insert_trading_sidebar_link(html: str) -> str:
 
 
 class SiteWriter:
-    def __init__(self, root: Path, dry_run: bool, trading_column: bool = False) -> None:
+    def __init__(self, root: Path, dry_run: bool, columns: tuple = ()) -> None:
         self.root = root
         self.dry_run = dry_run
-        self.trading_column = trading_column
+        self.columns = columns
         self.changed: list[str] = []
 
     def write(self, relative: str, text: str) -> None:
         if relative.endswith(".html") and relative != DAILY_INDEX_REL:
             text = insert_daily_nav(text)
-            if self.trading_column:
-                text = insert_trading_column_nav(text)
+            for name, href in self.columns:
+                text = insert_column_nav(text, name, href)
         path = self.root / relative
         existing = path.read_text(encoding="utf-8") if path.is_file() else None
         if existing == text:
@@ -1746,7 +1810,13 @@ def _wants_post(args: argparse.Namespace, payload: dict) -> bool:
 
 
 def publish(root: Path, post: Post, dry_run: bool = False) -> list[str]:
-    writer = SiteWriter(root, dry_run, trading_column=_uses_trading_column(post))
+    # A column the site already has stays in the nav of every page this rewrites.
+    columns = tuple(
+        (name, href)
+        for name, href in COLUMNS
+        if _uses_column(post, name) or (root / "categories" / urlize(name) / "index.html").is_file()
+    )
+    writer = SiteWriter(root, dry_run, columns=columns)
     writer.write(f"post/{post.slug}/index.html", render_single(post))
     writer.write("index.html", replace_homepage(writer.read("index.html"), post))
     writer.write(

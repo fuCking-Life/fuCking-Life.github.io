@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+
+    <title> Ermao | Agent 学习笔记（2026-11-19）：什么才算 agent </title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。 这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这： 下一步做什么、什么时候停，由模型决">
+    
+    <link rel="stylesheet"
+          href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
+          integrity="sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="/css/markupHighlight.min.f798cbda9aaa38f89eb38be6414bd082cfd71a6780375cbf67b6d2fb2b96491e.css"
+        integrity="sha256-95jL2pqqOPies4vmQUvQgs/XGmeAN1y/Z7bS&#43;yuWSR4="
+        crossorigin="anonymous"
+        type="text/css">
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="/post/learn-agent-2026-11-19/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="/js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js"
+            integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="
+            crossorigin="anonymous"></script>
+
+    
+        
+        
+        <script type="text/javascript"
+                src="/js/anatole-theme-switcher.min.47918423907d577c1f04c2fd28730186eca486fb18e52fc882c3c7ad5f2540b1.js"
+                integrity="sha256-R5GEI5B9V3wfBML9KHMBhuykhvsY5S/IgsPHrV8lQLE="
+                crossorigin="anonymous"></script>
+    
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="Agent 学习笔记（2026-11-19）：什么才算 agent"/>
+<meta name="twitter:description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。 这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这： 下一步做什么、什么时候停，由模型决"/>
+
+
+    
+
+<style>
+.post .post-content { font-size: 15px; }
+.post .post-content p { line-height: 1.85; margin: 0.7em 0 1em; }
+.post .post-content li p { margin: 0.25em 0 0.6em; }
+.post .post-content h2 { font-size: 20px; font-weight: 650; margin: 2em 0 0.8em; padding-top: 0.4em; border-top: 1px solid #eee; }
+.post .post-content h2:first-of-type { border-top: 0; margin-top: 1.2em; padding-top: 0; }
+.post .post-content h3 { font-size: 17px; font-weight: 600; margin: 1.6em 0 0.6em; line-height: 1.45; }
+.post .post-content ol, .post .post-content ul { padding-left: 1.3em; margin: 0.4em 0 1em; }
+.post .post-content li { margin: 0.45em 0 0.9em; }
+.post .post-content a { color: #2f69b3; }
+.post .post-content blockquote {
+  border-left: 4px solid #3b6fd8;
+  background: #f6f8fc;
+  color: #334;
+  padding: 0.7em 1em;
+  margin: 0.9em 0 1.1em;
+  border-radius: 0 6px 6px 0;
+}
+.post .post-content blockquote p { margin: 0.35em 0; color: #334; line-height: 1.75; }
+.post .post-content .digest-meta {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0.2em 0 0.4em;
+}
+.post .post-content hr { border: 0; border-top: 1px solid #eee; margin: 2em 0 1em; }
+.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
+html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
+.post .post-content p, .post .post-content li { color: var(--ln-ink); }
+.post .post-content .digest-meta { color: var(--ln-muted); border-left: 3px solid var(--ln-accent); padding-left: 0.8em; }
+.post .post-content h2 { counter-increment: lesson; border-top: 1px solid var(--ln-rule); }
+.post .post-content h2::before { content: counter(lesson, decimal-leading-zero); display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: var(--ln-accent); margin-bottom: 0.3em; }
+.post .post-content h3 { color: var(--ln-ink); }
+.post .post-content strong { color: var(--ln-ink); }
+.post .post-content code { background: var(--ln-code-bg); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.92em; }
+.post .post-content pre code { padding: 0; background: none; }
+.post .post-content .highlight pre { background: var(--ln-code-bg); border: 1px solid var(--ln-rule); border-radius: 8px; padding: 0.9em 1em; line-height: 1.6; font-size: 13px; }
+.post .post-content table { border-collapse: collapse; width: 100%; margin: 1em 0 1.3em; font-size: 14px; }
+.post .post-content th, .post .post-content td { border: 1px solid var(--ln-rule); padding: 0.5em 0.7em; text-align: left; vertical-align: top; color: var(--ln-ink); }
+.post .post-content th { background: var(--ln-code-bg); font-weight: 650; }
+.post .post-content blockquote { background: var(--ln-code-bg); border-left-color: var(--ln-rule); }
+.post .post-content blockquote p { color: var(--ln-ink); }
+.post .post-content blockquote.ln-key { border-left-color: var(--ln-accent); background: var(--ln-accent-soft); }
+.post .post-content blockquote.ln-key > p:first-child strong:first-child { color: var(--ln-accent); }
+.post .post-content blockquote.ln-ask { border-left-color: var(--ln-ask); background: var(--ln-ask-soft); }
+.post .post-content blockquote.ln-ask > p:first-child strong:first-child { color: var(--ln-ask); }
+.post .post-content blockquote.ln-fix { border-left-color: var(--ln-fix); background: var(--ln-fix-soft); }
+.post .post-content blockquote.ln-fix > p:first-child strong:first-child { color: var(--ln-fix); }
+</style>
+</head>
+<body><div class="sidebar animated fadeInDown ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="/images/profile.jpg" alt="profile picture">
+            <h3 title=""><a href="/">Hey. I&#39;m Ermao.</a></h3>
+            <div class="description">
+                <p>iOS developer/Python/Speech synthesis<br>Welcome to my site.<br>Go to " About me" if you want to know more details.<br></p>
+            </div>
+            <p><a href="/daily/" style="font-size:15px;font-weight:650;letter-spacing:0;text-transform:none;color:#2660ab">日报</a></p>
+            <p><a href="/categories/每日交易资讯/" style="font-size:15px;font-weight:650;letter-spacing:0;text-transform:none;color:#2660ab">每日交易资讯</a></p>
+            <p><a href="/categories/agent-学习笔记/" style="font-size:15px;font-weight:650;letter-spacing:0;text-transform:none;color:#2660ab">Agent 学习笔记</a></p>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://de.linkedin.com/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/fuCking-Life/" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:464514962@qq.com" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Ermao  2022 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  animated fadeInDown ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="/"
+                        
+                   title="">Home</a></li>
+        
+            
+            <li><a 
+                   href="/daily/"
+                        
+                   title="">日报</a></li>
+            <li><a 
+                   href="/categories/每日交易资讯/"
+                        
+                   title="">每日交易资讯</a></li>
+            <li><a 
+                   href="/categories/agent-学习笔记/"
+                        
+                   title="">Agent 学习笔记</a></li>
+            <li><a 
+                   href="/post/"
+                        
+                   title="">Posts</a></li>
+        
+            
+            <li><a 
+                   href="/books/"
+                        
+                   title="">Books</a></li>
+        
+            
+            <li><a 
+                   href="/life/"
+                        
+                   title="">Life</a></li>
+        
+            
+            <li><a 
+                   href="/about/"
+                        
+                   title="">About me</a></li>
+        
+        
+        
+            <li class="theme-switch-item">
+                <a class="theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+    <div class="post  animated fadeInDown ">
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h3>Agent 学习笔记（2026-11-19）：什么才算 agent</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> Thu, Nov 19, 2026 
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">300 Words|Read in about 2 Min|Total Amount of Reading <span id="busuanzi_value_page_pv"></span>Times</span>
+                    </div>
+                
+
+            </div>
+
+            <p class="digest-meta">覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。</p>
+<p>这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这：<strong>下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。</strong></p>
+<h2 id="项目一览一张有共享状态的图">项目一览：一张有共享状态的图</h2>
+<p>TradingAgents 模拟一家交易公司：分析师先分头调研，研究员辩论多空，交易员出方案，风控团队再辩一轮，最后由组合经理拍板。整张图在 <code>tradingagents/graph/setup.py</code> 里连起来：</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">          ┌─ Market Analyst ──────┐
+          ├─ Sentiment Analyst ───┤
+START ────┼─ News Analyst ────────┼──► Bull ⇄ Bear ──► Research Manager ──► Trader
+          ├─ Fundamentals Analyst ┤      (辩论 N 轮)
+          └─ Memory Log ──────────┘
+
+Trader ──► Aggressive → Conservative → Neutral ─(循环 N 轮)─► Portfolio Manager ──► END</code></pre></div>
+<p>各个角色之间不靠聊天消息通信，而是读写同一个 <code>AgentState</code>（<code>agents/state.py</code>）：分析师写 <code>market_report</code> 这类字段，辩论写 <code>investment_debate_state</code>，经理写 <code>investment_plan</code> 和 <code>final_trade_decision</code>。下游只拿到上游的成品报告，拿不到上游的工具调用过程。</p>
+<blockquote class="ln-key">
+<p><strong>要点：</strong> 多 agent 之间传递的是结构化的状态字段，而不是一长串对话，这样每个角色的上下文都是干净、可控的。</p></blockquote>
+<h2 id="什么才算-agent">什么才算 agent</h2>
+<p>项目号称有 12 个 agent。拿其中两个的核心代码对比：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"># Market Analyst：子图 agent ⇄ tools，最多 20 轮
+result = (prompt | llm.bind_tools(TOOLS)).invoke(messages)
+if result.tool_calls:   # 去执行工具，结果追加进 messages，再回到 agent
+else:                   # 结束，result.content 就是报告
+
+# Bull Researcher
+response = llm.invoke(prompt)   # prompt 里塞好了所有报告和辩论历史</code></pre></div>
+<blockquote class="ln-key">
+<p><strong>我的理解：</strong> 第一个绑定了一组工具，是一个 ReAct 循环：模型根据 prompt 选工具、拿到结果后再决定下一步，所以是 agent。第二个只是把一个 prompt 喂给大模型、拿回一个回答，不算 agent。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我一开始说模型会&#34;反思&#34;。其实 ReAct 循环里没有单独的反思步骤，流程是：模型输出&#34;我要调用某个工具&#34; → 代码执行工具、把结果追加进 messages → 模型看完整个历史，再决定继续调工具还是写报告。所谓&#34;思考&#34;，只是模型在做决定前生成的一段文字。</p></blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">模型输出: &#34;调用 get_stock_data(2026-01-01, 2026-01-09)&#34;   ← 模型决定
+代码执行工具，把结果追加进 messages                         ← 代码只负责执行
+模型再看一遍全部历史: 再调一个工具？还是写报告？         ← 模型又决定一次</code></pre></div>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 判断是不是 agent，看的是控制流：下一步做什么、什么时候停，是不是由模型决定。</p></blockquote>
+<h2 id="辩论是状态机不是-agent">辩论是状态机，不是 agent</h2>
+<p>Bull 和 Bear 来回辩好几轮，看起来也是一个循环。但决定下一个是谁发言的是 <code>graph/conditional_logic.py</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python">def should_continue_debate(self, state):
+    if state[&#34;investment_debate_state&#34;][&#34;count&#34;] &gt;= 2 * self.max_debate_rounds:
+        return &#34;Research Manager&#34;
+    if state[&#34;investment_debate_state&#34;][&#34;current_response&#34;].startswith(&#34;Bull&#34;):
+        return &#34;Bear Researcher&#34;
+    return &#34;Bull Researcher&#34;</code></pre></div>
+<p>数一下次数、看一眼上一个是谁发言，就决定下一步，全程没有模型参与，所以整个辩论是一个<strong>状态机</strong>，不是 agent。LangGraph 的图本质上就是状态机：节点读写 state，条件边根据 state 决定往哪走。</p>
+<p>为什么不让一个 LLM 主持人来调度？</p>
+<ul><li><p><strong>防止乱序</strong>：交给模型调度，可能出现 Bull 连说两次，或者辩论一直不结束。</p></li><li><p><strong>成本可预测</strong>：辩论 1 轮就是正好 2 次 LLM 调用，不会因为模型觉得&#34;还没辩够&#34;一直跑下去。</p></li><li><p><strong>这一步不需要判断力</strong>：轮流发言、到次数就停，规则事先完全确定，交给模型只会多出不确定性，没有任何收益。</p></li></ul>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 需要判断力的决策交给模型，事先能写成规则的决策交给代码。</p></blockquote>
+<h2 id="自主权放在了哪里">自主权放在了哪里</h2>
+<p>用这条原则重新看整个项目：外层是一条固定的流程（workflow），只有其中几个分析师内部是真正的 agent 循环。作者只在很少的地方把自主权交给模型。</p>
+<p>而且同样是分析师，待遇也不一样：</p>
+<table><thead><tr><th></th><th>Market Analyst</th><th>Sentiment Analyst</th></tr></thead><tbody><tr><td>怎么拿数据</td><td>模型自己决定调哪些工具、调几次</td><td>代码先抓好新闻、StockTwits、Reddit，塞进 prompt</td></tr><tr><td>是不是 agent</td><td>是</td><td>不是，只调用一次 LLM</td></tr></tbody></table>
+<blockquote class="ln-ask">
+<p><strong>思考题：</strong> 按上面那条原则，为什么 Market Analyst 可以自己决定调用哪些工具，Sentiment Analyst 却不行？提示：Market Analyst 的 prompt 列了十几个技术指标，要求它挑出最多 8 个。</p></blockquote>
+<h2 id="给-agent-自主权时项目加的几道护栏">给 agent 自主权时，项目加的几道护栏</h2>
+<p>这几处是 11-03 读代码时记下的，正好都是在&#34;放给模型的那几步&#34;上加的约束：</p>
+<ul><li><p><strong>每个分析师是一个独立子图</strong>：子图只把报告交回主图，并行的分析师不会写同一个字段，工具调用记录也不会混进彼此的历史。</p></li><li><p><strong>工具轮数上限</strong>：调用工具超过 <code>max_tool_rounds</code>（默认 20）轮，就追加一句&#34;工具次数用完了，现在写报告&#34;，并且这一轮不再绑定工具，防止模型无限调用工具、跑爆递归上限。</p></li><li><p><strong>工具参数由状态注入</strong>：<code>symbol</code> 和 <code>trade_date</code> 用 <code>InjectedState</code> 从状态里注入，模型看不到也改不了；日期再被截断到分析日，回测时模型拿不到未来数据。</p></li><li><p><strong>关键决策用结构化输出</strong>：Research Manager、Trader、Portfolio Manager 输出 Pydantic 对象，失败了再退回自由文本。最终评级直接取枚举值，不从文本里解析，避免&#34;不是 Sell&#34;这类字样被读成 Sell。</p></li><li><p><strong>记忆是延迟反馈</strong>：每次的决策先以 pending 状态记下来，到期后对比真实收益写一条 2~4 句话的教训，下次只注入给 Portfolio Manager。所谓&#34;学习&#34;不是微调模型，而是把过去的结论塞回 prompt。</p></li></ul>
+<h2 id="下一步">下一步</h2>
+<ul><li><p>先回答上面那道思考题。</p></li><li><p>用一个 ticker 完整跑一遍，对照 <code>full_states_log_*.json</code>，看 state 在每个节点之后怎么变化。</p></li><li><p>再看记忆闭环：<code>memory/log.py</code>、<code>memory/settlement.py</code>、<code>memory/reflection.py</code>。</p></li></ul></div>
+        <div class="post-footer">
+            <div class="info">
+                <span class="separator"><a class="category" href="/categories/agent-学习笔记/">Agent 学习笔记</a></span>
+                <span class="separator"><a class="tag" href="/tags/tradingagents/">TradingAgents</a><a class="tag" href="/tags/langgraph/">LangGraph</a></span>
+                
+            </div>
+        </div>
+
+        <div id="fb_comments_container">
+                <h2>comments</h2>
+                <script src="https://utteranc.es/client.js" 
+        repo="fuCking-Life/fuCking-Life.github.io"
+        issue-term="pathname"
+        theme="github-light" 
+        
+        crossorigin="anonymous" 
+        async>
+</script>
+            </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/js/medium-zoom.min.2d6fd0be87fa98f0c9b4dc2536b312bbca48757f584f6ea1f394abc9bcc38fbc.js"
+        integrity="sha256-LW/Qvof6mPDJtNwlNrMSu8pIdX9YT26h85SrybzDj7w="
+        crossorigin="anonymous"></script></body>
+
+</html>
