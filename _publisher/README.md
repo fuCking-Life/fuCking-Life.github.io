@@ -36,6 +36,7 @@ A learning-notes post gets its own styles on top of the digest typography: the o
 > **原则：** 需要判断力的决策交给模型。   (green; also 要点, 我的理解)
 > **思考题：** 为什么这样设计？           (amber)
 > **修正：** 不是反思。                   (red)
+> **举一反三：** 换个系统也成立。         (indigo)
 ```
 
 Other blockquotes stay plain.

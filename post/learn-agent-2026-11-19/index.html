@@ -5,7 +5,7 @@
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     
     <meta charset="utf-8"><meta name="generator" content="Hugo 0.82.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。 这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这： 下一步做什么、什么时候停，由模型决">
+    <meta name="description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。 今天最大的收获是一个判断标准： 下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。 两道判断题">
     
     <link rel="stylesheet"
           href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"
@@ -53,7 +53,7 @@
 <meta name="twitter:image" content="https://fuCking-Life.github.io/images/site-feature-image.png"/>
 
 <meta name="twitter:title" content="Agent 学习笔记（2026-11-19）：什么才算 agent"/>
-<meta name="twitter:description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。 这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这： 下一步做什么、什么时候停，由模型决"/>
+<meta name="twitter:description" content="覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。 今天最大的收获是一个判断标准： 下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。 两道判断题"/>
 
 
     
@@ -84,8 +84,8 @@
   margin: 0.2em 0 0.4em;
 }
 .post .post-content hr { border: 0; border-top: 1px solid #eee; margin: 2em 0 1em; }
-.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
-html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
+.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ext: #4338ca; --ln-ext-soft: #eef0fb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
+html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ext: #a5b4fc; --ln-ext-soft: rgba(165, 180, 252, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
 .post .post-content p, .post .post-content li { color: var(--ln-ink); }
 .post .post-content .digest-meta { color: var(--ln-muted); border-left: 3px solid var(--ln-accent); padding-left: 0.8em; }
 .post .post-content h2 { counter-increment: lesson; border-top: 1px solid var(--ln-rule); }
@@ -106,6 +106,8 @@ html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-so
 .post .post-content blockquote.ln-ask > p:first-child strong:first-child { color: var(--ln-ask); }
 .post .post-content blockquote.ln-fix { border-left-color: var(--ln-fix); background: var(--ln-fix-soft); }
 .post .post-content blockquote.ln-fix > p:first-child strong:first-child { color: var(--ln-fix); }
+.post .post-content blockquote.ln-ext { border-left-color: var(--ln-ext); background: var(--ln-ext-soft); }
+.post .post-content blockquote.ln-ext > p:first-child strong:first-child { color: var(--ln-ext); }
 </style>
 </head>
 <body><div class="sidebar animated fadeInDown ">
@@ -228,9 +230,9 @@ html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-so
 
             </div>
 
-            <p class="digest-meta">覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架），2026-11-03 读架构，2026-11-19 拆&#34;什么才算 agent&#34;。</p>
-<p>这一篇记两件事：一是什么东西才算 agent，二是这个项目把自主权放给了模型的哪几个地方。结论先写在这：<strong>下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。</strong></p>
-<h2 id="项目一览一张有共享状态的图">项目一览：一张有共享状态的图</h2>
+            <p class="digest-meta">覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。</p>
+<p>今天最大的收获是一个判断标准：<strong>下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。</strong>两道判断题我都答对了，但有两处说法不准：一是以为 ReAct 里有&#34;反思&#34;这一步，二是把&#34;有工具&#34;当成了 agent 的标志。还有一道题没答完。</p>
+<h2 id="背景这个项目长什么样">背景：这个项目长什么样</h2>
 <p>TradingAgents 模拟一家交易公司：分析师先分头调研，研究员辩论多空，交易员出方案，风控团队再辩一轮，最后由组合经理拍板。整张图在 <code>tradingagents/graph/setup.py</code> 里连起来：</p>
 <div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">          ┌─ Market Analyst ──────┐
           ├─ Sentiment Analyst ───┤
@@ -239,11 +241,9 @@ START ────┼─ News Analyst ────────┼──► Bull 
           └─ Memory Log ──────────┘
 
 Trader ──► Aggressive → Conservative → Neutral ─(循环 N 轮)─► Portfolio Manager ──► END</code></pre></div>
-<p>各个角色之间不靠聊天消息通信，而是读写同一个 <code>AgentState</code>（<code>agents/state.py</code>）：分析师写 <code>market_report</code> 这类字段，辩论写 <code>investment_debate_state</code>，经理写 <code>investment_plan</code> 和 <code>final_trade_decision</code>。下游只拿到上游的成品报告，拿不到上游的工具调用过程。</p>
-<blockquote class="ln-key">
-<p><strong>要点：</strong> 多 agent 之间传递的是结构化的状态字段，而不是一长串对话，这样每个角色的上下文都是干净、可控的。</p></blockquote>
-<h2 id="什么才算-agent">什么才算 agent</h2>
-<p>项目号称有 12 个 agent。拿其中两个的核心代码对比：</p>
+<p>各个角色不靠聊天消息通信，而是读写同一个 <code>AgentState</code>：分析师写报告字段，辩论写 <code>investment_debate_state</code>，经理写最终决策。下游只拿到上游的成品，拿不到上游的工具调用过程。</p>
+<h2 id="今天学了什么">今天学了什么</h2>
+<p><strong>1. 判断是不是 agent，看控制流。</strong>项目号称有 12 个 agent，拿两个对比：</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"># Market Analyst：子图 agent ⇄ tools，最多 20 轮
 result = (prompt | llm.bind_tools(TOOLS)).invoke(messages)
 if result.tool_calls:   # 去执行工具，结果追加进 messages，再回到 agent
@@ -251,37 +251,44 @@ else:                   # 结束，result.content 就是报告
 
 # Bull Researcher
 response = llm.invoke(prompt)   # prompt 里塞好了所有报告和辩论历史</code></pre></div>
+<p>Market Analyst 每拿到一次工具结果，都由模型决定是再调工具还是写报告，所以是 agent；Bull Researcher 调用一次就结束，只是一次 LLM 调用。</p>
 <blockquote class="ln-key">
-<p><strong>我的理解：</strong> 第一个绑定了一组工具，是一个 ReAct 循环：模型根据 prompt 选工具、拿到结果后再决定下一步，所以是 agent。第二个只是把一个 prompt 喂给大模型、拿回一个回答，不算 agent。</p></blockquote>
-<blockquote class="ln-fix">
-<p><strong>修正：</strong> 我一开始说模型会&#34;反思&#34;。其实 ReAct 循环里没有单独的反思步骤，流程是：模型输出&#34;我要调用某个工具&#34; → 代码执行工具、把结果追加进 messages → 模型看完整个历史，再决定继续调工具还是写报告。所谓&#34;思考&#34;，只是模型在做决定前生成的一段文字。</p></blockquote>
+<p><strong>原则：</strong> 下一步做什么、什么时候停，由模型决定的才是 agent。</p></blockquote>
+<p><strong>2. ReAct 循环的真实流程。</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">模型输出: &#34;调用 get_stock_data(2026-01-01, 2026-01-09)&#34;   ← 模型决定
 代码执行工具，把结果追加进 messages                         ← 代码只负责执行
 模型再看一遍全部历史: 再调一个工具？还是写报告？         ← 模型又决定一次</code></pre></div>
-<blockquote class="ln-key">
-<p><strong>原则：</strong> 判断是不是 agent，看的是控制流：下一步做什么、什么时候停，是不是由模型决定。</p></blockquote>
-<h2 id="辩论是状态机不是-agent">辩论是状态机，不是 agent</h2>
-<p>Bull 和 Bear 来回辩好几轮，看起来也是一个循环。但决定下一个是谁发言的是 <code>graph/conditional_logic.py</code>：</p>
+<p><strong>3. 辩论是状态机，不是 agent。</strong>Bull 和 Bear 来回辩好几轮，但决定下一个是谁发言的是 <code>graph/conditional_logic.py</code>：</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python">def should_continue_debate(self, state):
     if state[&#34;investment_debate_state&#34;][&#34;count&#34;] &gt;= 2 * self.max_debate_rounds:
         return &#34;Research Manager&#34;
     if state[&#34;investment_debate_state&#34;][&#34;current_response&#34;].startswith(&#34;Bull&#34;):
         return &#34;Bear Researcher&#34;
     return &#34;Bull Researcher&#34;</code></pre></div>
-<p>数一下次数、看一眼上一个是谁发言，就决定下一步，全程没有模型参与，所以整个辩论是一个<strong>状态机</strong>，不是 agent。LangGraph 的图本质上就是状态机：节点读写 state，条件边根据 state 决定往哪走。</p>
-<p>为什么不让一个 LLM 主持人来调度？</p>
-<ul><li><p><strong>防止乱序</strong>：交给模型调度，可能出现 Bull 连说两次，或者辩论一直不结束。</p></li><li><p><strong>成本可预测</strong>：辩论 1 轮就是正好 2 次 LLM 调用，不会因为模型觉得&#34;还没辩够&#34;一直跑下去。</p></li><li><p><strong>这一步不需要判断力</strong>：轮流发言、到次数就停，规则事先完全确定，交给模型只会多出不确定性，没有任何收益。</p></li></ul>
+<p>数一下次数、看一眼上一个是谁发言，就决定下一步，全程没有模型参与。LangGraph 的图本质上就是状态机：节点读写 state，条件边根据 state 决定往哪走。</p>
+<p><strong>4. 自主权该放在哪。</strong>整个项目外层是一条固定流程（workflow），只有几个分析师内部是真正的 agent 循环。作者只在很少的地方把决定权交给模型。</p>
 <blockquote class="ln-key">
 <p><strong>原则：</strong> 需要判断力的决策交给模型，事先能写成规则的决策交给代码。</p></blockquote>
-<h2 id="自主权放在了哪里">自主权放在了哪里</h2>
-<p>用这条原则重新看整个项目：外层是一条固定的流程（workflow），只有其中几个分析师内部是真正的 agent 循环。作者只在很少的地方把自主权交给模型。</p>
-<p>而且同样是分析师，待遇也不一样：</p>
-<table><thead><tr><th></th><th>Market Analyst</th><th>Sentiment Analyst</th></tr></thead><tbody><tr><td>怎么拿数据</td><td>模型自己决定调哪些工具、调几次</td><td>代码先抓好新闻、StockTwits、Reddit，塞进 prompt</td></tr><tr><td>是不是 agent</td><td>是</td><td>不是，只调用一次 LLM</td></tr></tbody></table>
+<h2 id="我理解对的">我理解对的</h2>
+<ul><li><p><strong>Market Analyst 是 agent，Bull Researcher 不是。</strong>判断对了，而且抓住了关键差别：前者是一个循环，模型拿到结果后还要接着决定；后者调用一次就返回。</p></li><li><p><strong>辩论是状态机。</strong>这是我自己从代码里读出来的：路由函数只看 <code>count</code> 和 <code>current_response</code> 两个字段，没有模型参与。</p></li><li><p><strong>不让 LLM 来调度辩论，是因为它可能判断错，比如让 Bull 连说两次。</strong>理由成立，讲的是可靠性。另外还有两个理由：一是<strong>成本可预测</strong>，辩论 1 轮就是正好 2 次调用，不会因为模型觉得&#34;还没辩够&#34;一直跑；二是<strong>这一步不需要判断力</strong>，轮流发言、到次数就停，交给模型只会多出不确定性，没有任何收益。</p></li></ul>
+<h2 id="我理解错的不够准的">我理解错的、不够准的</h2>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> ReAct 里没有单独的&#34;反思&#34;步骤。我说模型会&#34;去反思、去执行、去思考&#34;，但实际流程只有&#34;模型决定 → 代码执行 → 模型再决定&#34;。所谓&#34;思考&#34;，只是模型在做决定之前生成的一段文字，不是一个独立的环节。</p></blockquote>
+<p>我容易混淆，是因为确实存在显式&#34;反思&#34;的设计（比如 Reflexion 一类的做法），但那是专门另加的一次模型调用。这个项目里就有一个：<code>memory/reflection.py</code> 在一笔决策结算之后，单独调用一次模型，对照真实收益写 2~4 句教训，供下次参考。所以<strong>反思是需要专门设计的组件，不是 ReAct 自带的</strong>。</p>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> &#34;绑定了工具&#34;不等于 agent。我第一次的判断依据是&#34;大语言模型里绑定了一堆工具，然后有一个循环&#34;，但工具不是关键。Sentiment Analyst 也从三个数据源（新闻、StockTwits、Reddit）拿数据，可调用顺序是代码写死的，模型只负责读完写报告，所以它不是 agent。判断的依据始终是：谁决定下一步。</p></blockquote>
+<h2 id="举一反三">举一反三</h2>
+<p><strong>1. 用&#34;谁决定下一步&#34;去看别的系统。</strong></p>
+<table><thead><tr><th>系统</th><th>谁决定下一步</th><th>算不算 agent</th></tr></thead><tbody><tr><td>Claude Code、Cursor 这类编程助手改代码</td><td>模型决定读哪个文件、改哪里、跑什么命令、什么时候停</td><td>是</td></tr><tr><td>一次调用的 RAG 问答</td><td>检索步骤是代码写死的，模型只负责回答</td><td>不是</td></tr><tr><td>先用 LLM 判断用户意图，再进入对应的固定流程</td><td>模型只决定一次走向，之后全是固定流程</td><td>不算，是 workflow 里的一个 LLM 路由节点</td></tr><tr><td>TradingAgents 的多空辩论</td><td>代码按次数轮流</td><td>不是，是状态机</td></tr></tbody></table>
+<blockquote class="ln-ext">
+<p><strong>举一反三：</strong> &#34;agent&#34;不是一个角色名，而是一种控制方式。一个系统叫不叫 agent 不重要，重要的是在哪几步把决定权交给了模型。</p></blockquote>
+<p><strong>2. 自主权是一个光谱，不是二选一。</strong>从左到右大致是：单次调用 → 固定链条（上一步的输出喂给下一步）→ LLM 路由（模型选分支）→ 有上限的 agent 循环 → 开放式 agent。越往右越灵活，也越难预测、越贵。这个项目大部分在左边，只在分析师上用了&#34;有上限的循环&#34;。</p>
+<p><strong>3. &#34;判断力给模型、规则给代码&#34;在别处的样子。</strong>比如做一个客服 agent：&#34;这句话是不是在要求退款&#34;交给模型判断；&#34;超过 500 元要人工审批&#34;写在代码里。agent 的最大轮数、超时、重试次数也属于&#34;规则&#34;，应该由代码兜底，对应项目里的 <code>max_tool_rounds = 20</code> 和到达上限后的 <code>wrap_up</code>。</p>
+<blockquote class="ln-ext">
+<p><strong>举一反三：</strong> 以后看到一个 agent 框架，先问三个问题：循环在哪？谁决定继续还是停？最坏情况下它会跑多少步、花多少钱？</p></blockquote>
+<h2 id="还没解决的问题">还没解决的问题</h2>
 <blockquote class="ln-ask">
-<p><strong>思考题：</strong> 按上面那条原则，为什么 Market Analyst 可以自己决定调用哪些工具，Sentiment Analyst 却不行？提示：Market Analyst 的 prompt 列了十几个技术指标，要求它挑出最多 8 个。</p></blockquote>
-<h2 id="给-agent-自主权时项目加的几道护栏">给 agent 自主权时，项目加的几道护栏</h2>
-<p>这几处是 11-03 读代码时记下的，正好都是在&#34;放给模型的那几步&#34;上加的约束：</p>
-<ul><li><p><strong>每个分析师是一个独立子图</strong>：子图只把报告交回主图，并行的分析师不会写同一个字段，工具调用记录也不会混进彼此的历史。</p></li><li><p><strong>工具轮数上限</strong>：调用工具超过 <code>max_tool_rounds</code>（默认 20）轮，就追加一句&#34;工具次数用完了，现在写报告&#34;，并且这一轮不再绑定工具，防止模型无限调用工具、跑爆递归上限。</p></li><li><p><strong>工具参数由状态注入</strong>：<code>symbol</code> 和 <code>trade_date</code> 用 <code>InjectedState</code> 从状态里注入，模型看不到也改不了；日期再被截断到分析日，回测时模型拿不到未来数据。</p></li><li><p><strong>关键决策用结构化输出</strong>：Research Manager、Trader、Portfolio Manager 输出 Pydantic 对象，失败了再退回自由文本。最终评级直接取枚举值，不从文本里解析，避免&#34;不是 Sell&#34;这类字样被读成 Sell。</p></li><li><p><strong>记忆是延迟反馈</strong>：每次的决策先以 pending 状态记下来，到期后对比真实收益写一条 2~4 句话的教训，下次只注入给 Portfolio Manager。所谓&#34;学习&#34;不是微调模型，而是把过去的结论塞回 prompt。</p></li></ul>
+<p><strong>思考题：</strong> 同样是分析师，为什么 Market Analyst 可以自己决定调用哪些工具，Sentiment Analyst 却是由代码先把数据抓好？提示：Market Analyst 的 prompt 列了 12 个技术指标，要求它从中挑出最多 8 个。</p></blockquote>
 <h2 id="下一步">下一步</h2>
 <ul><li><p>先回答上面那道思考题。</p></li><li><p>用一个 ticker 完整跑一遍，对照 <code>full_states_log_*.json</code>，看 state 在每个节点之后怎么变化。</p></li><li><p>再看记忆闭环：<code>memory/log.py</code>、<code>memory/settlement.py</code>、<code>memory/reflection.py</code>。</p></li></ul></div>
         <div class="post-footer">

@@ -552,6 +552,7 @@ class PublisherTests(unittest.TestCase):
             "> **原则：** 需要判断力的决策交给模型。\n\n"
             "> **思考题：** 为什么这样设计？\n\n"
             "> **修正：** 不是反思。\n\n"
+            "> **举一反三：** 换个系统也成立。\n\n"
             "> **随手记：** 普通引用。\n",
             encoding="utf-8",
         )
@@ -584,6 +585,7 @@ class PublisherTests(unittest.TestCase):
         self.assertIn('<blockquote class="ln-key">', page)
         self.assertIn('<blockquote class="ln-ask">', page)
         self.assertIn('<blockquote class="ln-fix">', page)
+        self.assertIn('<blockquote class="ln-ext">', page)
         self.assertEqual(page.count("<blockquote>"), 1)
         self.assertIn('<p class="digest-meta">覆盖范围', page)
         for rel in ("index.html", "post/index.html", "post/learn-agent-2026-11-19/index.html"):

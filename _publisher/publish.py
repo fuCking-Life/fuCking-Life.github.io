@@ -1118,10 +1118,10 @@ LEARNING_COLUMN_HREF = "/categories/agent-学习笔记/"
 COLUMNS = ((TRADING_COLUMN, TRADING_COLUMN_HREF), (LEARNING_COLUMN, LEARNING_COLUMN_HREF))
 
 # Learning notes: a lead line, numbered lessons, and callouts a blockquote opens
-# with in bold (思考题, 原则, 要点, 我的理解, 修正). Colors follow the theme switch.
+# with in bold (思考题, 原则, 要点, 我的理解, 修正, 举一反三). Colors follow the theme switch.
 LEARNING_NOTES_CSS = """
-.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
-html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
+.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ext: #4338ca; --ln-ext-soft: #eef0fb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
+html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ext: #a5b4fc; --ln-ext-soft: rgba(165, 180, 252, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
 .post .post-content p, .post .post-content li { color: var(--ln-ink); }
 .post .post-content .digest-meta { color: var(--ln-muted); border-left: 3px solid var(--ln-accent); padding-left: 0.8em; }
 .post .post-content h2 { counter-increment: lesson; border-top: 1px solid var(--ln-rule); }
@@ -1142,8 +1142,10 @@ html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-so
 .post .post-content blockquote.ln-ask > p:first-child strong:first-child { color: var(--ln-ask); }
 .post .post-content blockquote.ln-fix { border-left-color: var(--ln-fix); background: var(--ln-fix-soft); }
 .post .post-content blockquote.ln-fix > p:first-child strong:first-child { color: var(--ln-fix); }
+.post .post-content blockquote.ln-ext { border-left-color: var(--ln-ext); background: var(--ln-ext-soft); }
+.post .post-content blockquote.ln-ext > p:first-child strong:first-child { color: var(--ln-ext); }
 """.strip()
-_CALLOUTS = {"原则": "ln-key", "要点": "ln-key", "我的理解": "ln-key", "思考题": "ln-ask", "修正": "ln-fix"}
+_CALLOUTS = {"原则": "ln-key", "要点": "ln-key", "我的理解": "ln-key", "思考题": "ln-ask", "修正": "ln-fix", "举一反三": "ln-ext"}
 _CALLOUT_RE = re.compile(r"<blockquote>(\s*<p><strong>([^<]+)</strong>)")
 
 
