@@ -1,5 +1,731 @@
 [
   {
+    "id": "agent-app-2026-11-18-gemini-tasks",
+    "date": "2026-11-18",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "Gemini 任务模式对免费用户开放，可代打电话、付账单并购物",
+    "summary": "Google 宣布，Gemini 应用中的 Tasks（任务模式）即日起对美国、日本、韩国、加拿大、澳大利亚和印度的数亿免费用户开放，底层改用新的 Gemini 4 Hydrogen。用户把主界面从 Chat 切到 Task 后，可以把事项交给助手：例如同时给附近店铺打电话并在排队中等待、约到时间后写入 Calendar；经授权访问公用事业账户和邮件，分析异常账单；按 Agent Payments Protocol（AP2）走 Visa、Mastercard 的数字化支付代币购物（American Express 为即将支持），可预设消费上限，下单前仍会向用户确认，票据进入 Google Wallet。官方称 Wallet 即日起扩展到 iOS。美国用户还可把邮件转发到 gemini@google.com，或在 Android / iOS 上设置「Text with Gemini」用短信交代任务（需符合条件的美国号码和运营商）。任务跑在 Google Cloud Agent Compute Engine 的硬件隔离虚拟机里，并配有注入过滤和 Safe Browsing。Google 也承认任务仍可能中途失败，部分网站最后一步还得交回用户手动点。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这是云端个人助手在「打电话、代付款、跨应用收尾」上的又一次加码，但关键路径仍然是确认购买、隔离执行、以及可随时打断。端侧语音助手不必复刻整条代购链路，却很适合先在本地完成意图澄清、消费上限和「何时必须问一声」，再把不可逆的调用交给云端；Wallet 扩展到 iOS，也让后续的支付确认更适合做成系统级生物识别，而不是应用内随便点一下。"
+    },
+    "relevance": 5,
+    "domains": [
+      "个人 Agent",
+      "大模型"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "移动助手",
+      "任务代理",
+      "Gemini 4 Hydrogen",
+      "语音与短信"
+    ],
+    "source": {
+      "name": "Josh Woodward",
+      "handle": "@GeminiApp",
+      "identity": "Google Gemini 官方账号；Josh Woodward，Google Labs、Gemini 应用与 AI Studio 副总裁"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/products/gemini-app/tasks-in-gemini-free-new-features/"
+      },
+      {
+        "label": "官方帖 @GeminiApp",
+        "url": "https://x.com/GeminiApp/status/2122739010787520756"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-pipecat-audience",
+    "date": "2026-11-18",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Pipecat Audience：用端上小分类器判断这句话是在对谁说",
+    "summary": "Jon Taylor 演示了多人会议里一个 agent 入会后，先由名为 Jev 的模块判断“是不是在对助手说话”：不确定就再等 2.5 秒，若仍无人接话才回应；阈值可调。他称 Jev 每轮大约增加 100 ms，并指出也可用更小的分类器 Pipecat Audience，在 CPU 上最快约 15 ms 做出决定。我核对了 Audience 的模型卡（rc2.1，Apache-2.0）：这是看转写文本而不是原始音频的寻址分类器，约 33M 参数，提供 ONNX 和 Core ML，fp16 约 66 MB；在 Apple M1 Max 单线程上，p95 每句约 11–12 ms，输出是“对谁说 / 对全组 / 说不清”的分数，由应用侧做决策。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车里常有司机、乘客同时说话，不要默认“VAD 一响就当对 Luna 说”。先在 iOS 上跑 Audience 的 Core ML：把流式 ASR 的当前假设送给它，低置信度就继续听或等人接话，高置信度再调导航工具。Jev 那种“不确定就再等一两秒”也可以做成可调阈值，避免在副驾闲聊时抢话。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "模型发布",
+      "开源"
+    ],
+    "tags": [
+      "Pipecat",
+      "Audience",
+      "Jev",
+      "话轮"
+    ],
+    "source": {
+      "name": "Jon Taylor",
+      "handle": "@JonPTaylor",
+      "identity": "Daily / Pipecat 语音 AI 工程师"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/JonPTaylor/status/2122701549424042426"
+      },
+      {
+        "label": "模型",
+        "url": "https://huggingface.co/pipecat-ai/audience"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "agent-app-2026-11-18-droidprefill",
+    "date": "2026-11-18",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "清华团队提出 DroidPrefill：把手机 GUI 智能体改成「预填充决策」，步骤延迟最高降 85%",
+    "summary": "这篇 arXiv 论文针对「完全在手机上跑 GUI 智能体」：现有流水线把云端那套长推理、逐步解码搬到端上，既吃不准 NPU「预填充快、逐 token 解码慢」的特点，又和静态编译的固定上下文配置冲突。DroidPrefill 先把当前界面编译成可执行候选，再在固定上下文预算里只保留关键 UI 和任务状态；预填充结束后直接看候选标签的 logits，有把握就用 Self-Speculative Action Dispatch（SPAD）立刻执行，没把握再走一段短的结构化求精，只有需要填文本时才额外生成。实验在小米 17（骇龙 8 Elite Gen 5）上，经 GenieX 走 QAIRT/W4A16 和 llama.cpp/Q4_0（Hexagon NPU），文本侧用 Qwen3-4B-Instruct，无云端参与逐步决策。AndroidWorld 上，相对自回归 T3A+ 基线，QAIRT 路径单步推理从 24.2 秒降到 4.6 秒（约 80.8%），Easy 成功率从 10.7% 升到 23.0%；llama.cpp 路径从 34.8 秒降到 5.2 秒（约 85.0%），Easy 成功率从 13.1% 升到 37.7%。输出从每步约 319 token 降到约 27 token。需要注意：Medium+Hard 成功率仍然很低（最高约 7.3%），评测时模拟器和任务控制器在主机上，手机负责观测解析与决策。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "端侧 GUI 智能体不该照搬云端「先写一长段 reasoning 再吐动作」。把动作空间收成候选、把决策尽量提前到 prefill 边界，4B 级模型在旗舰 NPU 上才有机会把单步从半分钟打到约 5 秒。若要在 iOS 上做类似能力，值得先看 Core ML / 神经引擎能否同样暴露预填充边界的候选 logits，并老实接受：容易的点击任务可以上端，难任务仍需云端或更强的本地规划。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "论文",
+      "Agent 架构"
+    ],
+    "types": [
+      "论文",
+      "评测结果"
+    ],
+    "tags": [
+      "端侧 Agent",
+      "手机 NPU",
+      "GUI 智能体",
+      "小模型"
+    ],
+    "source": {
+      "name": "董啜、蔡冠宇、王继良、姜雨辰",
+      "handle": "",
+      "identity": "清华大学与北京理工大学，论文作者"
+    },
+    "links": [
+      {
+        "label": "论文 arXiv:2611.20772",
+        "url": "https://arxiv.org/abs/2611.20772"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-18-wakeword-tsr",
+    "date": "2026-11-18",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "无需声纹注册：用唤醒词引导目标说话人识别",
+    "summary": "论文提出一套免注册的 Speech-LLM：不采集目标说话人的注册音频，也不需要显式切出唤醒词边界，而是把唤醒词文本编码后，通过 cross-attention 注入预训练语音编码器，让模型把“刚出现的唤醒词”和随后要识别的那个人联系起来。同一个自回归框架里既转写目标指令，也拒识非目标说话人。作者报告指令字符错误率 16.15%、非目标拒识率 91.56%、综合分 87.70%，对照最强免注册基线的 71.70%。摘要未给出代码或权重链接，我也没有读到开源实现。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这正是车舱要的“叫了唤醒词之后，只听这个人，不要把乘客或收音机收进去”。Luna 可以先做更轻的版本：唤醒成功后的数秒内，把该段语音当作临时声纹，只对这个人做 ASR / 意图；不必一上来上 Speech-LLM。若以后要复现论文方法，先确认有没有开源权重，再评估能不能蒸馏到端上。"
+    },
+    "relevance": 5,
+    "domains": [
+      "论文",
+      "语音识别 ASR",
+      "语音 Agent"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "唤醒词",
+      "目标说话人",
+      "Speech-LLM"
+    ],
+    "source": {
+      "name": "Yuxiang Mei、Dongxing Xu、Yanhua Long",
+      "handle": "",
+      "identity": "arXiv"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.19844"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-15"
+  },
+  {
+    "id": "agent-app-2026-11-18-harness-leverage",
+    "date": "2026-11-18",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "荣耀与北科大评测：0.75B–4.7B 本地智能体的成败，很大程度取决于 harness",
+    "summary": "论文《Harness Leverage Across Model Size》同时改变模型和套件：5 套已发布的 harness、18 个要产出工件的任务、4 个可本地部署的开源模型（0.75B 到 4.7B）外加 35.5B 锚点，用同一套确定性检查器给 360 个组合打分。作者的核心观察是：对共享 8GB 显卡、只有几十亿参数的本地模型来说，harness（如何拼提示、暴露工具、判断何时结束）往往决定任务能不能完成，而不只是快一点慢一点。名为 Mingbird 的「完成控制型」harness 在每个规模上都拿到最高平均分。367 个有效组合里，有 127 个没有写出任何声明的产物，其中 85 个还是「正常退出」——如果只看进程退出码，会把没交出东西的运行算成成功。单独拿掉一条防止重复空转的规则后，0.75B 模型分数掉 0.411，18 个任务里有 8 个完全没有产物。作者也说明，harness 优势随模型变大是扩大还是缩小，现有四个尺度还定不下来。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "在手机或 8GB 级本地环境里，先把「何时停、有没有把文件写出来、如何挡住重复失败」做硬，往往比换一个稍大的小模型更管用。不要用「agent 进程成功退出」当完成标准，一定要检查产物；给 1B 上下的端侧模型写套件时，重复调用熔断和完成门禁值得做成默认能力，而不是等模型自己学会收尾。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "Agent 架构",
+      "论文"
+    ],
+    "types": [
+      "论文",
+      "评测结果"
+    ],
+    "tags": [
+      "端侧小模型",
+      "Agent Harness",
+      "本地部署",
+      "荣耀"
+    ],
+    "source": {
+      "name": "王浩、黄婷",
+      "handle": "",
+      "identity": "北京科技大学与荣耀终端有限公司，论文作者"
+    },
+    "links": [
+      {
+        "label": "论文 arXiv:2611.21407",
+        "url": "https://arxiv.org/abs/2611.21407"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-18-chime-license",
+    "date": "2026-11-18",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "CHiME-5 / CHiME-6 改为 CC BY 4.0，并上线 Hugging Face",
+    "summary": "Shinji Watanabe 宣布，CHiME-5 和 CHiME-6 的许可证从 CC BY-SA 4.0 改为 CC BY 4.0，并发布到 Hugging Face。我查看了数据集说明：二者都是 20 场家庭聚餐的真实录音；CHiME-6 在此基础上校正了设备间时钟漂移，约 50 小时、16 kHz，包含 6 个 Kinect 阵列（共 24 路远场通道）和 4 副参与者佩戴的双耳近讲麦，场景是真实厨房、餐厅和客厅，并带说话人标注与官方划分。CC BY 4.0 不再要求衍生作品也用相同许可证，商用和开源模型训练更方便。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这不是高速公路，但是难得的可商用、多说话人、重叠语音和远场数据。可以用来测“司机 / 乘客抢话时会不会误触发、目标说话人 ASR 会不会串人”，并和已关注的 CHiME-3 公交/街道噪声集搭配：CHiME-3 测路噪，CHiME-5/6 测多人重叠。"
+    },
+    "relevance": 5,
+    "domains": [
+      "开源",
+      "语音识别 ASR",
+      "语音 Agent"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "CHiME",
+      "远场",
+      "重叠语音"
+    ],
+    "source": {
+      "name": "Shinji Watanabe",
+      "handle": "@shinjiw_at_cmu",
+      "identity": "CMU 教授、ESPnet 负责人"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/shinjiw_at_cmu/status/2122701026843386111"
+      },
+      {
+        "label": "CHiME-5",
+        "url": "https://huggingface.co/datasets/chimechallenge/chime5"
+      },
+      {
+        "label": "CHiME-6",
+        "url": "https://huggingface.co/datasets/chimechallenge/chime6"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "agent-app-2026-11-18-ai-studio-android",
+    "date": "2026-11-18",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "Google AI Studio 可用一句提示生成可上架的全栈 Android 应用",
+    "summary": "Google 宣布，AI Studio 里的 Build agent 配合 Gemini 4 Carbon / Hydrogen，可以从一条提示生成带数据持久化、登录和 Gemini 能力的 Kotlin / Jetpack Compose Android 应用，并发布到个人 Google Play 资料库，用普通 Google 账号就能装到真机，无需自己管签名和 USB 调试。后端会按需开通 Cloud Firestore、Firebase Authentication（Google 登录）以及 Firebase AI Logic + App Check，把模型调用放在服务端，避免把 API key 写进 APK。浏览器内模拟器支持更低延迟启动、1200p、实时音频（可测 Gemini Live、TTS 等），并能一键截屏交给 agent 改 UI。这是对今年 5 月 I/O 上「在 AI Studio 里做 Android 应用」的一次明显加码，目前看不到同步的 iOS / Swift 生成能力。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "移动端 Agent 应用的脚手架正在被「提示 → 工程 → 上架」压缩，但密钥、鉴权和 App Check 被明确留在云侧。若你在 iOS 上走类似路线，更该提前设计：哪些推理必须在端上、哪些通过代理调用；同时，带音频的模拟器说明语音助手类应用已经是这类生成工作流的一等公民，Swift / 端侧模型这条线目前还得自己补。"
+    },
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "端侧"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Android",
+      "AI 编程",
+      "Gemini",
+      "移动开发"
+    ],
+    "source": {
+      "name": "Mike Taylor-Cai",
+      "handle": "@GoogleAIStudio",
+      "identity": "Google AI Studio 官方账号；Mike Taylor-Cai，Google AI Studio 产品经理"
+    },
+    "links": [
+      {
+        "label": "Google Developers 博客",
+        "url": "https://developers.googleblog.com/build-full-stack-android-apps-with-gemini-in-google-ai-studio/"
+      },
+      {
+        "label": "官方帖 @GoogleAIStudio",
+        "url": "https://x.com/GoogleAIStudio/status/2122752241887068565"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-voice-negotiation",
+    "date": "2026-11-18",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "外部实测：Pipecat、LiveKit 与 GPT-Live 的延迟、识别和话轮",
+    "summary": "作者用同一组 47 条西班牙语录音、每种架构 77 通通话，在听者侧比较 Pipecat 级联、LiveKit Agents 级联和 OpenAI GPT-Live 端到端语音模型，任务是电话里谈运费。内容回复的中位延迟分别是 2,616.0 ms、3,090.0 ms 和 2,444.8 ms；GPT-Live 相对 Pipecat 的 171.2 ms 优势，置信区间包含 0。GPT-Live 自己的时间戳显示，它在对方说完后约 800 ms 开始回答，其余约 1,367 ms 几乎恒定，是音频在 OpenAI 服务里的往返。三次架构里，一次工具调用都要再加 0.9–1.1 秒，大于框架之间的差距；框架自评延迟分别比听者等待短 9%（Pipecat）和 22%（LiveKit）。总体词错误率不高（6.03%、4.93%、1.47%），但金额错误在两个级联里是 13.01% 和 12.61%，GPT-Live 为 2.86%。默认设置下，两个级联几乎会在每个 backchannel 处停下来，并把抢话的 “ok” 当成承运人的同意：15 通里 Pipecat 发生 3 次、LiveKit 2 次、GPT-Live 0 次（描述性计数，作者写明未做显著性检验）。代码和数据已公开。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要只看框架自己报的延迟，要用听者侧（或车机扬声器侧）的计时；改路线这类工具调用，要单独预算约 1 秒，不能把它算进“模型很快”。更要紧的是：默认端点检测会把司机随口的“嗯 / 好”当成话轮结束甚至确认，必须把 backchannel 和“确认改路线”分开，并对地址、里程、时间这类槽位做校验，而不是只看总体 WER。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "论文",
+      "评测与榜单"
+    ],
+    "types": [
+      "论文",
+      "评测结果",
+      "开源"
+    ],
+    "tags": [
+      "Pipecat",
+      "LiveKit",
+      "GPT-Live"
+    ],
+    "source": {
+      "name": "Jovan Popoca Moran、Eduardo de Avila-Armenta 等",
+      "handle": "",
+      "identity": "arXiv；代码仓库为 AILabFr8tech"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.19118"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/AILabFr8tech/voice-negotiation-agents"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-14"
+  },
+  {
+    "id": "agent-app-2026-11-18-gpt-6-2",
+    "date": "2026-11-18",
+    "seq": 5,
+    "source_brief": "agent-app",
+    "title": "OpenAI 发布 GPT-6.2 Astra 与 GPT-6.2 Sol，强调更少 token 完成专业与智能体任务",
+    "summary": "OpenAI 发布 GPT-6.2 代的两个模型：Astra 面向更难的专业项目（幻灯片、表格、文档、编程与前端，以及科学研究），Sol 面向日常工作和多步智能体流程。官方称两者都能用更少的输出 token 完成高难度任务，从而在额度内多做一些事。在其「Agents’ Last Exam」专业多步评测上，OpenAI 称 Astra 比 GPT-6 Astra 高 5.2 分、成本不到三分之一，并比 Claude Fable 5.2 高 5.5 分、成本约为其 5%（该榜对 Fable 5.2 排除了 9 道使用了后备模型的题）。Cognition FrontierCode 2.0 上，官方称最大推理力度下 Sol 与 Astra 只差 0.5 分，成本大约为五分之一。API 方面，Astra 输入/输出定价较 GPT-6 Astra 低 20%（官方标为每百万 token：输入 8 美元、缓存输入 0.40 美元、输出 40 美元）；Sol 维持 GPT-6.1 Sol 的价格。即日起在 ChatGPT Work 与 Codex 向 Plus、Pro、Enterprise、Edu 开放，也同步提供 API。Pro 的 200 美元档首次为 Sol 提供 Ultrafast（官方称最高约 4.5 倍速率，但更耗额度），500 美元档则两个模型都有 Ultrafast。以上分数和成本对比均来自 OpenAI 官方，尚未见到完整的独立复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "云端模型这一轮拼的是「同样额度下多完成几件多步任务」，不是再堆一轮炫耀性生成。端云分工可以更干脆：本地小模型负责低延迟交互和工具草稿，把长程专业任务交给更省 token 的云端模型；同时要为「更快但更吃额度」的档位预留开关，避免语音助手在连续多步时把用户的云端配额一次打光。"
+    },
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "Agent 架构"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "大模型",
+      "智能体",
+      "ChatGPT",
+      "API"
+    ],
+    "source": {
+      "name": "OpenAI",
+      "handle": "@OpenAI",
+      "identity": "OpenAI 官方账号"
+    },
+    "links": [
+      {
+        "label": "OpenAI 官方博客",
+        "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol"
+      },
+      {
+        "label": "官方帖 @OpenAI",
+        "url": "https://x.com/OpenAI/status/2122750124543926515"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-floor-transfer",
+    "date": "2026-11-18",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "把多人话轮拆成“先找候选、再核实”两级过程",
+    "summary": "论文指出：多人对话里，停顿不等于说完，另一人出声也不等于话轮已经交接。作者做了一个双过程框架：快速、偏召回的一级连续发现可能的交接时刻；更慢的一级再结合声学、语言、说话人，以及可获得的多模态线索去做伪候选剔除和时刻精修。评测包括在给定时刻上做 SHIFT/HOLD、核实自动生成的候选，以及连续发现并定位真正的 floor transfer；数据用了 VoxConverse，以及带视线和动作的三人对话集 Multi-TPC。主要结论是：找出“可能要换人”的候选，比可靠地确认并定位真正交接要容易得多；不同证据源的贡献随场景变化。摘要中没有代码或权重链接。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "Luna 不必把 end-of-turn 做成一次分类。可以先用便宜的 VAD / 声学头高召回地标出“可能说完了”，再用语义、是否在对助手说话、是否换人等信号做核实；不确定就继续听。评测也要分开报：候选召回、误触发、以及交接时刻的误差，而不是只给一个准确率。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "论文",
+      "语音 Agent"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "话轮交接",
+      "VoxConverse"
+    ],
+    "source": {
+      "name": "Rutherford A. Patamia、Ming Liu、Wei Luo 等",
+      "handle": "",
+      "identity": "arXiv；投稿 IEEE TASLP 的预印本"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.19484"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-15"
+  },
+  {
+    "id": "agent-app-2026-11-18-devin-bots",
+    "date": "2026-11-18",
+    "seq": 6,
+    "source_brief": "agent-app",
+    "title": "Cognition 推出 Devin Bots：持久智能体负责目标，并可带领一组 Devin",
+    "summary": "Cognition 发布 Devin Bots：带有自己的记忆和工具、能并行带领多个 Devin 会话的持久智能体。你交给它的是一项持续责任（例如「让 Android 与 iOS 保持对等」），而不是一张任务清单；它负责调查、分派、验收，只把需要人拍板的事项送进 Needs You 收件箱，并可在 Slack、iMessage 或 Devin 应用里汇合。官方案例包括：没有 Android 工程师的情况下，一个 Android Bot 用 44 天做出已进入 Google Play 开放测试的 Android 应用，合并 1,134 个 PR、约 34.5 万行 Kotlin；人类负责人只发了 183 条消息，其中 22 天一条都没发，此后还由该 Bot 持续跟 iOS 新功能对齐。另一个 Layout Bot 负责网页布局抖动，三周合并 159 个相关 PR。同事 Jenny Xu 的手游工作室在只有她一名人类员工、约 20 个 Bot 的配置下，周 PR 从约 50 个升到约 1,900 个，并保持每周发版。Cognition 还称内部上周约合并 1,600 个来自 Bots 的 PR，公司整体每周合并超过 2,000 个 PR。产品已在 devin.ai/bots 上线，官方未在这篇博客里公布定价。这些产出数字均来自 Cognition 自述。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这里展示的是「目标所有权 + 人只处理决策点」，不是更快的自动补全。做手机助手时，可以把长期责任（跟进、对等、回归）和单次任务分开：端上保存目标、约束和待确认队列，云端或远程编码智能体负责推进；iMessage 被列为交互入口，也说明移动端更适合做简短决策通道，而不是把全部仓库上下文塞进手机。"
+    },
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "工具与 MCP"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "编程智能体",
+      "多 Agent",
+      "长期任务",
+      "Android"
+    ],
+    "source": {
+      "name": "Cognition",
+      "handle": "",
+      "identity": "Devin 开发公司官方博客"
+    },
+    "links": [
+      {
+        "label": "Cognition 官方博客",
+        "url": "https://devin.ai/blog/introducing-devin-bots"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-tiny-voca",
+    "date": "2026-11-18",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "4.5M 参数的 tiny-voca 在 ESP32-S3 上快于实时，并进入 audio.cpp",
+    "summary": "@ngxson 把 tiny-voca 移植到 ESP32-S3，称音频生成已经快于实时，主要延迟来自音素化（phonemization），并公布了移植仓库。同一窗口内，@0xShug0 宣布 tiny-voca 已接入 audio.cpp。模型本身由 @n4ze3m 在 11-15 发布（早于本窗口，此处仅作背景）：约 4.5M 参数、18 MB，用约 18 小时合成语音从头训练，声称训练中从未听过真人声音；Apache-2.0，已有 ONNX，两个美式英语音色，24 kHz，模型卡写在 4 个 CPU 线程上约 70 倍实时。我未听评测音质，也未在 iPhone 上复现。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这是目前很小的 ONNX TTS，适合在 Mac / 真机上测“导航短播报能不能本地、低延迟地说出来”，并专门测音素化在 iOS 上要花多久——微控制器上它已经是瓶颈。它目前只有英语、两条合成音色，不能当 Luna 的正式中文播报；音质和稳定性要通过听感评测后再决定能否做兜底。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "语音合成 TTS",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "模型发布"
+    ],
+    "tags": [
+      "tiny-voca",
+      "ESP32",
+      "audio.cpp"
+    ],
+    "source": {
+      "name": "Xuan-Son Nguyen",
+      "handle": "@ngxson",
+      "identity": "Hugging Face 工程师、llama.cpp 多模态贡献者；@0xShug0 补充了 audio.cpp 接入"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/ngxson/status/2122654022930706917"
+      },
+      {
+        "label": "audio.cpp 接入",
+        "url": "https://x.com/0xShug0/status/2122801103389549040"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/n4ze3m/tiny-voca"
+      },
+      {
+        "label": "ESP32 移植",
+        "url": "https://github.com/ngxson/tiny-voca-esp32s3"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/n4ze3m/tiny-voca"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "agent-app-2026-11-18-antigravity-robotics",
+    "date": "2026-11-18",
+    "seq": 7,
+    "source_brief": "agent-app",
+    "title": "Google 为 Antigravity 上线 Robotics 插件，用 Gemini 4 Hydrogen 当更快的机器人工作台",
+    "summary": "在 Gemini 4 Hydrogen 发布之后，Google 今天为 Antigravity 推出 Robotics 插件，把硬件接入、MuJoCo 仿真和闭环控制收成一套技能，官方说法是「一下午可以从拆箱走到可运行的应用」。Hydrogen 把原先 Gemini Robotics ER 2 的具身推理能力收进 Gemini 4 系列，并可用自然语言目标加摄像头画面直接规划、写控制代码并在执行中调整。官方称在 Artificial Analysis Robotics 0.1 上，Hydrogen 控制真实六轴机械臂完成 8 项桌面任务，得分 58，与更高端的 Argon 相近但 token 成本更低；在公开 ERQA 上，空间推理也超过 ER 2。演示包括约 10 分钟完成 I2RT YAM 机械臂接入与标定、一小时内从白板草图走到传送带分拣，以及双臂肥皂店接单打包。Antigravity 需 Google AI Pro 或 Ultra；API 侧可直接调用 `gemini-4-hydrogen`。这些基准和用时均来自 Google 官方演示与陈述。",
+    "insight": {
+      "heading": "对具身智能 / 端侧 Agent 的启发",
+      "body": "机器人这一侧也在把「快而够用的模型 + 可组装的技能层」当成默认工作台，而不只是堆更大的专有模型。这和手机端侧智能体是同一思路：把接入、仿真/预演、感知和闭环控制拆成可调用技能，让模型在固定工具边界里迭代。端侧不一定要直接控机械臂，但「先在本地或仿真里预演，再允许真实动作」值得写进任何会操作外部设备的语音助手。"
+    },
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "多模态"
+    ],
+    "types": [
+      "产品发布",
+      "评测结果"
+    ],
+    "tags": [
+      "具身智能",
+      "机器人",
+      "Gemini 4 Hydrogen",
+      "仿真"
+    ],
+    "source": {
+      "name": "Alex Gruenstein、Gabe Cohen",
+      "handle": "",
+      "identity": "Google Distinguished Software Engineer 与机器人产品高级总监，及 Gemini Robotics 团队，Google Developers 博客"
+    },
+    "links": [
+      {
+        "label": "Google Developers 博客",
+        "url": "https://developers.googleblog.com/gemini-hydrogen-for-robotics/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-sgm-diar",
+    "date": "2026-11-18",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "在线说话人日志：用“新奇门控记忆”决定这是不是新的人",
+    "summary": "作者把视觉持续学习里的 Surprise-Gated Memory 搬到流式说话人日志：冻结的 DiariZen 编码器之上，用校准过的新奇信号决定“当前声音是已经听过的人，还是新人”，并用周期性 replay 巩固记忆。在会议结束可回写的设定下，相对朴素在线基线，SGM-Diar 在 AMI-SDM 上收回了与离线 oracle 之间 9.2 个 diarization error 点中的 4.8 个（约 52%），在 VoxConverse 上收回 2.3 点中的 1.9 个（约 82%）。他们还报告 one-shot 说话人召回 0.857、错误新奇率 0.001。作者明确这是概念验证：单一种子，只用了 3 场 AMI 和 5 场 VoxConverse，记忆只在单场会议内有效，结束即清空，运行时不更新梯度。摘要未提供代码。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车里通常只有两三个人，不必上会议级 diarization，但“这个声音是不是已经在本趟行程里听过的司机 / 乘客”可以用类似的新奇阈值来做。先在本趟行程内维护临时声纹库，行程结束就清掉；阈值要在 CHiME 或多说话人录音上单独校准，不要直接搬论文里的绝对误差数字。"
+    },
+    "relevance": 4,
+    "domains": [
+      "论文",
+      "语音 Agent"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "说话人日志",
+      "Surprise-Gated Memory"
+    ],
+    "source": {
+      "name": "Louis Mouchon、Alexis Lainault",
+      "handle": "",
+      "identity": "arXiv"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.20819"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-18-qwen-audio-asr",
+    "date": "2026-11-18",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "Qwen-Audio-3.1-ASR：多语种误差下降，方言可保留或转成普通话",
+    "summary": "Qwen Audio 官方线程介绍 Qwen-Audio-3.1-ASR：支持 30 种语言和 16 种中文方言。他们用统一的 API 评测称，中英 7 个测试集里有 4 个错误率最低；在 GigaSpeechBench（7 语）上，宏平均错误率从 3.0 版的 22.50% 降到 15.09%，相对下降 32.9%，且 7 种语言都优于前一版。方言可以保留原表述，也可以转成普通话：在 16 个内部中文方言 ASR 集上，宏平均字错误率 10.38%，其中 11 个集在对比系统里最低。推理时还可提供热词表。帖子末尾链到 10 月的技术报告 arXiv:2610.28711，我没有在这次重读该报告全文。官方没有说明 3.1 能否在端上运行，从“API 评测管线”的表述看，更像云端服务。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "司机可能说粤语或其他方言，也可能夹专有路名、站点。端上模型未必能直接部署这套 3.1，但可以把“方言保留 / 转普通话”做成可切换选项，并把导航热词（地名、出口、卡车停靠点）在推理时注入。用他们公布的口径当云端对照，不要把 API 成绩直接当成 Core ML 上的 WER。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音识别 ASR",
+      "大模型"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "Qwen",
+      "ASR",
+      "方言"
+    ],
+    "source": {
+      "name": "阿里 Qwen 语音团队",
+      "handle": "@TONGYI_SpeechAI",
+      "identity": "ASR、TTS、Realtime"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/TONGYI_SpeechAI/status/2122579304894902598"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2610.28711"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-17"
+  },
+  {
+    "id": "lumi-2026-11-18-ag-ui",
+    "date": "2026-11-18",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "AG-UI 1.0.5：修好重叠流里并行 tool call 被换序的问题",
+    "summary": "仓库发布了 2026-11-17 这一组 TypeScript 包，其中 @ag-ui/client 来到 1.0.5。发布说明里最重要的一点：compactEvents 在重叠的流之间会保留消息顺序和快照边界，修复并行 tool call 被换序、以及中途快照覆盖增量的问题；跨流到达的事件也保持到达顺序，避免 STEP_STARTED / STEP_FINISHED 被校验拒绝。这是一次带破坏性变更的发布：事件校验会拒绝缺失、非字符串或继承来的联合类型判别字段，依赖旧排序或未压缩推理增量的代码需要复查。@CopilotKit 另外发帖称 AG-UI 登上 GitHub Trending 第一、约 2 万 star，我没有独立核对当日排行榜。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若语音一边播报、一边并行调用“搜地点 + 规划路线 + 打开页面”，事件流必须按发生顺序到达界面，否则地图上会先出现错的步骤。设计函数工具时，把并行调用的结果和中间快照做成可校验的顺序，而不是假设“先返回的就是先开始的”。"
+    },
+    "relevance": 3,
+    "domains": [
+      "Agent 架构",
+      "工具与 MCP",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "AG-UI",
+      "tool call",
+      "CopilotKit"
+    ],
+    "source": {
+      "name": "ag-ui-protocol/ag-ui",
+      "handle": "@CopilotKit",
+      "identity": "AG-UI 协议仓库；@CopilotKit 同期转发了协议动态"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/ag-ui-protocol/ag-ui/releases/tag/release/2026-11-17"
+      },
+      {
+        "label": "原帖",
+        "url": "https://x.com/CopilotKit/status/2122717588530806917"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-18-sophon-idle",
+    "date": "2026-11-18",
+    "seq": 10,
+    "source_brief": "lumi",
+    "title": "Sophon-Realtime v1.4.1：用户一直说、模型一直听，会话却被空闲超时掐掉",
+    "summary": "v1.4.1 修复了一个会话被过早结束的问题：vLLM-Omni 0.30 只会在模型输出、追加、心跳和播放确认时重置空闲计时器，不会在收到用户音频时重置。因此，当用户持续说话而模型暂时不回（长独白、听写、只听不说），Flash 配置会在 60 秒后断开会话（Tag / E2E 原先是 300 秒）。本次只改配置、不改权重：单卡配置默认 idle_ttl_s 改为 600 秒，小显存配置改为 300 秒；根因他们已向 vLLM-Omni 报告。窗口内 @BKJinAI 没有就这次发布发帖。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "司机可能连续讲十几秒甚至一分钟的路况，这段时间助手应只听、不答。空闲超时必须把“正在收听用户音频”算作活跃，不能只看自己有没有在播 TTS；否则会在用户还没说完时把会话拆掉。端上同样要单独测“长独白 / 只听模式”的超时路径。"
+    },
+    "relevance": 3,
+    "domains": [
+      "全双工",
+      "端到端语音",
+      "开源",
+      "语音 Agent"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "Sophon",
+      "空闲超时",
+      "全双工"
+    ],
+    "source": {
+      "name": "adventists-ai/sophon-realtime",
+      "handle": "",
+      "identity": "开源全双工模型 Sophon-Realtime 的仓库"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.4.1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-18/",
+    "posted_at": "2026-11-18"
+  },
+  {
     "id": "lumi-2026-11-17-voice-reader",
     "date": "2026-11-17",
     "seq": 1,
