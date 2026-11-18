@@ -155,7 +155,7 @@ class PublisherTests(unittest.TestCase):
     def test_archive_and_homepage_round_trip_without_edits(self):
         home = (self.tmp / "index.html").read_text(encoding="utf-8")
         matches = list(publish.CARD_RE.finditer(home))
-        self.assertEqual(len(matches), 13)
+        self.assertEqual(len(matches), 14)
         gaps = [home[a.end() : b.start()] for a, b in zip(matches, matches[1:])]
         self.assertTrue(gaps)
         self.assertTrue(all(gap == gaps[0] for gap in gaps))
@@ -222,8 +222,9 @@ class PublisherTests(unittest.TestCase):
         post_feed = ET.fromstring((self.tmp / "post/index.xml").read_text(encoding="utf-8"))
         for feed in (root_feed, post_feed):
             titles = [item.findtext("title") for item in feed.findall("./channel/item")]
-            self.assertEqual(titles[0], "每日 AI 与移动端智能体简报（2026-11-18）")
-            self.assertEqual(titles[1], "发布器测试标题")
+            self.assertEqual(titles[0], "Luna 全双工语音日报（2026-11-18）")
+            self.assertEqual(titles[1], "每日 AI 与移动端智能体简报（2026-11-18）")
+            self.assertEqual(titles[2], "发布器测试标题")
             self.assertEqual(titles.count("发布器测试标题"), 1)
         self.assertIn("虽迟但到的30岁", [item.findtext("title") for item in root_feed.findall("./channel/item")])
         self.assertNotIn(
@@ -253,8 +254,9 @@ class PublisherTests(unittest.TestCase):
 
         cat_feed = ET.fromstring((self.tmp / "categories" / "日报" / "index.xml").read_text(encoding="utf-8"))
         cat_titles = [item.findtext("title") for item in cat_feed.findall("./channel/item")]
-        self.assertEqual(cat_titles[0], "每日 AI 与移动端智能体简报（2026-11-18）")
-        self.assertEqual(cat_titles[1], "发布器测试标题")
+        self.assertEqual(cat_titles[0], "Luna 全双工语音日报（2026-11-18）")
+        self.assertEqual(cat_titles[1], "每日 AI 与移动端智能体简报（2026-11-18）")
+        self.assertEqual(cat_titles[2], "发布器测试标题")
         term_feed = ET.fromstring((self.tmp / "categories" / "index.xml").read_text(encoding="utf-8"))
         term_titles = [item.findtext("title") for item in term_feed.findall("./channel/item")]
         self.assertEqual(set(term_titles[:2]), {"日报", "lumi"})
