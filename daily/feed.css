@@ -584,6 +584,103 @@ input[type="search"]:focus {
     font-size: 12.5px;
 }
 
+.sync-panel {
+    margin: 0 0 14px;
+    padding: 14px 16px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+}
+
+.sync-status {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.sync-label,
+.sync-note,
+.sync-notice {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.sync-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.sync-code {
+    margin: 4px 0 0;
+    font-family: "SFMono-Regular", ui-monospace, "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 20px;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+}
+
+.sync-link {
+    margin: 4px 0 0;
+    color: var(--body);
+    font-size: 13px;
+    line-height: 1.55;
+    word-break: break-all;
+}
+
+.sync-actions,
+.sync-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.sync-form .sync-label,
+.sync-form .sync-note {
+    flex: 1 0 100%;
+    margin-top: 0;
+}
+
+.sync-code { overflow-wrap: anywhere; }
+
+.sync-actions button,
+.sync-form button,
+.sync-form input {
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: var(--ink);
+    font-size: 13px;
+}
+
+.sync-actions .sync-go,
+.sync-form .sync-go {
+    font-weight: 750;
+}
+
+.sync-form input {
+    width: min(280px, 100%);
+    background: #fff;
+    padding: 6px 12px;
+    letter-spacing: 0.04em;
+}
+
+.sync-form input:focus {
+    outline: none;
+    border-color: #b9cbe8;
+    box-shadow: 0 0 0 3px rgba(47, 95, 168, 0.12);
+}
+
+.sync-actions button:disabled,
+.sync-form button:disabled {
+    opacity: 0.55;
+}
+
 .empty, .noscript {
     margin: 12px 0;
     color: var(--muted);
