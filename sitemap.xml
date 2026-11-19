@@ -2,6 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
     <loc>https://fuCking-Life.github.io/tags/每日交易资讯/</loc>
     <lastmod>2026-11-18T08:00:00+08:00</lastmod>
   </url>
@@ -23,11 +31,11 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/daily/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/tags/agent-app/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</loc>
@@ -35,11 +43,11 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/categories/日报/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/lumi-2026-11-17/</loc>
@@ -47,10 +55,10 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/categories/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url><url>
     <loc>https://fuCking-Life.github.io/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url><url>
     <loc>https://fuCking-Life.github.io/categories/life/</loc>
     <lastmod>2022-11-10T20:30:09+08:00</lastmod>
@@ -68,7 +76,7 @@
     <lastmod>2021-07-04T18:55:59+08:00</lastmod>
   </url><url>
     <loc>https://fuCking-Life.github.io/post/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url><url>
     <loc>https://fuCking-Life.github.io/categories/algorithm/</loc>
     <lastmod>2021-05-13T09:36:45+08:00</lastmod>
@@ -119,6 +127,6 @@
     <lastmod>2018-05-17T11:43:59+08:00</lastmod>
   </url><url>
     <loc>https://fuCking-Life.github.io/tags/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
 </urlset>

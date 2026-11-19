@@ -6,7 +6,17 @@
     <description>Recent content in lumi on Fucking Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 18 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/tags/lumi/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/tags/lumi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-19）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-19/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-19/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-18 08:45 – 2026-11-19 08:42（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 10 条：Kuroko 在 TurnBench 暂列第一但未做直播流测试，Inworld 开源 SAVA 与 Voice Isolator，打断后裁剪对话历史，以及 Pipecat Audience 多人场景澄清；另有 Sophon-Realtime 1.5.0、Nemotron Bolt E4B、Qwen-Audio-3.1-ASR Message、tiny-voca/Kokoro 接入 llama.cpp、临床短话轮情绪实测和 LiveKit Agents 1.8.13。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Luna 全双工语音日报（2026-11-18）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-18/</link>

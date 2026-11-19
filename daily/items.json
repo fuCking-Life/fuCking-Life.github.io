@@ -1,5 +1,718 @@
 [
   {
+    "id": "agent-app-2026-11-19-rumble-2-flash",
+    "date": "2026-11-19",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "Reson8 开源 0.5B 语音识别模型 Rumble-2-Flash，CEO 称小到能在手机上跑",
+    "summary": "Reson8 今天把 Rumble-2-Flash 以 Apache 2.0 开源权重发布，模型为 0.5B 参数，支持 40 多种语言，架构沿用 Qwen3-ASR，可直接在 Hugging Face Transformers 和 vLLM 里运行，无需自定义运行时。公司在 Hugging Face 博客里介绍，它是用 on-policy distillation（并由 GOLD 对齐不同分词器）从更大的生产模型 Rumble-2 蒸馏而来。官方给出的评测是：在 Open ASR Leaderboard 多语种轨道上，中、德、法、意、西、葡、印地、荷、英 9 种语言平均错误率 6.96%，优于大 15 倍的 Meta omniASR-LLM 7B，也高于 Whisper large-v3；英语轨道平均 WER 为 6.6%。在 AppTek 302 小时、覆盖 14 种英语口音的呼叫中心测试上，WER 为 7.86%，与 30B 的 NVIDIA Nemotron 3.5 Transcribe（7.78%）接近，并好于同族的 Qwen3-ASR 0.6B（8.7%）。吞吐方面，官方称在批次较满时超过 7,000 RTFx（约半秒处理一小时音频），模型卡标明这些榜单数字是在 H200 上用 vLLM 测的，不能直接当成手机端延迟。CEO Raoul Ritter 在帖子里写它「比大 20 倍的模型更好，小到能在你的手机上跑」，但官方模型卡和博客没有给出手机机型、内存占用或端侧时延。该模型面向预录音频（通话、讲座、语音备忘、播客）；说话人分离和实时对话转写被放在更大的 Rumble-2 上。托管 API 已于 11 月 3 日上线。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "0.5B 级、面向电话噪音和口音的开源 ASR，正好卡在手机语音助手最需要的那一层：先在本地把语音稳妥转成文字，再决定哪些请求继续在端上处理。若要接到 iOS 语音助手里，下一步不是复述服务器上的 7,000 RTFx，而是自己在神经引擎或 Core ML 上量延迟、功耗和中文/口语场景的 WER；同时不要指望它单独承担实时多说话人对讲，官方已把那部分留给更大模型。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "模型发布"
+    ],
+    "tags": [
+      "端侧语音",
+      "小模型",
+      "语音识别",
+      "开源"
+    ],
+    "source": {
+      "name": "Raoul Ritter",
+      "handle": "@reson8_official",
+      "identity": "阿姆斯特丹语音识别公司 Reson8 官方账号；Reson8 CEO Raoul Ritter；Hugging Face 官方博客"
+    },
+    "links": [
+      {
+        "label": "Hugging Face 博客",
+        "url": "https://huggingface.co/blog/rumble-2-flash"
+      },
+      {
+        "label": "模型权重",
+        "url": "https://huggingface.co/Reson8/Rumble-2-Flash"
+      },
+      {
+        "label": "官方帖 @reson8_official",
+        "url": "https://x.com/reson8_official/status/2123068013356151211"
+      },
+      {
+        "label": "CEO 帖 @raoulritterr",
+        "url": "https://x.com/raoulritterr/status/2123053360773271563"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-kuroko",
+    "date": "2026-11-19",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Kuroko：14.9M 话轮模型在 Sesame TurnBench 暂列第一，但还没做过直播流测试",
+    "summary": "PatientDesk AI 宣布，14.9M 参数的开源话轮模型 Kuroko 在 Sesame TurnBench 隐藏测试集上，两项任务都排在 27 个条目的第一：结束话轮召回 98.3%（6,293 次事件）、误报 6.5%、中位延迟 619 ms；打断召回 98.9%（804 次事件）、误报 7.4%、中位延迟 557 ms。我读了他们的博文：系统由 Silero VAD 6.2.3、一套来自 p99lab turn-1-mini 的时序规则（规则代码未放进 Hugging Face 仓库），以及每秒 25 次判断“这段声音是不是在抢话轮”的 14.9M 模型组成；训练大约 1,025 小时对话，以 Open Yap 1K 为主，未使用 TurnBench 的开发 / 测试音频，权重为 Apache-2.0。作者写明，分数来自按 40 秒片段离线处理的录音，“We have not run it as a live stream.” 结束话轮上，下一名 OpenYap Turn 召回 97.8%，但中位延迟只有 298 ms，比 Kuroko 更快。我没有自己复跑该榜。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这正是要解决的“别把‘嗯’当成说完，也别在司机思考停顿时抢话”。先在车载录音上离线对比 Kuroko 和现有 VAD / Smart Turn，再补一次真正的流式测试——作者自己还没做。转到 Core ML / ONNX 之前，先看 14.9M、40 ms 步进在 iPhone 上的预算；训练以英语为主，中文司机场景要单独测误报。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "话轮控制",
+      "开源发布",
+      "端上语音"
+    ],
+    "source": {
+      "name": "Oncel Ozgul",
+      "handle": "@ozgul_oncel",
+      "identity": "Oncel Ozgul，PatientDesk AI（YC W26）联合创始人；技术博文作者为 Sezgin Saygili"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/ozgul_oncel/status/2122854851893944443"
+      },
+      {
+        "label": "博文",
+        "url": "https://spero.patientdesk.ai/blog/kuroko"
+      },
+      {
+        "label": "榜单",
+        "url": "https://turnbench.sesame.com"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/cloud0day3/kuroko"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "agent-app-2026-11-19-chatgpt-live-dictation",
+    "date": "2026-11-19",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "ChatGPT 上线 Live Dictation：边说边出字，并取消 10 分钟上限",
+    "summary": "OpenAI 宣布升级 ChatGPT 的听写：Live Dictation 会在说话的同时把语音转成文字，而不必等你说完再一次性出稿。官方更新说明还写明，可以点按或点击波形来显示或隐藏正在生成的文字，并取消了原先 10 分钟的录音上限。该功能正在全球向所有 ChatGPT 套餐推送，覆盖 iOS、Android、网页和桌面应用。这不是新的对话式语音模式，而是输入框里的实时听写；OpenAI 未在这篇说明里公布所用模型和端侧/云端分工。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "手机语音助手的输入体验，正在从「说完再等」变成「边说边改」。端上至少应该先做低延迟的流式转写和即时纠错，让用户在说错一个词时就能改，而不是把一段长录音交给云端再一次性回写。取消时长上限也说明：长指令、长备忘会成为常规输入，端侧缓冲、标点和局部重识别要比一次性离线转写更值得优先做。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "iOS",
+      "个人 Agent"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "语音输入",
+      "移动 App",
+      "ChatGPT",
+      "实时转写"
+    ],
+    "source": {
+      "name": "ChatGPT",
+      "handle": "@ChatGPT",
+      "identity": "ChatGPT 官方账号；OpenAI ChatGPT 更新说明"
+    },
+    "links": [
+      {
+        "label": "官方帖 @ChatGPT",
+        "url": "https://x.com/ChatGPT/status/2123114715257946334"
+      },
+      {
+        "label": "OpenAI 更新说明",
+        "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-sava",
+    "date": "2026-11-19",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "Inworld 开源 SAVA 与 Voice Isolator：可在笔记本 CPU 上跑的语义 VAD / 话轮结束检测",
+    "summary": "Inworld 开源了 Voice Isolator 和 SAVA，权重与代码均为 Apache-2.0，可商用。我读了 SAVA 的博文和模型卡：这是一个 25.5M 的流式模型，16 kHz，每 40 ms 同时输出“是否在说话”和“话轮是否结束”；话轮结束头没有前瞻，语音概率有 120 ms 前瞻。模型卡写在 Apple M3 Max 单线程上，一路音频每帧 3.8 ms（开源介绍页写的是 3 ms 以内）。在 AMI 会议集上，相对 Pipecat smart-turn v3.2，中位检测延迟 71 ms 对 210 ms，200 ms 内检出 85.5% 对 30.8%。其他基准并不一边倒：在 smart-turn 自己的测试集上 AUC 几乎持平（0.980 对 0.983），在 Easy Turn 上 SAVA 为 0.51、smart-turn 为 0.83，在普通话会议集 AliMeeting 上偏弱。SAVA 明确不做目标说话人选择，也不负责打断和 backchannel，这两项留给应用侧；对安静、远场声音较敏感，他们建议先经过 Voice Isolator。Voice Isolator 是 48 kHz 降噪而不是目标说话人分离；实时版约 58M，20 ms 前瞻，算法延迟 63 ms，支持 Apple silicon。TTS-2 技术报告我这次没有单独阅读。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "先在车噪和中文重叠语音上复现 AMI 与 AliMeeting 的对比，不要只看 AMI 上那组好看的中位延迟。SAVA 不能替代“是不是在对 Luna 说话”，车里仍要另做定向 / 声纹。可以尝试“Isolator → SAVA → 应用侧 backchannel 策略”这条级联，并评估 25.5M + 58M 在 iPhone 上的算力和耗电。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "话轮控制",
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Inworld AI",
+      "handle": "@inworld",
+      "identity": "Inworld AI，发布开源语音模型与商用语音 API"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/inworld/status/2123120546908926300"
+      },
+      {
+        "label": "介绍页",
+        "url": "https://inworld.ai/open-source"
+      },
+      {
+        "label": "SAVA 博文",
+        "url": "https://inworld.ai/blog/introducing-sava"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/inworld-ai/sava"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/inworld/sava"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "agent-app-2026-11-19-doordash-imessage",
+    "date": "2026-11-19",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "DoorDash 助手向美加全部 iOS 用户开放，可在信息 App 里完成点餐结账",
+    "summary": "在今年早些时候的试点之后，DoorDash 宣布其助手已对所有用户在 iOS 信息 App 中开放，基于 Apple Messages for Business。用户可以自然语言下单，例如「25 分钟内送到、20 美元以内、不要蘑菇、加辣的拉面」，在同一对话里看到带照片、描述和价格的可点选菜单，自定义餐品并完成结账，无需打开 DoorDash 主应用。官方称助手会使用 DoorDash 订单历史和内部 memory blocks 做个性化推荐；当请求同时包含预算、饮食偏好和送达时间时，由小语言模型和机器学习排序在多家门店中搜索符合全部约束的菜系和单品。其他示例还包括：提醒明天中午点午餐、把食谱链接转成到店购物车、查找附近最便宜的新款 AirPods。DoorDash 联合创始人兼 CTO Andy Fang 确认面向美加全部 DoorDash iOS 用户，并称 Android 支持即将到来。入口为 doordash.com/text。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这是一条很完整的「系统级消息通道 + 垂直 Agent」路径：意图、约束、菜单预览和支付都留在 iMessage 里，不强迫用户跳进自家 App。做端侧语音或消息助手时，可以把预算、忌口、时效这类硬约束先在本地收成结构化条件，再用小模型做检索和排序，把带图的可点选项和结账确认做成系统对话卡片。Android 尚未同步，也说明这类体验目前仍深度绑在 Apple Messages for Business 上。"
+    },
+    "relevance": 5,
+    "domains": [
+      "个人 Agent",
+      "iOS",
+      "苹果生态"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "移动助手",
+      "iMessage",
+      "垂直 Agent",
+      "小模型"
+    ],
+    "source": {
+      "name": "Andy Fang",
+      "handle": "@AIatDoorDash",
+      "identity": "DoorDash 应用 AI 研究实验室官方账号；DoorDash 联合创始人兼 CTO Andy Fang"
+    },
+    "links": [
+      {
+        "label": "官方帖 @AIatDoorDash",
+        "url": "https://x.com/AIatDoorDash/status/2123149057510268929"
+      },
+      {
+        "label": "Andy Fang 帖",
+        "url": "https://x.com/andyfang/status/2123151073041129640"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-truncate-history",
+    "date": "2026-11-19",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "打断之后，要把对话历史裁到用户真正听到的部分",
+    "summary": "Andi Marafioti 演示：语音 agent 写文本比开口快，用户打断时，模型会以为对方已经听完整段回复。现在 huggingface/speech-to-speech 会把助手历史裁到用户实际听到的音频对应的转写，并标成 incomplete，文本里不加打断标记。我核对了 PR #804：它在 2026-11-10 就已合并，这条帖是窗口内的演示，不是当天才合入。若还没有音频发出去，就不保留助手消息；若最后一段仍在合成，就按会话里测到的语速或 12 字/秒估计时长。服务端按发送时间估计播放进度，会高估已听内容，也忽略网络和缓冲；客户端若自己跟踪播放，可以发 `conversation.item.truncate` 和 `audio_end_ms` 覆盖该估计。窗口前一天合并的 PR #843 还规定：回复被取消时，已经发出的 function call 要保留。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "司机打断之后，上下文只能保留已经播出的那几秒，不能把还在缓冲区里的“然后在前方出口下高速”当成已传达；已经执行的导航工具调用也不要回滚。播放进度必须用真正的扬声器时间戳，不要用“文本已经生成”或“音频已经送出”来估。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "Agent 架构"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Andi Marafioti",
+      "handle": "@andimarafioti",
+      "identity": "Andi Marafioti，Hugging Face 多模态研究负责人"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/andimarafioti/status/2123077999004156162"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/huggingface/speech-to-speech"
+      },
+      {
+        "label": "PR",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/804"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "agent-app-2026-11-19-gemini-4-neon",
+    "date": "2026-11-19",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "Google 发布 Gemini 4 Neon：介于 Carbon 与 Hydrogen 之间，面向复杂编程与知识工作",
+    "summary": "Google 发布 Gemini 4 Neon，定位在 Gemini 4 系列的 Carbon 与 Hydrogen 之间，强调在复杂软件工程、知识工作和科学流程上，既有接近前沿的能力，又能较快完成端到端任务。官方称在 Artificial Analysis Intelligence Index 的 xhigh 思维档上总分为 61、总体第 3，并领先于同档可比模型；在 Vals Index 上第 2（70.9%），处在帕累托前沿；新的 Agent Arena Index 上可操纵性（中途按用户修正调整）排第 2，并在 4,200 多场真实智能体会话中以 1336 分列全球第 2。定价为每百万 token 输入 3 美元（缓存输入 0.15 美元，官方称优惠 95%）、输出 15 美元，上下文窗口 100 万 token。官方还给出一批基准，包括 Artificial Analysis Coding Agent Index 总体第 1（58.6）、Terminal-Bench 4.1 为 65.2%、FrontierCode 2.0 在默认 high 设置为 46.2%，以及内部 Antigravity 测试中「目前最低的捏造率」。@GeminiApp 确认，Google AI Pro 和 Ultra 订阅用户可在移动端、桌面和网页的 Chat 与 Tasks 模型列表中选用 4 Neon；开发者可通过 Google AI Studio 付费 API 和 Android Studio 使用，Antigravity 亦向付费 Pro/Ultra 开放。以上分数和成本对比均来自 Google 官方。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "云端模型线进一步把「够快的前沿推理」单独做成一档，并直接进到 Gemini 手机应用的 Tasks。端云分工可以更明确：端上继续承担低延迟交互和任务草稿，把长程分析、编程和科学工作交给这一档更省成本的云端模型；既然 Tasks 已能切换 Neon，手机助手也应让用户（或策略层）按任务难度选模型，避免一律走最贵、最慢的那一档。"
+    },
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "Agent 架构",
+      "个人 Agent"
+    ],
+    "types": [
+      "模型发布",
+      "产品发布"
+    ],
+    "tags": [
+      "Gemini",
+      "智能体",
+      "编程模型",
+      "移动 App"
+    ],
+    "source": {
+      "name": "Koray Kavukcuoglu",
+      "handle": "@GoogleDeepMind",
+      "identity": "Google DeepMind 高级副总裁、Google 首席 AI 架构师；Google 官方博客；@GeminiApp"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/"
+      },
+      {
+        "label": "官方帖 @GoogleDeepMind",
+        "url": "https://x.com/GoogleDeepMind/status/2123167884411077030"
+      },
+      {
+        "label": "官方帖 @GeminiApp",
+        "url": "https://x.com/GeminiApp/status/2123168704662012079"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-audience-clarify",
+    "date": "2026-11-19",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "Pipecat Audience 作者澄清：现在还不适配一般多人场景",
+    "summary": "Jon Taylor 回复称：Pipecat Audience 仍是实验性的，训练目标是“一个用户和多个 agent 之间的对话”，要更好地覆盖一般多人场景还需要专门迭代，他正在做这件事。他也希望把 Audience 这种小分类器和 Jev 放到公开的决策模型基准上对比。同一窗口里，Kwindla Kramer 说明他们现在的复杂语音应用会并行跑多种推理：小分类器做很快的路由 / 过滤，LLM 做语义判断；例如用户一段时间没先开口时要不要接话，或用户触发安全规则时要不要打断。他给出的多人演示仓库 https://github.com/pipecat-ai/experiment-multiuser-bot 在收集时返回 404，我没能读到代码。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要把昨日介绍的 Audience 直接当成车内“司机 / 乘客”方案——它练的是“一个用户、多个助手”，不是副驾插话。先做车舱专项评测，再决定是等他们的多人迭代，还是用车内数据自己微调。并行架构仍然值得保留：端上小分类器先做“该不该接”，拿不准再上本地或云端更大模型。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端侧"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "唤醒与声纹",
+      "话轮控制",
+      "端上小模型"
+    ],
+    "source": {
+      "name": "Jon Taylor",
+      "handle": "@JonPTaylor",
+      "identity": "Jon Taylor，Daily / Pipecat 语音 AI 工程师；@kwindla 同期补充了并行推理架构"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/JonPTaylor/status/2123135335433650236"
+      },
+      {
+        "label": "相关讨论",
+        "url": "https://x.com/kwindla/status/2123068255581638933"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "agent-app-2026-11-19-genie-4",
+    "date": "2026-11-19",
+    "seq": 5,
+    "source_brief": "agent-app",
+    "title": "Genie 4 向 Google AI Ultra 用户开放：可在探索中途改世界，并生成同步原生音频",
+    "summary": "继 10 月 27 日的研究发布之后，Google 今天把 Genie 4 正式放入 Project Genie，向符合条件的 Google AI Ultra 订阅用户开放，Pro 用户可排队。Genie 4 被官方称为目前最逼真、可交互的世界模型：你可以在探索过程中用新提示实时改环境，例如改天气、加入角色或改变剧情；并首次为这些画面配上随场景变化的实时原生音频，包括环境声和角色对白。同期还有 Project Genie agent，可用自然语言组织多模态模型来生成初始视觉和配乐；探索时也可引入 Gemini，观察画面、给出下一步建议或自动触发事件。Genie 3 仍可选用，单次生成探索时长从 60 秒延长到最多 3 分钟，并支持世界串联、360 度全景图作为初始条件，以及实时自然语言事件。官方同时提醒：这仍属前沿研究，摄像延迟、复杂物理交互、实时音频精度和长期场景持续性仍是未解决问题；所有生成的视频和音频带有 SynthID 水印。模型卡还写明输出为最高 24fps 的实时 720p 视频加同步音频，并依赖 Gemini Omni Flash 与 Gemini 的推理来保持连贯。",
+    "insight": {
+      "heading": "对世界模型 / 具身智能的启发",
+      "body": "世界模型正在从研究演示变成可订阅的交互环境，关键能力是「边走边改」和同步音频，而不是一次性生成一段视频。对机器人或端侧智能体来说，更有价值的是：在允许真实动作之前，先在可提示、可打断的仿真里预演；同时也要正视官方自己列出的限制——物体持久性和复杂物理仍会漂，不能把当前 Genie 当成可靠的物理引擎。这套体验目前在浏览器里、且仅向 Ultra 开放，还不是手机端侧能力。"
+    },
+    "relevance": 4,
+    "domains": [
+      "多模态",
+      "大模型"
+    ],
+    "types": [
+      "产品发布",
+      "技术解读"
+    ],
+    "tags": [
+      "世界模型",
+      "具身智能",
+      "Genie",
+      "仿真"
+    ],
+    "source": {
+      "name": "Diego Rivas、Pavan Kumar",
+      "handle": "@GoogleDeepMind",
+      "identity": "Google DeepMind 与 Google Labs 集团产品经理；Google 官方博客"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/"
+      },
+      {
+        "label": "官方帖 @GoogleDeepMind",
+        "url": "https://x.com/GoogleDeepMind/status/2123117733709586849"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-sophon-150",
+    "date": "2026-11-19",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Sophon-Realtime v1.5.0：4B 模型能上 16 GB Mac，话轮问题也要按模型大小来写",
+    "summary": "仓库发布了 v1.5.0（昨日报告的是 v1.4.1）。新增 Sophon-Realtime-4B-Tag-W4（语言模块 4 bit，约 21 GB，面向单张 24 GB GPU）和 Sophon-Realtime-4B-Flash-MLX（语言模块 8 bit，对话时约 11 GB，面向 16 GB 的 Apple silicon Mac）。发布说明称，在 M4 Max 上，你说完后 0.3–0.5 秒开始出声（同系列 32B Mac 构建是 0.9–1.1 秒）。Mac 引擎按模型配置选择 `turn_question`：32B 仍用短的二选一问题，4B 改用四选项，因为 4B 在短问题上表现较差（Smart Turn v3.2 样本，中英各 300 条：四选项 90.0% / 89.7%，短问题 72.3% / 74.0%；32B 在同样样本上 91.7% / 92.7%）。测量是在目标显存预算下做的，尚未在物理 24 GB 卡或 16 GB Mac 上复测。这仍是 Mac / GPU 上的实时语音模型，不是 iOS / Core ML 移植。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "4B 在手机上仍然偏大，但“话轮问题要按模型大小来写”可以直接用在 Luna：端上小模型不要复用大模型的二分类提示，选项不够时准确率会掉一截。若在 Mac 上先做全双工原型，Flash-MLX 更接近消费级内存，不过要以真机 16 GB 复测为准。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "端到端语音",
+      "大模型",
+      "开源"
+    ],
+    "types": [
+      "模型发布",
+      "开源"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "话轮控制",
+      "开源发布"
+    ],
+    "source": {
+      "name": "adventists-ai/sophon-realtime",
+      "handle": "",
+      "identity": "开源全双工模型 Sophon-Realtime 的仓库"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.5.0"
+      },
+      {
+        "label": "4B-Flash-MLX",
+        "url": "https://huggingface.co/adventists-ai/Sophon-Realtime-4B-Flash-MLX"
+      },
+      {
+        "label": "4B-Tag-W4",
+        "url": "https://huggingface.co/adventists-ai/Sophon-Realtime-4B-Tag-W4"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-nemotron-bolt",
+    "date": "2026-11-19",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Nemotron 3.5 Bolt E4B：面向本地语音助手的 4GB 文本小模型（周二已公告）",
+    "summary": "论文介绍 Nemotron 3.5 Bolt E4B 4GB：从 Gemma-4-E4B-it 继续后训练的开源文本小模型，面向本地语音 / 设备助手、多轮工具调用和边端界面。摘要称在 21 项基准上，相对 Gemma-4-E4B-it 和 Qwen3.5-4B，平均准确率最高、输出 token 最少；并配有 DFlash 草稿模型，并发为 1 时相对无投机解码的单用户解码速度为 2.74 倍，batch size 1 时相对 Gemma 的 MTP 生成吞吐为 1.21 倍。论文 11-16 提交，按页面头信息属于 11-17 周二公告批次，昨日报告未收录；我读了摘要和论文注释里的博客。博客本身标注发布于 2026-10-23，不是本窗口的新文章，其中还写到约 4GB 显存、64k 上下文、35 种语言、偏口语的简洁回复模式，以及异步工具调用说明。硬件目标是 GeForce RTX、Jetson 和 RTX/DGX Spark，不是 iOS / Core ML。我没有阅读 PDF。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "把它当作“本地意图 + 工具调用”的参照，而不是 iPhone 上的部署方案——4GB 级别目前放不进端侧预算。可以借鉴“为语音准备的短回复模式”和“异步工具调用”：导航搜地点不必堵住 TTS。若后续出现更小的 Core ML 蒸馏版，再做真机对比。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "端侧",
+      "Agent 架构",
+      "论文"
+    ],
+    "types": [
+      "技术解读",
+      "论文"
+    ],
+    "tags": [
+      "端上小模型",
+      "语音 agent 工程",
+      "论文"
+    ],
+    "source": {
+      "name": "NVIDIA",
+      "handle": "",
+      "identity": "NVIDIA（Nemotron 3.5 Bolt 作者团队），arXiv"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.20771"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-19-qwen-asr-message",
+    "date": "2026-11-19",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "Qwen-Audio-3.1-ASR Message：流式输入、热词和口头修正一次做完",
+    "summary": "Qwen 语音团队在 Qwen-Audio-3.1-ASR 之上介绍了面向交互式语音输入的 Message 模型（昨日报告已介绍 3.1 基础版）。线程称：边说边出字，句末再刷新整句；在其测试条件下，首字延迟 100 ms、出字 220 ms、末字 103 ms，低于 Doubao Streaming ASR 2.0。它支持分层热词（P0 高优先级，P1 更大候选集），启用 P0 后，近期热词召回从 63.08% 升到 99.46%，人名从 62.12% 升到 99.43%；并在同一解码里做口头润色（去掉口头禅、合并无意义重复、保留最后一次自我修正），可读性分数从 2.53 升到 3.44。模型仍覆盖 30 种语言和 16 种中文方言，训练包含噪声和远场。以上数字都是帖中的官方陈述，我没有找到评测报告，API 产品页这次也没有成功读到正文。线程没有声称可在端上运行，链接指向云端 API。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "司机常会中途改口（“去新加坡……不对，去裕廊”），流式 ASR 应先出 partial、再说完刷新，润色时保留最后的修正，而不是把已放弃的词留在意图里。把地名、出口、卡车停靠点做成高优先级热词。这些延迟和召回数字只作云端对照，不要写成 Core ML 上的指标。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音 Agent",
+      "语音识别 ASR",
+      "端侧",
+      "Agent 架构"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "端上语音",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "阿里 Qwen 语音团队（ASR、TTS、Realtime）",
+      "handle": "@TONGYI_SpeechAI",
+      "identity": "阿里 Qwen 语音团队（ASR、TTS、Realtime）"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/TONGYI_SpeechAI/status/2122975604303867957"
+      },
+      {
+        "label": "API",
+        "url": "https://www.qwencloud.com/models/qwen-audio-3.1-asr-flash-message?region=ap-southeast-1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-tiny-voca-kokoro",
+    "date": "2026-11-19",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "tiny-voca 和 Kokoro 已接入 llama.cpp",
+    "summary": "@ngxson 宣布 tiny-voca 和 Kokoro TTS 已进入 llama.cpp。对应 PR 在窗口开始前数小时合并，窗口内的发布 b12494、b12497 引用了这两次合入。这是新的运行时集成，不是对昨日 ESP32-S3 / audio.cpp 消息的重复。Kokoro 的字素到音素放在 Jinja 模板里，而不是编进二进制；评审意见提到，TTS 模板会丢掉含非 ASCII 字母的词，部分缩写靠猜测。tiny-voca 仍是英语、音色 M2 / F2。我没有在 iPhone 上复现。窗口内 llama.cpp 更晚的日常 build 说明里没有其他语音相关变更。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以在 Mac 上用这条路径先试英语短播报，但 Kokoro 丢掉非 ASCII 对中文导航是硬伤，tiny-voca 也还没有中文。Luna 的正式中文 TTS 仍要另选；若继续跟 llama.cpp，先单独测中文、数字和路名。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音合成 TTS",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "产品发布",
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Xuan-Son Nguyen",
+      "handle": "@ngxson",
+      "identity": "Xuan-Son Nguyen，Hugging Face 工程师、llama.cpp 多模态贡献者"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/ngxson/status/2122867162113257640"
+      },
+      {
+        "label": "Kokoro PR",
+        "url": "https://github.com/ggml-org/llama.cpp/pull/32413"
+      },
+      {
+        "label": "tiny-voca PR",
+        "url": "https://github.com/ggml-org/llama.cpp/pull/32427"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/ggml-org/tiny-voca-GGUF"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "lumi-2026-11-19-clinical-short-turns",
+    "date": "2026-11-19",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "临床语音 agent 实测：一两个字的短话轮，单靠转写很难判断情绪",
+    "summary": "论文在真实上线的临床语音 agent 通话上做“这一轮患者是否沮丧”的检测。摘要称：已部署通话里患者话轮非常短，约 59% 只有一两个词（对照表演语料是 13%）；在单词话轮上，只看转写的检测无法排除随机水平。音频是否有帮助取决于模型和提示：要求关注说话方式时，两个 Gemini 2.5 模型在 30 通通话上比纯转写高 3.0 个百分点（区间含 0 附近）；换一套提示后，一个更新的 Gemini 和两个更小的开源模型加上音频反而更差。在临床通话上训练的 WavLM 探针总体 71.6%，与最好的提示模型相当，但在额外 24 通里漏掉了全部沮丧的单词话轮。作者的结论是：话轮很短时，单靠转写不足以排除沮丧。摘要页没有代码或权重，我也没有阅读 PDF。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "司机常用“嗯 / 好 / 不是”这种短回复，不要只靠 ASR 文本判断这是确认、否定还是不耐烦。若要做情绪或确认校验，可以加声学特征，但必须用真实短话轮评测，并确认加音频不会把分类弄得更差。把“确认改路线”从 backchannel 里拆出来，仍然比先上情绪模型更要紧。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "语音识别 ASR",
+      "Agent 架构",
+      "论文"
+    ],
+    "types": [
+      "技术解读",
+      "论文"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "话轮控制",
+      "论文"
+    ],
+    "source": {
+      "name": "Annika Michael、Zachary Ellis、Yuxiang Zhou 等",
+      "handle": "",
+      "identity": "arXiv 论文作者"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.21001"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-16"
+  },
+  {
+    "id": "lumi-2026-11-19-livekit-1813",
+    "date": "2026-11-19",
+    "seq": 10,
+    "source_brief": "lumi",
+    "title": "LiveKit Agents 1.8.13：接入会看主说话人的云端流式 ASR，并保留 Gemini 自己的话轮检测",
+    "summary": "LiveKit 宣布 AssemblyAI STT 3.7 Realtime Agent 已在 LiveKit Inference 上线，称模型会关注背景人声和主说话人。帖中给出相对前一版的提升（短回复少 29% 错误、少 38% 漏识别，数字错误少 80%，静音时少 47% 臆造词，partial 到 final 只有 1% 的词会变，语音结束后 86 ms 出终稿），但我在其文档里没有找到这些百分比，只能当作官方推文中的陈述。文档确认了模型 ID、`speaker_labels` 和用于主说话人检测的 `MultiSpeakerAdapter`，并写明约 1 秒以内的短句 `speaker_id` 为 None。同一早晨发布的 livekit-agents 1.8.13 还写到：Gemini Live 会话改为保留 Gemini 自己的话轮检测，以免漏回复；Gladia 去掉能量门控，所有音频都会转发，安静段不再被过滤器当成录音结束。这是云端 ASR / 服务端框架，不是端上模型。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "主说话人和背景人声正是车舱会遇到的问题，但不要把帖里的百分比直接写成 Luna 的预期。若云端 ASR 做兜底，就在路噪、数字（里程、出口）和一秒钟以内的短指令上自己测；短指令可能没有 speaker_id。也不要用能量门把轻声或停顿切掉。如果某一路云端实时模型自带话轮检测，先对比“用它自己的”和“换成 Luna 的端点”谁更少漏接。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "语音识别 ASR",
+      "Agent 架构",
+      "开源"
+    ],
+    "types": [
+      "产品发布",
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "唤醒与声纹",
+      "开源发布"
+    ],
+    "source": {
+      "name": "LiveKit 官方",
+      "handle": "@livekit",
+      "identity": "LiveKit 官方，开源 Agents 框架与实时音视频基础设施"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/livekit/status/2123114375913386492"
+      },
+      {
+        "label": "发布说明",
+        "url": "https://github.com/livekit/agents/releases/tag/livekit-agents%401.8.13"
+      },
+      {
+        "label": "文档",
+        "url": "https://docs.livekit.io/agents/models/stt/assemblyai/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-19/",
+    "posted_at": "2026-11-19"
+  },
+  {
     "id": "agent-app-2026-11-18-gemini-tasks",
     "date": "2026-11-18",
     "seq": 1,
