@@ -20,6 +20,7 @@
             <button type="button" data-view="daily" class="is-active">日报</button>
             <button type="button" data-view="all">全部消息</button>
             <button type="button" data-view="tags">标签</button>
+            <button type="button" data-view="favorites">收藏</button>
         </nav>
         <div class="top-tools">
             <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
@@ -63,6 +64,7 @@
             </div>
         </aside>
         <main class="stage">
+            <div id="sync-panel" class="sync-panel" hidden aria-label="跨设备同步"></div>
             <section class="chart-card" id="chart-card" aria-label="每日条数">
                 <h2>每日条数</h2>
                 <div id="chart"></div>
