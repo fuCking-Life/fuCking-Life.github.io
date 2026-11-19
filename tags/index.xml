@@ -1,55 +1,46 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Fucking Life</title>
+    <title>标签 · Fucking Life</title>
     <link>https://fuCking-Life.github.io/tags/</link>
-    <description>Recent content in Tags on Fucking Life</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>LangGraph</title>
-      <link>https://fuCking-Life.github.io/tags/langgraph/</link>
-      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/tags/langgraph/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>TradingAgents</title>
-      <link>https://fuCking-Life.github.io/tags/tradingagents/</link>
-      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/tags/tradingagents/</guid>
-      <description></description>
-    </item>
-    
+    <description>全部标签</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://fuCking-Life.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>每日交易资讯</title>
       <link>https://fuCking-Life.github.io/tags/每日交易资讯/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/tags/每日交易资讯/</guid>
       <description></description>
     </item>
-    
-    <item>
-      <title>agent-app</title>
-      <link>https://fuCking-Life.github.io/tags/agent-app/</link>
-      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/tags/agent-app/</guid>
-      <description></description>
-    </item>
-    
     <item>
       <title>lumi</title>
       <link>https://fuCking-Life.github.io/tags/lumi/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/tags/lumi/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>agent-app</title>
+      <link>https://fuCking-Life.github.io/tags/agent-app/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/tags/agent-app/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TradingAgents</title>
+      <link>https://fuCking-Life.github.io/tags/tradingagents/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/tags/tradingagents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LangGraph</title>
+      <link>https://fuCking-Life.github.io/tags/langgraph/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/tags/langgraph/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

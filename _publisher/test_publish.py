@@ -17,6 +17,7 @@ HERE = Path(__file__).resolve().parent
 SITE = HERE.parent
 sys.path.insert(0, str(HERE))
 import publish  # noqa: E402
+import sitegen  # noqa: E402
 
 
 BODY = """# 固定标题
@@ -78,21 +79,6 @@ class MarkdownTests(unittest.TestCase):
         self.assertIn("<li><p><strong>标题</strong><br>\n续行仍在条目里。\n", html)
         self.assertIn('href="https://example.com/a"', html)
         self.assertLess(html.find("续行仍在条目里"), html.find("</li>"))
-        page = publish.render_single(
-            publish.Post(
-                title="t",
-                when=publish.parse_when("2026-11-17"),
-                slug="sample",
-                categories=[("日报", "日报")],
-                tags=[],
-                body_html=html,
-                summary_html="<p>时间窗口：今天</p>",
-                description="时间窗口：今天",
-            )
-        )
-        self.assertIn(".post .post-content { font-size: 15px; }", page)
-        self.assertIn(".post .post-content .digest-meta {", page)
-        self.assertIn('href="/css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css"', page)
 
     def test_more_separator_is_not_rendered(self):
         before, full = publish.split_more("摘要段落。\n\n<!--more-->\n\n正文段落。\n")
@@ -119,495 +105,291 @@ class MarkdownTests(unittest.TestCase):
         self.assertIn("<p>", rendered)
 
 
+def make_site(tmp: Path, with_records: bool = True) -> None:
+    """A throwaway site root: the hand-written assets plus (optionally) the real records."""
+    for folder in ("css", "js", "images", "favicons"):
+        shutil.copytree(SITE / folder, tmp / folder)
+    daily = tmp / "daily"
+    daily.mkdir()
+    for name in ("feed.css", "feed.js"):
+        shutil.copy2(SITE / "daily" / name, daily / name)
+    posts = tmp / "_publisher" / "posts"
+    if with_records:
+        shutil.copytree(SITE / "_publisher" / "posts", posts)
+    else:
+        posts.mkdir(parents=True)
+
+
+def run_cli(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(HERE / "publish.py"), *args],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env={**__import__("os").environ, "PYTHONUTF8": "1"},
+    )
+
+
 class PublisherTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="site-publish-"))
-        for name in (
-            "index.html",
-            "index.xml",
-            "sitemap.xml",
-            "404.html",
-            "robots.txt",
-        ):
-            shutil.copy2(SITE / name, self.tmp / name)
-        for folder in ("post", "categories", "tags", "life", "page", "about", "css", "js"):
-            shutil.copytree(SITE / folder, self.tmp / folder)
-        self.untouched = [
-            "post/inithugo/index.html",
-            "post/cocoapods/privatespecs/index.html",
-            "post/yy/yyasynclayer/index.html",
-            "life/initlife/index.html",
-            "life/index.html",
-            "page/2/index.html",
-            "page/1/index.html",
-            "about/index.html",
-            "404.html",
-            "categories/hugo/index.html",
-            "categories/objc/index.html",
-            "css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css",
-            "js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js",
-        ]
-        self.before = {rel: _sha(self.tmp / rel) for rel in self.untouched}
-        self.integrity = 'sha256-EjlK0d13q8XyuKyf/4mm938R8duRJihM3qQSNpNvXFY='
+        make_site(self.tmp)
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
 
-    def _publish(self, **kwargs):
-        post = publish.Post(
+    def read(self, rel: str) -> str:
+        return (self.tmp / rel).read_text(encoding="utf-8")
+
+    def _post(self, **kwargs) -> "publish.Post":
+        return publish.Post(
             title=kwargs["title"],
             when=publish.parse_when(kwargs["date"]),
             slug=publish.validate_slug(kwargs["slug"]),
-            categories=kwargs["categories"],
-            tags=kwargs.get("tags", []),
-            body_html=kwargs["body_html"],
-            summary_html=kwargs["summary_html"],
-            description=kwargs["description"],
+            categories=[(n, publish.urlize(n)) for n in kwargs["categories"]],
+            tags=[(n, publish.urlize(n)) for n in kwargs.get("tags", [])],
+            body_html=kwargs.get("body_html", publish.render_markdown(BODY)),
+            summary_html=kwargs.get("summary_html", "<p>测试摘要。</p>"),
+            description=kwargs.get("description", "测试摘要。"),
+            headline=kwargs.get("headline", ""),
         )
-        return publish.publish(self.tmp, post), post
 
-    def test_archive_and_homepage_round_trip_without_edits(self):
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        matches = list(publish.CARD_RE.finditer(home))
-        self.assertGreaterEqual(len(matches), 1)
-        self.assertEqual(len(matches), home.count('class="post-title"'))
-        gaps = [home[a.end() : b.start()] for a, b in zip(matches, matches[1:])]
-        self.assertTrue(gaps)
-        self.assertTrue(all(gap == gaps[0] for gap in gaps))
-        rebuilt = gaps[0].join(match.group(0) for match in matches)
-        self.assertEqual(home[matches[0].start() : matches[-1].end()], rebuilt)
-        for relative in ("post/index.html", "categories/index.html", "categories/objc/index.html"):
-            html = (self.tmp / relative).read_text(encoding="utf-8")
-            start, end = publish.find_archive(html)
-            inner = html[start:end]
-            prefix, years = publish.split_years(inner)
-            self.assertEqual(prefix + "".join(chunk for _, chunk in years), inner)
-            for _year, chunk in years:
-                head, tail = publish.split_tail(chunk)
-                entries = publish.ENTRY_RE.findall(head)
-                self.assertGreaterEqual(len(entries), 1)
-                self.assertTrue(chunk.endswith(tail))
+    def test_checked_in_site_matches_a_fresh_build(self):
+        """The committed pages are exactly what the records build to."""
+        items = json.loads((SITE / "daily" / "items.json").read_text(encoding="utf-8"))
+        files = sitegen.build_site(SITE, sitegen.load_records(SITE / "_publisher" / "posts"), [i["date"] for i in items])
+        stale = []
+        for rel, text in files.items():
+            path = SITE / rel
+            if not path.is_file() or path.read_text(encoding="utf-8").replace("\r\n", "\n") != text:
+                stale.append(rel)
+        self.assertEqual(stale, [], "run: python _publisher/publish.py --rebuild")
+        removable, kept = sitegen.stale_dirs(SITE, files)
+        self.assertEqual((removable, kept), ([], []))
 
-    def test_publish_prepends_and_is_idempotent(self):
-        body_html = publish.render_markdown(BODY)
-        summary = publish.first_paragraph(body_html)
-        changed, post = self._publish(
-            title="发布器测试标题",
-            date="2026-11-17",
-            slug="lumi-2026-11-17",
-            categories=[("日报", "日报"), ("lumi", "lumi")],
-            tags=[("lumi", "lumi"), ("日报", "日报")],
-            body_html=body_html,
-            summary_html=summary,
-            description=publish.plain_text(summary)[:180],
+    def test_rebuild_is_stable(self):
+        first = publish.rebuild_only(self.tmp)
+        self.assertIn("index.html", first)
+        self.assertEqual(publish.rebuild_only(self.tmp), [])
+
+    def test_publish_adds_post_everywhere_and_is_idempotent(self):
+        publish.rebuild_only(self.tmp)
+        post = self._post(
+            title="Luna 全双工语音日报（2026-11-21）",
+            date="2026-11-21",
+            slug="lumi-2026-11-21",
+            categories=["日报"],
+            tags=["lumi"],
+            summary_html="<p>时间窗口：昨天到今天</p>\n<p>本期 7 条：测试条目。</p>",
+            headline="测试头条",
         )
-        self.assertIn("post/lumi-2026-11-17/index.html", changed)
-        page = (self.tmp / "post/lumi-2026-11-17/index.html").read_text(encoding="utf-8")
-        self.assertIn(self.integrity, page)
-        self.assertIn('integrity="sha256-DAXAqQ0oyWihytT7MavQuOEmTniMzv7QIq4dO29idRQ="', page)
-        self.assertIn('href="/post/lumi-2026-11-17/"', page)
-        self.assertIn("发布器测试标题", page)
-        self.assertIn("Tue, Nov 17, 2026", page)
-        self.assertIn('href="/categories/日报/"', page)
-        self.assertIn('href="/tags/lumi/"', page)
-        self.assertIn('<h1 id="固定标题">', page)
-        self.assertIn("busuanzi_value_page_pv", page)
-        self.assertIn("utteranc.es/client.js", page)
-        self.assertNotIn("@@", page)
+        changed = publish.publish(self.tmp, post)
+        self.assertIn("_publisher/posts/lumi-2026-11-21.json", changed)
+        self.assertIn("post/lumi-2026-11-21/index.html", changed)
+        home = self.read("index.html")
+        day = home[home.index('id="日报"'):home.index('id="每日交易资讯"')]
+        self.assertIn("<b>11-21</b>周六", day)
+        self.assertIn("<h3>测试头条</h3>", day)
+        self.assertIn("Luna 全双工语音日报 · 7 条", day)
+        self.assertIn("<p>本期 7 条：测试条目。</p>", day)
+        self.assertNotIn("时间窗口", day)
+        # The previous day's cards drop to the compact list.
+        self.assertIn('<ul class="compact"><li><a href="/post/lumi-2026-11-19/">', day)
+        page = self.read("post/lumi-2026-11-21/index.html")
+        self.assertIn("<h1>Luna 全双工语音日报（2026-11-21）</h1>", page)
+        self.assertIn('<a class="tag" href="/tags/lumi/">#lumi</a>', page)
+        self.assertIn('data-repo="fuCking-Life/fuCking-Life.github.io"', page)
+        self.assertIn("/post/lumi-2026-11-21/", self.read("post/index.html"))
+        self.assertIn("/post/lumi-2026-11-21/", self.read("categories/日报/index.html"))
+        self.assertIn("/post/lumi-2026-11-21/", self.read("tags/lumi/index.html"))
+        for rel in ("index.xml", "post/index.xml", "categories/日报/index.xml", "tags/lumi/index.xml", "sitemap.xml"):
+            text = self.read(rel)
+            ET.fromstring(text.encode("utf-8"))
+            self.assertIn("https://fuCking-Life.github.io/post/lumi-2026-11-21/", text, rel)
+        rss = ET.fromstring(self.read("index.xml").encode("utf-8"))
+        first = rss.find("channel/item")
+        self.assertEqual(first.findtext("title"), "Luna 全双工语音日报（2026-11-21）")
+        self.assertEqual(first.findtext("pubDate"), "Sat, 21 Nov 2026 08:00:00 +0800")
+        self.assertEqual(publish.publish(self.tmp, post), [])
 
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertLess(
-            home.find("/post/lumi-2026-11-17/"),
-            home.find("/post/cocoapods/privatespecs/"),
-        )
-        self.assertIn("这是发布器测试用的第一段，不是新闻。", home)
-        self.assertEqual(home.count("/post/lumi-2026-11-17/"), 1)
-        self.assertIn('<div class="pagination">', home)
-
-        posts = (self.tmp / "post/index.html").read_text(encoding="utf-8")
-        self.assertLess(posts.find(">2026</div>"), posts.find(">2021</div>"))
-        self.assertIn("Nov 17", posts)
-        self.assertEqual(posts.count("/post/lumi-2026-11-17/"), 1)
-        self.assertIn("/post/inithugo/", posts)
-
-        for rel in self.untouched:
-            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
-
-        root_feed = ET.fromstring((self.tmp / "index.xml").read_text(encoding="utf-8"))
-        post_feed = ET.fromstring((self.tmp / "post/index.xml").read_text(encoding="utf-8"))
-        for feed in (root_feed, post_feed):
-            titles = [item.findtext("title") for item in feed.findall("./channel/item")]
-            self.assertEqual(titles.count("发布器测试标题"), 1)
-            # 2026-11-18 posts are already on the site, so a 2026-11-17 item sorts after them.
-            self.assertLess(
-                titles.index("每日 AI 与移动端智能体简报（2026-11-18）"),
-                titles.index("发布器测试标题"),
+    def test_learning_note_title_callouts_and_lead(self):
+        body = publish.mark_digest_meta(
+            publish.render_markdown(
+                "覆盖范围：测试项目。\n\n正文。\n\n> **修正：** 不是反思。\n\n> **原则：** 交给模型。\n\n> 普通引用。\n"
             )
-        self.assertIn("虽迟但到的30岁", [item.findtext("title") for item in root_feed.findall("./channel/item")])
-        self.assertNotIn(
-            "虽迟但到的30岁",
-            [item.findtext("title") for item in post_feed.findall("./channel/item")],
         )
-
-        sitemap = ET.fromstring((self.tmp / "sitemap.xml").read_text(encoding="utf-8"))
-        ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-        locs = [node.text for node in sitemap.findall("sm:url/sm:loc", ns)]
-        self.assertEqual(locs.count(post.abs_url), 1)
-        self.assertIn("https://fuCking-Life.github.io/categories/日报/", locs)
-        self.assertIn("https://fuCking-Life.github.io/tags/lumi/", locs)
-        self.assertIn("https://fuCking-Life.github.io/post/inithugo/", locs)
-
-        category_page = (self.tmp / "categories" / "日报" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Ermao | 日报", category_page)
-        self.assertIn(self.integrity, category_page)
-        self.assertEqual(category_page.count("/post/lumi-2026-11-17/"), 1)
-        lumi_page = (self.tmp / "categories" / "lumi" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("/post/lumi-2026-11-17/", lumi_page)
-        tag_page = (self.tmp / "tags" / "日报" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Ermao | 日报", tag_page)
-        tags_index = (self.tmp / "tags" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("/tags/日报/", tags_index)
-        self.assertIn("/tags/lumi/", tags_index)
-
-        cat_feed = ET.fromstring((self.tmp / "categories" / "日报" / "index.xml").read_text(encoding="utf-8"))
-        cat_titles = [item.findtext("title") for item in cat_feed.findall("./channel/item")]
-        self.assertIn("发布器测试标题", cat_titles)
-        self.assertLess(
-            cat_titles.index("Luna 全双工语音日报（2026-11-18）"),
-            cat_titles.index("发布器测试标题"),
+        post = self._post(
+            title="Agent 学习笔记（2026-11-22）：测试主题",
+            date="2026-11-22",
+            slug="learn-agent-2026-11-22",
+            categories=["Agent 学习笔记"],
+            tags=["LangGraph"],
+            body_html=body,
+            summary_html="<p>覆盖范围：测试项目。</p>\n<p>正文。</p>",
         )
-        term_feed = ET.fromstring((self.tmp / "categories" / "index.xml").read_text(encoding="utf-8"))
-        term_titles = [item.findtext("title") for item in term_feed.findall("./channel/item")]
-        self.assertIn("日报", term_titles)
-        self.assertIn("lumi", term_titles)
-        self.assertLess(term_titles.index("日报"), term_titles.index("life"))
-        self.assertLess(term_titles.index("lumi"), term_titles.index("life"))
+        publish.publish(self.tmp, post)
+        page = self.read("post/learn-agent-2026-11-22/index.html")
+        self.assertIn("<h1>测试主题</h1>", page)
+        self.assertIn('<p class="digest-meta">覆盖范围：测试项目。</p>', page)
+        self.assertIn('<blockquote class="ln-fix">', page)
+        self.assertIn('<blockquote class="ln-key">', page)
+        self.assertIn("<blockquote>\n<p>普通引用。</p>", page)
+        self.assertIn('class="on" aria-current="page" href="/categories/agent-学习笔记/"', page)
+        home = self.read("index.html")
+        notes = home[home.index('id="agent-学习笔记"'):]
+        self.assertIn('<h3><a href="/post/learn-agent-2026-11-22/">测试主题</a></h3><p>正文。</p>', notes)
+        self.assertIn("11-22 周日 · LangGraph", notes)
+        # Prev/next stay inside the column.
+        self.assertIn('href="/post/learn-agent-2026-11-19/"><small>← 上一篇</small>什么才算 agent', page)
 
-        again, _post = self._publish(
-            title="发布器测试标题",
-            date="2026-11-17",
-            slug="lumi-2026-11-17",
-            categories=[("日报", "日报"), ("lumi", "lumi")],
-            tags=[("lumi", "lumi"), ("日报", "日报")],
-            body_html=body_html,
-            summary_html=summary,
-            description=publish.plain_text(summary)[:180],
-        )
-        self.assertEqual(again, [])
-        self.assertEqual((self.tmp / "index.html").read_text(encoding="utf-8").count("/post/lumi-2026-11-17/"), 1)
+    def test_republish_moves_category_and_drops_empty_terms(self):
+        first = self._post(title="临时文章", date="2026-11-20", slug="tmp-move", categories=["测试栏目"], tags=["临时"])
+        publish.publish(self.tmp, first)
+        self.assertTrue((self.tmp / "categories" / "测试栏目" / "index.html").is_file())
+        home = self.read("index.html")
+        self.assertIn('id="测试栏目"', home)
+        moved = self._post(title="临时文章", date="2026-11-20", slug="tmp-move", categories=["Agent 学习笔记"])
+        changed = publish.publish(self.tmp, moved)
+        self.assertIn("categories/测试栏目/ (removed)", changed)
+        self.assertIn("tags/临时/ (removed)", changed)
+        self.assertFalse((self.tmp / "categories" / "测试栏目").exists())
+        self.assertFalse((self.tmp / "tags" / "临时").exists())
+        self.assertNotIn("测试栏目", self.read("index.html"))
+        self.assertNotIn("测试栏目", self.read("categories/index.html"))
+        self.assertIn("/post/tmp-move/", self.read("categories/agent-学习笔记/index.html"))
 
-    def test_older_post_sorts_below_and_existing_category_keeps_old_posts(self):
-        body_html = publish.render_markdown(OLDER)
-        summary = publish.first_paragraph(body_html)
-        self._publish(
-            title="发布器测试标题",
-            date="2026-11-17T09:30:00",
-            slug="lumi-2026-11-17",
-            categories=[("日报", "日报")],
-            tags=[],
-            body_html=body_html,
-            summary_html=summary,
-            description="desc",
-        )
-        self._publish(
-            title="较早的测试",
-            date="2020-01-02",
-            slug="agent-app-2020-01-02",
-            categories=[("日报", "日报"), ("objc", "objc")],
-            tags=[("agent-app", "agent-app")],
-            body_html=body_html,
-            summary_html=summary,
-            description="desc",
-        )
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertLess(home.find("/post/lumi-2026-11-17/"), home.find("/post/cocoapods/privatespecs/"))
-        self.assertLess(home.find("/post/cocoapods/privatespecs/"), home.find("/post/agent-app-2020-01-02/"))
-        objc = (self.tmp / "categories" / "objc" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("/post/objc_essence_0/", objc)
-        self.assertIn("/post/agent-app-2020-01-02/", objc)
-        self.assertLess(objc.find(">2021</div>"), objc.find(">2020</div>"))
-        daily = (self.tmp / "categories" / "日报" / "index.html").read_text(encoding="utf-8")
-        self.assertLess(daily.find("/post/lumi-2026-11-17/"), daily.find("/post/agent-app-2020-01-02/"))
-        page = (self.tmp / "post/lumi-2026-11-17/index.html").read_text(encoding="utf-8")
-        self.assertIn("Tue, Nov 17, 2026", page)
-        rss = (self.tmp / "index.xml").read_text(encoding="utf-8")
-        self.assertIn("Tue, 17 Nov 2026 09:30:00 +0800", rss)
+    def test_remove_post_from_cli(self):
+        publish.rebuild_only(self.tmp)
+        self.assertTrue((self.tmp / "post/trading-2026-11-18/index.html").is_file())
+        proc = run_cli("--root", str(self.tmp), "--remove", "trading-2026-11-18")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("removed /post/trading-2026-11-18/", proc.stdout)
+        self.assertIn("removed post/trading-2026-11-18/", proc.stdout)
+        self.assertFalse((self.tmp / "_publisher/posts/trading-2026-11-18.json").exists())
+        self.assertFalse((self.tmp / "post/trading-2026-11-18").exists())
+        self.assertNotIn("trading-2026-11-18", self.read("index.html"))
+        self.assertNotIn("trading-2026-11-18", self.read("sitemap.xml"))
+        proc = run_cli("--root", str(self.tmp), "--remove", "trading-2026-11-18")
+        self.assertEqual(proc.returncode, 2)
+        self.assertIn("no post record", proc.stderr)
+
+    def test_cli_publish_with_headline_and_dry_run(self):
+        body = self.tmp / "body.md"
+        body.write_text("时间窗口：今天\n\n首页摘要。\n\n<!--more-->\n\n## 小节\n\n正文。\n", encoding="utf-8")
+        args = [
+            "--root", str(self.tmp), "--title", "每日交易资讯（2026-11-20）", "--date", "2026-11-20",
+            "--slug", "trading-2026-11-20", "--category", "每日交易资讯", "--tag", "每日交易资讯",
+            "--headline", "测试 交易 头条", "--body-file", str(body),
+        ]
+        proc = run_cli(*args, "--dry-run")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("would update post/trading-2026-11-20/index.html", proc.stdout)
+        self.assertFalse((self.tmp / "post" / "trading-2026-11-20").exists())
+        self.assertFalse((self.tmp / "_publisher/posts/trading-2026-11-20.json").exists())
+        proc = run_cli(*args)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("published /post/trading-2026-11-20/", proc.stdout)
+        record = json.loads(self.read("_publisher/posts/trading-2026-11-20.json"))
+        self.assertEqual(record["headline"], "测试 交易 头条")
+        self.assertEqual(record["date"], "2026-11-20T08:00:00+08:00")
+        self.assertNotIn("正文", record["summary_html"])
+        home = self.read("index.html")
+        trade = home[home.index('id="每日交易资讯"'):home.index('id="agent-学习笔记"')]
+        self.assertIn("测试 交易 头条", trade)
+        self.assertIn("<p>首页摘要。</p>", trade)
+        self.assertEqual(trade.count('class="entry"'), 2)
+        proc = run_cli(*args)
+        self.assertIn("no file changes", proc.stdout)
 
     def test_html_body_and_explicit_summary(self):
-        changed, _post = self._publish(
-            title="HTML 测试",
-            date="2026-11-17T00:30:00Z",
-            slug="agent-app-2026-11-17",
-            categories=[("Agent App", "agent-app")],
-            tags=[],
-            body_html="<p>第一段保持原样。</p><h2 id=\"x\">第二节</h2>",
-            summary_html="<p>" + publish.hugo_escape("手工摘要") + "</p>",
-            description="手工摘要",
+        payload = self.tmp / "post.json"
+        payload.write_text(
+            json.dumps(
+                {
+                    "title": "HTML 正文",
+                    "date": "2026-11-20T21:30:00+08:00",
+                    "slug": "html-body",
+                    "categories": ["日报"],
+                    "body": "<p>原样 <em>HTML</em>。</p>",
+                    "format": "html",
+                    "summary": "手写 <摘要>",
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
         )
-        self.assertTrue(changed)
-        page = (self.tmp / "post/agent-app-2026-11-17/index.html").read_text(encoding="utf-8")
-        self.assertIn("<p>第一段保持原样。</p><h2 id=\"x\">第二节</h2>", page)
-        self.assertIn("Tue, Nov 17, 2026", page)
-        rss = (self.tmp / "index.xml").read_text(encoding="utf-8")
-        self.assertIn("Tue, 17 Nov 2026 08:30:00 +0800", rss)
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertIn("手工摘要", home)
-        self.assertTrue((self.tmp / "categories" / "agent-app" / "index.html").is_file())
-
-    def test_republish_can_rename_and_move_category(self):
-        body_html = "<p>同一篇。</p>"
-        summary = "<p>同一篇。</p>"
-        common = dict(
-            date="2026-11-17",
-            slug="lumi-2026-11-17",
-            body_html=body_html,
-            summary_html=summary,
-            description="同一篇。",
-        )
-        self._publish(title="旧标题", categories=[("日报", "日报")], tags=[("lumi", "lumi")], **common)
-        self._publish(title="新标题", categories=[("lumi", "lumi")], tags=[], **common)
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(home.count("/post/lumi-2026-11-17/"), 1)
-        self.assertIn("新标题", home)
-        self.assertNotIn("旧标题", home)
-        daily = (self.tmp / "categories" / "日报" / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("/post/lumi-2026-11-17/", daily)
-        moved = (self.tmp / "categories" / "lumi" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("新标题", moved)
-        tags = (self.tmp / "tags" / "lumi" / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("/post/lumi-2026-11-17/", tags)
-
-    def test_rejects_path_escape(self):
-        with self.assertRaises(publish.PublishError):
-            publish.validate_slug("../index")
-        with self.assertRaises(publish.PublishError):
-            publish.validate_slug("bad slug")
-
-    def test_cli_on_copy(self):
-        body = self.tmp / "body.md"
-        body.write_text(BODY, encoding="utf-8")
-        proc = subprocess.run(
-            [
-                sys.executable,
-                str(HERE / "publish.py"),
-                "--root",
-                str(self.tmp),
-                "--title",
-                "命令行测试",
-                "--date",
-                "2026-11-17",
-                "--slug",
-                "lumi-2026-11-17",
-                "--category",
-                "日报",
-                "--tag",
-                "lumi",
-                "--body-file",
-                str(body),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = run_cli("--root", str(self.tmp), "--input", str(payload))
         self.assertEqual(proc.returncode, 0, proc.stderr)
-        self.assertIn("published /post/lumi-2026-11-17/", proc.stdout)
-        self.assertTrue((self.tmp / "post/lumi-2026-11-17/index.html").is_file())
-        proc = subprocess.run(
-            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--slug", "nope"],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        page = self.read("post/html-body/index.html")
+        self.assertIn("<p>原样 <em>HTML</em>。</p>", page)
+        record = json.loads(self.read("_publisher/posts/html-body.json"))
+        self.assertEqual(record["summary_html"], "<p>手写 &lt;摘要&gt;</p>")
+        self.assertEqual(record["date"], "2026-11-20T21:30:00+08:00")
+
+    def test_foreign_files_keep_a_stale_directory(self):
+        legacy = self.tmp / "post" / "legacy"
+        legacy.mkdir(parents=True)
+        (legacy / "index.html").write_text("old", encoding="utf-8")
+        (legacy / "photo.png").write_bytes(b"png")
+        proc = run_cli("--root", str(self.tmp), "--rebuild")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("left post/legacy/ in place", proc.stderr)
+        self.assertTrue((legacy / "photo.png").is_file())
+        (legacy / "photo.png").unlink()
+        proc = run_cli("--root", str(self.tmp), "--rebuild")
+        self.assertIn("removed post/legacy/", proc.stdout)
+        self.assertFalse(legacy.exists())
+
+    def test_empty_site_builds(self):
+        empty = Path(tempfile.mkdtemp(prefix="site-empty-"))
+        try:
+            make_site(empty, with_records=False)
+            publish.rebuild_only(empty)
+            self.assertIn("还没有文章", (empty / "index.html").read_text(encoding="utf-8"))
+            ET.fromstring((empty / "index.xml").read_bytes())
+        finally:
+            shutil.rmtree(empty)
+
+    def test_rejects_path_escape_and_missing_category(self):
+        for bad in ("../x", "a//b", "a/../b", "a\\b", "a b"):
+            with self.assertRaises(publish.PublishError):
+                publish.validate_slug(bad)
+        proc = run_cli("--root", str(self.tmp), "--title", "t", "--date", "2026-11-20", "--slug", "x", "--body", "b")
         self.assertEqual(proc.returncode, 2)
+        self.assertIn("category", proc.stderr)
 
-    def test_trading_column_link_is_added_beside_daily(self):
-        skeleton = (SITE / "categories" / "hugo" / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("每日交易资讯", skeleton)
-        daily_only = publish.insert_daily_nav(skeleton)
-        self.assertNotIn("每日交易资讯", daily_only)
-        self.assertIn(">日报</a>", daily_only)
-        once = publish.insert_trading_column_nav(daily_only)
-        twice = publish.insert_trading_column_nav(once)
-        self.assertEqual(once, twice)
-        self.assertIn(">日报</a>", once)
-        menu = once[once.find('id="navMenu"') : once.find("</ul>", once.find('id="navMenu"'))]
-        side_start = once.find('<div class="sidebar')
-        side = once[side_start : once.find('<div class="main">', side_start)]
-        self.assertEqual(menu.count('href="/categories/每日交易资讯/"'), 1)
-        self.assertEqual(side.count('href="/categories/每日交易资讯/"'), 1)
-        self.assertLess(menu.find('href="/daily/"'), menu.find('href="/categories/每日交易资讯/"'))
-        self.assertLess(menu.find('href="/categories/每日交易资讯/"'), menu.find('href="/post/"'))
-        self.assertLess(side.find('href="/daily/"'), side.find('href="/categories/每日交易资讯/"'))
-        self.assertEqual(publish.SOURCE_BRIEFS, ("lumi", "agent-app"))
-        self.assertNotIn("每日交易资讯", publish.DOMAINS)
-        self.assertNotIn("每日交易资讯", publish.TYPES)
 
-    def test_publish_trading_column_rewrites_nav_and_leaves_daily_feed(self):
-        body = self.tmp / "trading.md"
-        body.write_text(
-            "时间窗口：2026-11-18（新加坡时间）\n\n"
-            "这是首页摘要，不臆补数字。\n\n"
-            "<!--more-->\n\n"
-            "华为鲲鹏只是原话。颓废是原话。阿柠投研也是原话。\n",
-            encoding="utf-8",
+class RecordTests(unittest.TestCase):
+    def record(self, **kw):
+        base = dict(
+            slug="s", title="t", when=publish.parse_when("2026-11-19"), categories=["日报"], tags=[],
+            body_html="<p>正文</p>", summary_html="<p>摘要</p>", description="",
         )
-        daily_before = {}
-        for rel in ("daily/items.json", "daily/index.html", "daily/feed.css", "daily/feed.js"):
-            path = self.tmp / rel
-            if path.is_file():
-                daily_before[rel] = path.read_bytes()
-        proc = subprocess.run(
-            [
-                sys.executable,
-                str(HERE / "publish.py"),
-                "--root",
-                str(self.tmp),
-                "--title",
-                "每日交易资讯（2026-11-18）",
-                "--date",
-                "2026-11-18",
-                "--slug",
-                "trading-2026-11-18",
-                "--category",
-                "每日交易资讯",
-                "--tag",
-                "每日交易资讯",
-                "--body-file",
-                str(body),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        self.assertEqual(proc.returncode, 0, proc.stderr)
-        self.assertNotIn("daily/items.json", proc.stdout)
-        self.assertNotIn("daily/feed.js", proc.stdout)
-        pages = (
-            "index.html",
-            "post/index.html",
-            "post/trading-2026-11-18/index.html",
-            "categories/每日交易资讯/index.html",
-            "categories/index.html",
-            "tags/每日交易资讯/index.html",
-            "tags/index.html",
-        )
-        for rel in pages:
-            html = (self.tmp / rel).read_text(encoding="utf-8")
-            self.assertIn(">日报</a>", html, rel)
-            menu_at = html.find('id="navMenu"')
-            menu = html[menu_at : html.find("</ul>", menu_at)]
-            side_at = html.find('<div class="sidebar')
-            side = html[side_at : html.find('<div class="main">', side_at)]
-            self.assertEqual(menu.count('href="/categories/每日交易资讯/"'), 1, rel)
-            self.assertEqual(side.count(">每日交易资讯</a>"), 1, rel)
-            self.assertLess(menu.find('href="/daily/"'), menu.find(publish.TRADING_COLUMN_HREF), rel)
-        home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertLess(home.find("/post/trading-2026-11-18/"), home.find("/post/agent-app-2026-11-18/"))
-        self.assertIn("时间窗口：2026-11-18（新加坡时间）", home)
-        self.assertIn("这是首页摘要，不臆补数字。", home)
-        self.assertNotIn("华为鲲鹏只是原话。", home)
-        page = (self.tmp / "post/trading-2026-11-18/index.html").read_text(encoding="utf-8")
-        for required in ("不臆补", "华为鲲鹏", "颓废", "阿柠投研"):
-            self.assertIn(required, page)
-        for forbidden in ("不臥补", "鲤鹏", "颟废", "阿柑投研"):
-            self.assertNotIn(forbidden, page)
-        self.assertIn('href="/categories/每日交易资讯/">每日交易资讯</a>', page)
-        for rel in self.untouched:
-            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
-        for rel, blob in daily_before.items():
-            self.assertEqual((self.tmp / rel).read_bytes(), blob, rel)
-        again = subprocess.run(
-            [
-                sys.executable,
-                str(HERE / "publish.py"),
-                "--root",
-                str(self.tmp),
-                "--title",
-                "每日交易资讯（2026-11-18）",
-                "--date",
-                "2026-11-18",
-                "--slug",
-                "trading-2026-11-18",
-                "--category",
-                "每日交易资讯",
-                "--tag",
-                "每日交易资讯",
-                "--body-file",
-                str(body),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        self.assertEqual(again.returncode, 0, again.stderr)
-        self.assertIn("no file changes", again.stdout)
-        home_again = (self.tmp / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(home_again.count('title="">每日交易资讯</a>'), 1)
+        base.update(kw)
+        return sitegen.PostRecord(**base)
 
-    def test_publish_learning_column_styles_its_page_and_follows_trading_in_nav(self):
-        body = self.tmp / "learn.md"
-        body.write_text(
-            "覆盖范围：TradingAgents 学习记录。\n\n"
-            "## 第一课\n\n"
-            "> **原则：** 需要判断力的决策交给模型。\n\n"
-            "> **思考题：** 为什么这样设计？\n\n"
-            "> **修正：** 不是反思。\n\n"
-            "> **举一反三：** 换个系统也成立。\n\n"
-            "> **随手记：** 普通引用。\n",
-            encoding="utf-8",
-        )
-        proc = subprocess.run(
-            [
-                sys.executable,
-                str(HERE / "publish.py"),
-                "--root",
-                str(self.tmp),
-                "--title",
-                "Agent 学习笔记（2026-11-19）",
-                "--date",
-                "2026-11-19",
-                "--slug",
-                "learn-agent-2026-11-19",
-                "--category",
-                "Agent 学习笔记",
-                "--body-file",
-                str(body),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        self.assertEqual(proc.returncode, 0, proc.stderr)
-        self.assertIn("categories/agent-学习笔记/index.html", proc.stdout)
-        page = (self.tmp / "post/learn-agent-2026-11-19/index.html").read_text(encoding="utf-8")
-        self.assertIn("counter(lesson", page)
-        self.assertIn("html[data-theme=dark] .post .post-content", page)
-        self.assertIn('<blockquote class="ln-key">', page)
-        self.assertIn('<blockquote class="ln-ask">', page)
-        self.assertIn('<blockquote class="ln-fix">', page)
-        self.assertIn('<blockquote class="ln-ext">', page)
-        self.assertEqual(page.count("<blockquote>"), 1)
-        self.assertIn('<p class="digest-meta">覆盖范围', page)
-        for rel in ("index.html", "post/index.html", "post/learn-agent-2026-11-19/index.html"):
-            html = (self.tmp / rel).read_text(encoding="utf-8")
-            menu_at = html.find('id="navMenu"')
-            menu = html[menu_at : html.find("</ul>", menu_at)]
-            side_at = html.find('<div class="sidebar')
-            side = html[side_at : html.find('<div class="main">', side_at)]
-            self.assertEqual(menu.count(publish.LEARNING_COLUMN_HREF), 1, rel)
-            self.assertEqual(side.count(publish.LEARNING_COLUMN_HREF), 1, rel)
-            self.assertLess(menu.find(publish.LEARNING_COLUMN_HREF), menu.find('href="/post/"'), rel)
-            if publish.TRADING_COLUMN_HREF in menu:
-                self.assertLess(menu.find(publish.TRADING_COLUMN_HREF), menu.find(publish.LEARNING_COLUMN_HREF), rel)
-                self.assertLess(side.find(publish.TRADING_COLUMN_HREF), side.find(publish.LEARNING_COLUMN_HREF), rel)
-        trading = (self.tmp / "post/trading-2026-11-18/index.html").read_text(encoding="utf-8")
-        self.assertNotIn("counter(lesson", trading)
+    def test_titles(self):
+        self.assertEqual(self.record(title="Agent 学习笔记（2026-11-19）：什么才算 agent").display_title, "什么才算 agent")
+        self.assertEqual(self.record(title="每日交易资讯（2026-11-19）").display_title, "每日交易资讯（2026-11-19）")
+        self.assertEqual(self.record(title="Luna 全双工语音日报（2026-11-19）").series_title, "Luna 全双工语音日报")
 
-    def test_learning_callouts_leave_other_blockquotes(self):
-        html = "<blockquote>\n<p><strong>思考题：</strong> 问</p>\n</blockquote>\n<blockquote>\n<p>普通</p>\n</blockquote>"
-        marked = publish.mark_learning_callouts(html)
-        self.assertIn('<blockquote class="ln-ask">', marked)
-        self.assertIn("<blockquote>\n<p>普通</p>", marked)
+    def test_summary_text_and_count(self):
+        rec = self.record(summary_html="<p>时间窗口：昨天</p>\n<p>本期 10 条：甲、乙。</p>")
+        self.assertEqual(rec.summary_text, "本期 10 条：甲、乙。")
+        self.assertEqual(rec.item_count, 10)
+        only_meta = self.record(summary_html="<p>2026年11月17日（星期二）</p>")
+        self.assertEqual(only_meta.summary_text, "2026年11月17日（星期二）")
+        self.assertIsNone(only_meta.item_count)
+
+    def test_round_trip(self):
+        rec = self.record(headline="头条", tags=["a"])
+        again = sitegen.PostRecord.from_dict(json.loads(rec.to_json()))
+        self.assertEqual(again.to_json(), rec.to_json())
+
+    def test_reading_minutes(self):
+        self.assertEqual(self.record(body_html="<p>" + "字" * 1200 + "</p>").reading_minutes, 3)
+        self.assertEqual(self.record(body_html="<p>短</p>").reading_minutes, 1)
 
 
 def sample_item(**overrides):
@@ -750,47 +532,18 @@ class DigestTests(unittest.TestCase):
         for rel in ("daily/feed.js", "_publisher/templates/daily.html"):
             self.assertIn("日报", (SITE / rel).read_text(encoding="utf-8"), rel)
 
-    def test_sidebar_link_is_idempotent(self):
-        html = (SITE / "index.html").read_text(encoding="utf-8")
-        once = publish.insert_daily_nav(html)
-        twice = publish.insert_daily_nav(once)
-        self.assertEqual(once, twice)
-        self.assertEqual(once.count('href="/daily/"'), 2)
-        self.assertIn(">日报</a>", once)
-        self.assertGreaterEqual(once.find('href="/daily/"'), 0)
-        self.assertLess(once.find('href="/daily/"'), once.find('href="/post/"'))
-
 
 class DigestPublishTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="site-digest-"))
-        for name in ("index.html", "index.xml", "sitemap.xml", "404.html", "robots.txt"):
-            shutil.copy2(SITE / name, self.tmp / name)
-        for folder in ("post", "categories", "tags", "css", "js"):
-            shutil.copytree(SITE / folder, self.tmp / folder)
-        daily = self.tmp / "daily"
-        daily.mkdir()
-        shutil.copy2(SITE / "daily" / "feed.css", daily / "feed.css")
-        shutil.copy2(SITE / "daily" / "feed.js", daily / "feed.js")
-        self.frozen = [
-            "post/yy/yyasynclayer/index.html",
-            "post/inithugo/index.html",
-            "css/style.min.12394ad1dd77abc5f2b8ac9fff89a6f77f11f1db9126284cdea41236936f5c56.css",
-            "js/anatole-header.min.0c05c0a90d28c968a1cad4fb31abd0b8e1264e788ccefed022ae1d3b6f627514.js",
-        ]
-        self.before = {rel: _sha(self.tmp / rel) for rel in self.frozen}
+        make_site(self.tmp)
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
 
-    def test_publish_items_upserts_and_leaves_old_posts(self):
+    def test_publish_items_upserts_and_keeps_posts(self):
         seed = HERE / "drafts" / "items-2026-11-17.json"
-        proc = subprocess.run(
-            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(seed)],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = run_cli("--root", str(self.tmp), "--items", str(seed))
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertIn("published /daily/", proc.stdout)
         stored = json.loads((self.tmp / "daily" / "items.json").read_text(encoding="utf-8"))
@@ -799,42 +552,37 @@ class DigestPublishTests(unittest.TestCase):
         self.assertIn("搜索标题、讲解、来源", page)
         self.assertIn("只看相关度不低于所选档的消息，", page)
         self.assertIn("再点一次取消。", page)
+        self.assertIn('data-view="favorites">收藏</button>', page)
+        self.assertIn('id="sync-panel"', page)
         self.assertNotIn("报日", page)
         home = (self.tmp / "index.html").read_text(encoding="utf-8")
-        posts = (self.tmp / "post" / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="/daily/"', home)
-        self.assertIn('href="/daily/"', posts)
+        self.assertIn("/post/learn-agent-2026-11-19/", home)
         sitemap = (self.tmp / "sitemap.xml").read_text(encoding="utf-8")
-        self.assertIn("https://fuCking-Life.github.io/daily/", sitemap)
-        for rel in self.frozen:
-            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
-
-        proc = subprocess.run(
-            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(seed)],
-            check=False,
-            capture_output=True,
-            text=True,
+        self.assertIn(
+            "<loc>https://fuCking-Life.github.io/daily/</loc>\n    <lastmod>2026-11-17T08:00:00+08:00</lastmod>",
+            sitemap,
         )
+
+        proc = run_cli("--root", str(self.tmp), "--items", str(seed))
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertIn("no file changes", proc.stdout)
 
         changed = sample_item(id="lumi-2026-11-17-voice-reader", seq=1, title="替换后的标题")
         payload = self.tmp / "one.json"
         payload.write_text(json.dumps([changed]), encoding="utf-8")
-        proc = subprocess.run(
-            [sys.executable, str(HERE / "publish.py"), "--root", str(self.tmp), "--items", str(payload)],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = run_cli("--root", str(self.tmp), "--items", str(payload))
         self.assertEqual(proc.returncode, 0, proc.stderr)
         stored = json.loads((self.tmp / "daily" / "items.json").read_text(encoding="utf-8"))
         self.assertEqual(len(stored), 17)
         titles = {item["id"]: item["title"] for item in stored}
         self.assertEqual(titles["lumi-2026-11-17-voice-reader"], "替换后的标题")
         self.assertIn("Qwen4-Max", " ".join(titles.values()))
-        for rel in self.frozen:
-            self.assertEqual(self.before[rel], _sha(self.tmp / rel), rel)
+
+    def test_template_matches_the_live_daily_page(self):
+        template = (HERE / "templates" / "daily.html").read_text(encoding="utf-8")
+        live = (SITE / "daily" / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(template, live.replace("\r\n", "\n"))
 
 
 if __name__ == "__main__":

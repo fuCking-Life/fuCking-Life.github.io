@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>agent-app on Fucking Life</title>
+    <title>#agent-app · Fucking Life</title>
     <link>https://fuCking-Life.github.io/tags/agent-app/</link>
-    <description>Recent content in agent-app on Fucking Life</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/tags/agent-app/index.xml" rel="self" type="application/rss+xml" />
+    <description>带 #agent-app 标签的文章</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://fuCking-Life.github.io/tags/agent-app/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-18 08:34 – 2026-11-19 08:32（新加坡时间）&lt;/p&gt;
 &lt;p&gt;本期 5 条：Reson8 开源 0.5B 手机级 ASR、ChatGPT Live Dictation 取消 10 分钟上限、DoorDash 助手进 iMessage，以及 Gemini 4 Neon 与 Genie 4。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-18）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</link>
       <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-17 08:32 – 2026-11-18 08:34（新加坡时间）&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-17）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</link>
       <pubDate>Tue, 17 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</guid>
       <description>&lt;p&gt;2026年11月17日（星期二）· 新加坡时间&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

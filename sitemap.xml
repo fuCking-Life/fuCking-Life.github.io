@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fuCking-Life.github.io/tags/langgraph/</loc>
+    <loc>https://fuCking-Life.github.io/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/tags/tradingagents/</loc>
+    <loc>https://fuCking-Life.github.io/post/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/categories/agent-学习笔记/</loc>
+    <loc>https://fuCking-Life.github.io/daily/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/post/trading-2026-11-19/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-19/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/tags/每日交易资讯/</loc>
+    <loc>https://fuCking-Life.github.io/categories/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -38,19 +21,23 @@
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/post/trading-2026-11-18/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <loc>https://fuCking-Life.github.io/categories/agent-学习笔记/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-18/</loc>
-    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+    <loc>https://fuCking-Life.github.io/tags/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/daily/</loc>
+    <loc>https://fuCking-Life.github.io/tags/每日交易资讯/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -58,95 +45,47 @@
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</loc>
-    <lastmod>2026-11-17T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
+    <loc>https://fuCking-Life.github.io/tags/tradingagents/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
+    <loc>https://fuCking-Life.github.io/tags/langgraph/</loc>
     <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/trading-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</loc>
+    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/trading-2026-11-18/</loc>
+    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-18/</loc>
+    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</loc>
+    <lastmod>2026-11-18T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/lumi-2026-11-17/</loc>
     <lastmod>2026-11-17T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/categories/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/life/</loc>
-    <lastmod>2022-11-10T20:30:09+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/life/</loc>
-    <lastmod>2022-11-10T20:30:09+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/life/initlife/</loc>
-    <lastmod>2022-11-10T20:30:09+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/cocoapods/</loc>
-    <lastmod>2021-07-04T18:55:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</loc>
-    <lastmod>2021-07-04T18:55:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/algorithm/</loc>
-    <lastmod>2021-05-13T09:36:45+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</loc>
-    <lastmod>2021-05-13T09:36:45+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/instrument/</loc>
-    <lastmod>2021-04-26T14:12:01+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/some_webs/</loc>
-    <lastmod>2021-04-26T14:12:01+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/objc_essence_0/</loc>
-    <lastmod>2021-04-23T21:55:05+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/objc/</loc>
-    <lastmod>2021-04-23T21:55:05+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/objc_essence_1/</loc>
-    <lastmod>2021-04-13T22:07:09+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/hugo/</loc>
-    <lastmod>2021-04-10T22:07:20+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/inithugo/</loc>
-    <lastmod>2021-04-10T22:07:20+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/ios/</loc>
-    <lastmod>2018-12-11T17:34:38+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/memory_cache/</loc>
-    <lastmod>2018-12-11T17:34:38+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/cross-platform/</loc>
-    <lastmod>2018-06-05T09:19:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/categories/weex/</loc>
-    <lastmod>2018-06-05T09:19:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/weex/weex3/</loc>
-    <lastmod>2018-06-05T09:19:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/weex/weex2/</loc>
-    <lastmod>2018-05-21T17:56:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/post/weex/weex1/</loc>
-    <lastmod>2018-05-17T11:43:59+08:00</lastmod>
-  </url><url>
-    <loc>https://fuCking-Life.github.io/tags/</loc>
-    <lastmod>2026-11-19T08:00:00+08:00</lastmod>
+    <loc>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</loc>
+    <lastmod>2026-11-17T08:00:00+08:00</lastmod>
   </url>
 </urlset>

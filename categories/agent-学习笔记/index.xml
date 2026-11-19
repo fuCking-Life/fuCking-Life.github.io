@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Agent 学习笔记 on Fucking Life</title>
+    <title>Agent 学习笔记 · Fucking Life</title>
     <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
-    <description>Recent content in Agent 学习笔记 on Fucking Life</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/categories/agent-学习笔记/index.xml" rel="self" type="application/rss+xml" />
+    <description>Agent 学习笔记 栏目的文章</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://fuCking-Life.github.io/categories/agent-学习笔记/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Agent 学习笔记（2026-11-19）：什么才算 agent</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</guid>
       <description>&lt;p&gt;覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。&lt;/p&gt;
 &lt;p&gt;今天最大的收获是一个判断标准：&lt;strong&gt;下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。&lt;/strong&gt;两道判断题我都答对了，但有两处说法不准：一是以为 ReAct 里有&amp;#34;反思&amp;#34;这一步，二是把&amp;#34;有工具&amp;#34;当成了 agent 的标志。还有一道题没答完。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

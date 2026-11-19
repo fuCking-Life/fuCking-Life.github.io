@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Insert posts and daily-digest items into this already-built Anatole site.
+"""Publish posts and daily-digest items to this static site.
 
-The site on master is compiled HTML. This script does not run Hugo. It writes
-a new ``post/<slug>/index.html`` from the existing single-post chrome and
-splices that post into the homepage, the posts archive, RSS, the sitemap, and
-the category and tag pages. A JSON item list upserts ``daily/items.json`` and
-regenerates the ``/daily/`` feed.
+Each post is stored as a record in ``_publisher/posts/<slug>.json``. Publishing
+upserts that record (or the digest items in ``daily/items.json``) and then
+rebuilds every generated page from all records with ``sitegen.py``: the
+homepage, post pages, column and tag pages, the archive, RSS, the sitemap,
+``404.html``, and ``/daily/``.
 
 Run ``python3 _publisher/publish.py --help`` for the arguments. See
 ``_publisher/README.md`` for the files that change and the known limits.
@@ -15,59 +15,28 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import re
+import shutil
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
-SITE_BASE = "https://fuCking-Life.github.io"
-TZ = ZoneInfo("Asia/Shanghai")
-DIGEST_TYPOGRAPHY_CSS = """
-.post .post-content { font-size: 15px; }
-.post .post-content p { line-height: 1.85; margin: 0.7em 0 1em; }
-.post .post-content li p { margin: 0.25em 0 0.6em; }
-.post .post-content h2 { font-size: 20px; font-weight: 650; margin: 2em 0 0.8em; padding-top: 0.4em; border-top: 1px solid #eee; }
-.post .post-content h2:first-of-type { border-top: 0; margin-top: 1.2em; padding-top: 0; }
-.post .post-content h3 { font-size: 17px; font-weight: 600; margin: 1.6em 0 0.6em; line-height: 1.45; }
-.post .post-content ol, .post .post-content ul { padding-left: 1.3em; margin: 0.4em 0 1em; }
-.post .post-content li { margin: 0.45em 0 0.9em; }
-.post .post-content a { color: #2f69b3; }
-.post .post-content blockquote {
-  border-left: 4px solid #3b6fd8;
-  background: #f6f8fc;
-  color: #334;
-  padding: 0.7em 1em;
-  margin: 0.9em 0 1.1em;
-  border-radius: 0 6px 6px 0;
-}
-.post .post-content blockquote p { margin: 0.35em 0; color: #334; line-height: 1.75; }
-.post .post-content .digest-meta {
-  color: #888;
-  font-size: 13px;
-  line-height: 1.7;
-  margin: 0.2em 0 0.4em;
-}
-.post .post-content hr { border: 0; border-top: 1px solid #eee; margin: 2em 0 1em; }
-""".strip()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import sitegen  # noqa: E402
+from sitegen import (  # noqa: E402,F401
+    COLUMNS,
+    SITE_BASE,
+    TZ,
+    PostRecord,
+    PublishError,
+    mark_callouts,
+    plain_text,
+    urlize,
+    xml_escape,
+)
+
 _META_START = re.compile(r"^(?:时间窗口|覆盖范围|\d{4}年)")
-WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-MONTHS = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-]
-MONTH_INDEX = {name: i + 1 for i, name in enumerate(MONTHS)}
 
 # Fixed vocabularies for /daily/. Names stay in this order in the filter UI.
 DOMAINS = [
@@ -106,33 +75,8 @@ DAILY_ITEMS_REL = "daily/items.json"
 DAILY_INDEX_REL = "daily/index.html"
 
 HERE = Path(__file__).resolve().parent
-SINGLE_TEMPLATE = HERE / "templates" / "single.html"
-DAILY_TEMPLATE = HERE / "templates" / "daily.html"
-
-SHORT_TAIL = "\n                \n            \n"
-LONG_TAIL = SHORT_TAIL + "        "
-
-CARD_RE = re.compile(
-    r"        <div class=\"post  animated fadeInDown \">\n"
-    r"            \n"
-    r"            <div class=\"post-title\">.*?"
-    r"\n            </div>\n        </div>",
-    re.S,
-)
-ENTRY_RE = re.compile(r"                    <ul class=\"listing\">.*?</ul>", re.S)
-YEAR_RE = re.compile(r"[ \t]*<div class=\"listing-title\">(\d{4})</div>")
-ITEM_RE = re.compile(r"    <item>\n.*?\n    </item>", re.S)
-DATE_LONG_RE = re.compile(
-    r'<span class="date">\s*([A-Za-z]{3}),\s+([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})'
-)
-DATE_SHORT_RE = re.compile(
-    r'<span class="date">\s*([A-Za-z]{3})\s+(\d{1,2})\s*</span>'
-)
-
-
-class PublishError(SystemExit):
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+DAILY_TEMPLATE = sitegen.DAILY_TEMPLATE
+POSTS_REL = "_publisher/posts"
 
 
 def hugo_escape(text: str) -> str:
@@ -145,30 +89,6 @@ def hugo_escape(text: str) -> str:
         .replace("'", "&#39;")
         .replace("+", "&#43;")
     )
-
-
-def xml_escape(text: str) -> str:
-    return (
-        text.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&#34;")
-        .replace("'", "&#39;")
-    )
-
-
-def urlize(name: str) -> str:
-    """Hugo-like path slug: lowercase, unicode letters kept, other runs become '-'."""
-    out: list[str] = []
-    for ch in name.strip().lower():
-        if ch.isalnum() or ch in "-_":
-            out.append("-" if ch == "_" else ch)
-        else:
-            out.append("-")
-    slug = re.sub(r"-{2,}", "-", "".join(out)).strip("-")
-    if not slug:
-        raise PublishError(f"category or tag {name!r} has no URL slug")
-    return slug
 
 
 def validate_slug(slug: str) -> str:
@@ -221,49 +141,6 @@ def parse_when(value: str) -> datetime:
         return dt.astimezone(TZ)
     raise PublishError(
         f"unrecognized date {value!r}; use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS+08:00"
-    )
-
-
-def html_long_date(dt: datetime) -> str:
-    return f"{WEEKDAYS[dt.weekday()]}, {MONTHS[dt.month - 1]} {dt.day}, {dt.year}"
-
-
-def html_short_date(dt: datetime) -> str:
-    return f"{MONTHS[dt.month - 1]} {dt.day}"
-
-
-def rss_date(dt: datetime) -> str:
-    aware = dt.astimezone(TZ)
-    return (
-        f"{WEEKDAYS[aware.weekday()]}, {aware.day:02d} {MONTHS[aware.month - 1]} "
-        f"{aware.year} {aware.hour:02d}:{aware.minute:02d}:{aware.second:02d} +0800"
-    )
-
-
-def sitemap_date(dt: datetime) -> str:
-    aware = dt.astimezone(TZ)
-    return aware.strftime("%Y-%m-%dT%H:%M:%S+08:00")
-
-
-def parse_rss_date(value: str) -> datetime:
-    match = re.match(
-        r"\w+, (\d{2}) (\w{3}) (\d{4}) (\d{2}):(\d{2}):(\d{2}) ([+-]\d{4})",
-        value.strip(),
-    )
-    if not match:
-        raise PublishError(f"unrecognized RSS date {value!r}")
-    sign = 1 if match.group(7)[0] == "+" else -1
-    hours = int(match.group(7)[1:3])
-    minutes = int(match.group(7)[3:5])
-    tz = timezone(sign * timedelta(hours=hours, minutes=minutes))
-    return datetime(
-        int(match.group(3)),
-        MONTH_INDEX[match.group(2)],
-        int(match.group(1)),
-        int(match.group(4)),
-        int(match.group(5)),
-        int(match.group(6)),
-        tzinfo=tz,
     )
 
 
@@ -594,31 +471,9 @@ def _listing_summary(html: str) -> str:
     return first_paragraph(html)
 
 
-def plain_text(html: str) -> str:
-    text = re.sub(r"<[^>]+>", " ", html)
-    text = (
-        text.replace("&#43;", "+")
-        .replace("&#34;", '"')
-        .replace("&#39;", "'")
-        .replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&amp;", "&")
-    )
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def word_count(html: str) -> int:
-    return len(plain_text(html).split())
-
-
-def reading_label(html: str) -> str:
-    count = word_count(html)
-    fuzzy = 100 if count < 100 else int(round(count / 100.0) * 100)
-    minutes = max(1, math.ceil(count / 213)) if count else 1
-    return f"{fuzzy} Words|Read in about {minutes} Min"
-
-
 class Post:
+    """A post as given on the command line, before it is stored as a record."""
+
     def __init__(
         self,
         title: str,
@@ -629,9 +484,9 @@ class Post:
         body_html: str,
         summary_html: str,
         description: str,
+        headline: str = "",
     ) -> None:
         self.title = title
-        self.title_html = hugo_escape(title)
         self.when = when
         self.slug = slug
         self.categories = categories
@@ -639,781 +494,27 @@ class Post:
         self.body_html = body_html
         self.summary_html = summary_html
         self.description = description
-        self.description_html = hugo_escape(description)
+        self.headline = headline
         self.path = f"/post/{slug}/"
         self.abs_url = f"{SITE_BASE}{self.path}"
-        self.reading = reading_label(body_html)
 
-    @property
-    def footer_html(self) -> str:
-        parts: list[str] = []
-        if self.categories:
-            anchors = "".join(
-                f'<a class="category" href="/categories/{slug}/">{hugo_escape(name)}</a>'
-                for name, slug in self.categories
-            )
-            parts.append(f'<span class="separator">{anchors}</span>')
-        if self.tags:
-            anchors = "".join(
-                f'<a class="tag" href="/tags/{slug}/">{hugo_escape(name)}</a>'
-                for name, slug in self.tags
-            )
-            parts.append(f'<span class="separator">{anchors}</span>')
-        return "\n".join("                " + part for part in parts)
-
-
-def render_single(post: Post) -> str:
-    if not SINGLE_TEMPLATE.is_file():
-        raise PublishError(f"missing template {SINGLE_TEMPLATE}")
-    html = SINGLE_TEMPLATE.read_text(encoding="utf-8")
-    html = html.replace("@@TITLE@@", post.title_html)
-    html = html.replace("@@DESCRIPTION@@", post.description_html)
-    html = html.replace("@@CANONICAL@@", post.path)
-    html = html.replace("@@TWITTER_TITLE@@", post.title_html)
-    html = html.replace("@@TWITTER_DESCRIPTION@@", post.description_html)
-    html = html.replace("@@DATE@@", html_long_date(post.when))
-    html = html.replace("@@READING@@", post.reading)
-    html = html.replace("@@FOOTER@@", post.footer_html)
-    if "@@" in html.replace("@@CONTENT@@", ""):
-        raise PublishError("single-post template has an unfilled placeholder")
-    if "</head>" not in html:
-        raise PublishError("post template is missing </head>")
-    css = DIGEST_TYPOGRAPHY_CSS
-    content = post.body_html.strip("\n")
-    if _uses_column(post, LEARNING_COLUMN):
-        css += "\n" + LEARNING_NOTES_CSS
-        content = mark_learning_callouts(content)
-    html = html.replace(
-        "</head>",
-        "<style>\n" + css + "\n</style>\n</head>",
-        1,
-    )
-    html = html.replace("@@CONTENT@@", content)
-    return html
-
-
-def render_entry(href: str, title_html: str, when: datetime) -> str:
-    short = html_short_date(when)
-    return (
-        "                    <ul class=\"listing\">\n"
-        "                        <div class=\"listing-item\">\n"
-        "                            <div class=\"listing-post\">"
-        f'<a href="{href}" title="{title_html}">{title_html}</a>\n'
-        "                                <div class=\"post-time\">"
-        f'<span class="date"> {short} \n'
-        "                                                                            </span></div>\n"
-        "                            </div>\n"
-        "                        </div>\n"
-        "                    </ul>"
-    )
-
-
-def render_card(post: Post) -> str:
-    cats = "".join(
-        f'<a class="category" href="/categories/{slug}/">{hugo_escape(name)}</a>'
-        for name, slug in post.categories
-    )
-    date_long = html_long_date(post.when)
-    return (
-        "        <div class=\"post  animated fadeInDown \">\n"
-        "            \n"
-        "            <div class=\"post-title\">\n"
-        f'                <h3><a href="{post.path}">{post.title_html}</a>\n'
-        "                </h3>\n"
-        "            </div>\n"
-        "            <div class=\"post-content\">\n"
-        "                <div class=\"p_part\">\n"
-        f"                    <p>{post.summary_html}</p>\n"
-        "                    </div>\n"
-        "            </div>\n"
-        "\n"
-        "            \n"
-        "            <div class=\"post-footer\">\n"
-        "                <div class=\"meta\">\n"
-        "                    <div class=\"info\">\n"
-        "                        <em class=\"fas fa-calendar-day\"></em>\n"
-        f'                            <span class="date"> {date_long}\n'
-        "                                             </span>\n"
-        f'                        <span class="separator">{cats}</span>\n'
-        "                        \n"
-        "                    </div>\n"
-        "                </div>\n"
-        "            </div>\n"
-        "        </div>"
-    )
-
-
-def find_archive(html: str) -> tuple[int, int]:
-    open_tag = '<ul class="list-with-title">'
-    start = html.find(open_tag)
-    if start < 0:
-        raise PublishError("archive listing not found")
-    inner = start + len(open_tag)
-    i = inner
-    depth = 1
-    while i < len(html):
-        if html.startswith("<ul", i):
-            depth += 1
-            i += 3
-            continue
-        if html.startswith("</ul>", i):
-            depth -= 1
-            if depth == 0:
-                return inner, i
-            i += 5
-            continue
-        i += 1
-    raise PublishError("archive listing is not closed")
-
-
-def split_years(inner: str) -> tuple[str, list[tuple[int, str]]]:
-    matches = list(YEAR_RE.finditer(inner))
-    if not matches:
-        return "\n            \n", []
-    prefix = inner[: matches[0].start()]
-    years: list[tuple[int, str]] = []
-    for index, match in enumerate(matches):
-        end = matches[index + 1].start() if index + 1 < len(matches) else len(inner)
-        years.append((int(match.group(1)), inner[match.start() : end]))
-    return prefix, years
-
-
-def split_tail(chunk: str) -> tuple[str, str]:
-    if chunk.endswith(LONG_TAIL):
-        return chunk[: -len(LONG_TAIL)], LONG_TAIL
-    if chunk.endswith(SHORT_TAIL):
-        return chunk[: -len(SHORT_TAIL)], SHORT_TAIL
-    raise PublishError("unrecognized year block in an archive page")
-
-
-def entry_href(entry: str) -> str:
-    match = re.search(r'<a href="([^"]*)"', entry)
-    if not match:
-        raise PublishError("listing entry is missing a link")
-    return match.group(1)
-
-
-def entry_month_day(entry: str) -> tuple[int, int]:
-    match = DATE_SHORT_RE.search(entry)
-    if not match:
-        raise PublishError("listing entry is missing a date")
-    return MONTH_INDEX[match.group(1)], int(match.group(2))
-
-
-def render_year(year: int, entries: list[str], tail: str) -> str:
-    joined = "\n                \n".join(entries)
-    return (
-        f'                <div class="listing-title">{year}</div>\n'
-        f"                \n"
-        f"{joined}"
-        f"{tail}"
-    )
-
-
-def _place_entry(entries: list[str], new_entry: str, when: datetime) -> list[str]:
-    key = (when.month, when.day)
-    href = entry_href(new_entry)
-    kept = [entry for entry in entries if entry_href(entry) != href]
-    placed = False
-    out: list[str] = []
-    for entry in kept:
-        if not placed and entry_month_day(entry) <= key:
-            out.append(new_entry)
-            placed = True
-        out.append(entry)
-    if not placed:
-        out.append(new_entry)
-    return out
-
-
-def upsert_archive_inner(inner: str, href: str, title_html: str, when: datetime) -> str:
-    prefix, years = split_years(inner)
-    cleaned: list[tuple[int, str]] = []
-    for year, chunk in years:
-        head, tail = split_tail(chunk)
-        found = ENTRY_RE.findall(head)
-        kept = [entry for entry in found if entry_href(entry) != href]
-        if len(kept) == len(found):
-            cleaned.append((year, chunk))
-        elif kept:
-            cleaned.append((year, render_year(year, kept, tail)))
-    entry = render_entry(href, title_html, when)
-    index = next((i for i, (year, _) in enumerate(cleaned) if year == when.year), None)
-    if index is None:
-        insert_at = 0
-        while insert_at < len(cleaned) and cleaned[insert_at][0] > when.year:
-            insert_at += 1
-        is_last = insert_at == len(cleaned)
-        if is_last and cleaned and cleaned[-1][1].endswith(LONG_TAIL):
-            year, chunk = cleaned[-1]
-            cleaned[-1] = (year, chunk[: -8])
-        tail = LONG_TAIL if is_last else SHORT_TAIL
-        cleaned.insert(insert_at, (when.year, render_year(when.year, [entry], tail)))
-    else:
-        year, chunk = cleaned[index]
-        head, tail = split_tail(chunk)
-        entries = _place_entry(ENTRY_RE.findall(head), entry, when)
-        cleaned[index] = (year, render_year(year, entries, tail))
-    if cleaned and not cleaned[-1][1].endswith("\n        "):
-        year, chunk = cleaned[-1]
-        cleaned[-1] = (year, chunk + "        ")
-    return prefix + "".join(chunk for _, chunk in cleaned)
-
-
-def replace_archive(html: str, href: str, title_html: str, when: datetime) -> str:
-    start, end = find_archive(html)
-    inner = upsert_archive_inner(html[start:end], href, title_html, when)
-    return html[:start] + inner + html[end:]
-
-
-def remove_archive_href(html: str, href: str) -> str:
-    if href not in html:
-        return html
-    start, end = find_archive(html)
-    inner = html[start:end]
-    if href not in inner:
-        return html
-    prefix, years = split_years(inner)
-    kept_years: list[tuple[int, str]] = []
-    changed = False
-    for year, chunk in years:
-        if href not in chunk:
-            kept_years.append((year, chunk))
-            continue
-        changed = True
-        head, tail = split_tail(chunk)
-        kept = [entry for entry in ENTRY_RE.findall(head) if entry_href(entry) != href]
-        if kept:
-            kept_years.append((year, render_year(year, kept, tail)))
-    if not changed:
-        return html
-    if kept_years and not kept_years[-1][1].endswith("\n        "):
-        year, chunk = kept_years[-1]
-        kept_years[-1] = (year, chunk + "        ")
-    new_inner = prefix + "".join(chunk for _, chunk in kept_years)
-    if not kept_years:
-        new_inner = "\n            \n        "
-    return html[:start] + new_inner + html[end:]
-
-
-def card_sort_key(card: str) -> tuple[int, int, int]:
-    match = DATE_LONG_RE.search(card)
-    if not match:
-        raise PublishError("homepage card is missing a date")
-    month = MONTH_INDEX[match.group(2)]
-    return int(match.group(4)), month, int(match.group(3))
-
-
-def card_href(card: str) -> str:
-    match = re.search(r'<a href="([^"]+)"', card)
-    if not match:
-        raise PublishError("homepage card is missing a link")
-    return match.group(1)
-
-
-def replace_homepage(html: str, post: Post) -> str:
-    matches = list(CARD_RE.finditer(html))
-    if not matches:
-        raise PublishError("homepage post list was not found")
-    gaps = [html[a.end() : b.start()] for a, b in zip(matches, matches[1:])]
-    gap = gaps[0] if gaps else "\n    \n\n"
-    if any(item != gap for item in gaps):
-        raise PublishError("homepage cards are not separated consistently")
-    cards = [match.group(0) for match in matches]
-    cards = [card for card in cards if card_href(card) != post.path]
-    new_card = render_card(post)
-    key = (post.when.year, post.when.month, post.when.day)
-    placed = False
-    out: list[str] = []
-    for card in cards:
-        if not placed and card_sort_key(card) <= key:
-            out.append(new_card)
-            placed = True
-        out.append(card)
-    if not placed:
-        out.append(new_card)
-    rebuilt = gap.join(out)
-    return html[: matches[0].start()] + rebuilt + html[matches[-1].end() :]
-
-
-def rss_item(title: str, link: str, when: datetime, description: str) -> str:
-    return (
-        "    <item>\n"
-        f"      <title>{xml_escape(title)}</title>\n"
-        f"      <link>{link}</link>\n"
-        f"      <pubDate>{rss_date(when)}</pubDate>\n"
-        "      \n"
-        f"      <guid>{link}</guid>\n"
-        f"      <description>{description}</description>\n"
-        "    </item>"
-    )
-
-
-def remove_rss_item(xml: str, link: str) -> str:
-    for match in ITEM_RE.finditer(xml):
-        block = match.group(0)
-        if f"<link>{link}</link>" not in block and f"<guid>{link}</guid>" not in block:
-            continue
-        start, end = match.start(), match.end()
-        if xml.startswith("\n    \n", end):
-            end += len("\n    \n")
-        elif xml[max(0, start - len("\n    \n")) : start] == "\n    \n":
-            start -= len("\n    \n")
-        return xml[:start] + xml[end:]
-    return xml
-
-
-def upsert_rss_item(xml: str, title: str, link: str, when: datetime, description: str) -> str:
-    xml = remove_rss_item(xml, link)
-    block = rss_item(title, link, when, description)
-    matches = list(ITEM_RE.finditer(xml))
-    for match in matches:
-        found = re.search(r"<pubDate>(.*?)</pubDate>", match.group(0))
-        if not found:
-            continue
-        if when >= parse_rss_date(found.group(1)):
-            return xml[: match.start()] + block + "\n    \n" + xml[match.start() :]
-    if matches:
-        last = matches[-1]
-        return xml[: last.end()] + "\n    \n" + block + xml[last.end() :]
-    return xml.replace("  </channel>", block + "\n    \n  </channel>", 1)
-
-
-def bump_last_build(xml: str, when: datetime) -> str:
-    new = rss_date(when)
-    match = re.search(r"<lastBuildDate>(.*?)</lastBuildDate>", xml)
-    if not match:
-        return xml.replace(
-            "<atom:link ",
-            f"<lastBuildDate>{new}</lastBuildDate><atom:link ",
-            1,
+    def to_record(self) -> PostRecord:
+        return PostRecord(
+            slug=self.slug,
+            title=self.title,
+            when=self.when,
+            categories=[name for name, _slug in self.categories],
+            tags=[name for name, _slug in self.tags],
+            body_html=self.body_html,
+            summary_html=self.summary_html,
+            description=self.description,
+            headline=self.headline,
         )
-    if when >= parse_rss_date(match.group(1)):
-        return xml[: match.start(1)] + new + xml[match.end(1) :]
-    return xml
 
 
-def _feed_item(xml: str, link: str) -> tuple[str, datetime] | None:
-    for match in ITEM_RE.finditer(xml):
-        block = match.group(0)
-        if f"<link>{link}</link>" not in block:
-            continue
-        title = re.search(r"<title>(.*?)</title>", block)
-        pub = re.search(r"<pubDate>(.*?)</pubDate>", block)
-        if not title or not pub:
-            continue
-        return title.group(1), parse_rss_date(pub.group(1))
-    return None
-
-
-def upsert_feed(xml: str, title: str, link: str, when: datetime, description: str) -> str:
-    xml = bump_last_build(xml, when)
-    return upsert_rss_item(xml, title, link, when, description)
-
-
-def new_term_feed(kind: str, name: str, slug: str, item_title: str, item_link: str, when: datetime, description: str) -> str:
-    link = f"{SITE_BASE}/{kind}/{slug}/"
-    item = rss_item(item_title, item_link, when, description)
-    return (
-        '<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n'
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
-        "  <channel>\n"
-        f"    <title>{xml_escape(name)} on Fucking Life</title>\n"
-        f"    <link>{link}</link>\n"
-        f"    <description>Recent content in {xml_escape(name)} on Fucking Life</description>\n"
-        "    <generator>Hugo -- gohugo.io</generator>\n"
-        "    <language>en</language>\n"
-        f"    <lastBuildDate>{rss_date(when)}</lastBuildDate>"
-        f'<atom:link href="{link}index.xml" rel="self" type="application/rss+xml" />\n'
-        f"{item}\n"
-        "    \n"
-        "  </channel>\n"
-        "</rss>\n"
-    )
-
-
-def term_listing(html: str, href: str) -> tuple[date, str] | None:
-    if href not in html:
-        return None
-    start, end = find_archive(html)
-    _prefix, years = split_years(html[start:end])
-    for year, chunk in years:
-        if href not in chunk:
-            continue
-        head, _tail = split_tail(chunk)
-        for entry in ENTRY_RE.findall(head):
-            if entry_href(entry) != href:
-                continue
-            month, day = entry_month_day(entry)
-            match = re.search(r'title="([^"]*)"', entry)
-            title = match.group(1) if match else ""
-            return date(year, month, day), title
-    return None
-
-
-def term_index_needs_update(html: str, href: str, title_html: str, when: datetime) -> bool:
-    found = term_listing(html, href)
-    if found is None:
-        return True
-    listed, title = found
-    if title != title_html:
-        return True
-    return listed < when.date()
-
-
-def clone_term_page(root: Path, kind: str, name: str, slug: str, href: str, title_html: str, when: datetime) -> str:
-    if kind == "categories":
-        skeleton_path = root / "categories" / "hugo" / "index.html"
-        if not skeleton_path.is_file():
-            raise PublishError("categories/hugo/index.html is required as chrome for new categories")
-        page = skeleton_path.read_text(encoding="utf-8")
-        page = page.replace("Ermao | hugo ", f"Ermao | {hugo_escape(name)} ", 1)
-        page = page.replace('href="/categories/hugo/"', f'href="/categories/{slug}/"')
-        page = page.replace('content="hugo"', f'content="{hugo_escape(name)}"', 1)
-    else:
-        skeleton_path = root / "tags" / "index.html"
-        if not skeleton_path.is_file():
-            raise PublishError("tags/index.html is required as chrome for new tags")
-        page = skeleton_path.read_text(encoding="utf-8")
-        page = page.replace("Ermao | Tags ", f"Ermao | {hugo_escape(name)} ", 1)
-        page = page.replace('href="/tags/"', f'href="/tags/{slug}/"')
-        page = page.replace('content="Tags"', f'content="{hugo_escape(name)}"', 1)
-    fresh = upsert_archive_inner("\n            \n        ", href, title_html, when)
-    start, end = find_archive(page)
-    return page[:start] + fresh + page[end:]
-
-
-def set_sitemap_lastmod(xml: str, loc: str, lastmod: str, mode: str) -> str:
-    pattern = re.compile(
-        r"(<loc>" + re.escape(loc) + r"</loc>)(?:(\s*)<lastmod>([^<]*)</lastmod>)?"
-    )
-    match = pattern.search(xml)
-    if not match:
-        block = (
-            "  <url>\n"
-            f"    <loc>{loc}</loc>\n"
-            f"    <lastmod>{lastmod}</lastmod>\n"
-            "  </url>\n"
-        )
-        needle = 'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
-        if needle not in xml:
-            raise PublishError("sitemap.xml is missing the urlset opening")
-        return xml.replace(needle, needle + block, 1)
-    old = match.group(3)
-    if old and mode == "max" and old >= lastmod:
-        return xml
-    if old:
-        updated = f"{match.group(1)}{match.group(2)}<lastmod>{lastmod}</lastmod>"
-        return xml[: match.start()] + updated + xml[match.end() :]
-    updated = f"{match.group(1)}\n    <lastmod>{lastmod}</lastmod>"
-    return xml[: match.start()] + updated + xml[match.end() :]
-
-
-# Columns on the Anatole chrome, in nav order after 日报. They are not /daily/
-# domains, types, or source_briefs.
-TRADING_COLUMN = "每日交易资讯"
-TRADING_COLUMN_HREF = "/categories/每日交易资讯/"
-LEARNING_COLUMN = "Agent 学习笔记"
-LEARNING_COLUMN_HREF = "/categories/agent-学习笔记/"
-COLUMNS = ((TRADING_COLUMN, TRADING_COLUMN_HREF), (LEARNING_COLUMN, LEARNING_COLUMN_HREF))
-
-# Learning notes: a lead line, numbered lessons, and callouts a blockquote opens
-# with in bold (思考题, 原则, 要点, 我的理解, 修正, 举一反三). Colors follow the theme switch.
-LEARNING_NOTES_CSS = """
-.post .post-content { --ln-accent: #0f766e; --ln-accent-soft: #e6f4f1; --ln-ask: #b45309; --ln-ask-soft: #fdf3e3; --ln-fix: #b42318; --ln-fix-soft: #fdeceb; --ln-ext: #4338ca; --ln-ext-soft: #eef0fb; --ln-ink: #2b2f36; --ln-muted: #7a808a; --ln-rule: #e7e9ee; --ln-code-bg: #f6f7f9; counter-reset: lesson; }
-html[data-theme=dark] .post .post-content { --ln-accent: #5eead4; --ln-accent-soft: rgba(94, 234, 212, 0.08); --ln-ask: #fbbf24; --ln-ask-soft: rgba(251, 191, 36, 0.08); --ln-fix: #fca5a5; --ln-fix-soft: rgba(252, 165, 165, 0.08); --ln-ext: #a5b4fc; --ln-ext-soft: rgba(165, 180, 252, 0.08); --ln-ink: rgb(200, 200, 208); --ln-muted: rgb(140, 140, 150); --ln-rule: rgb(60, 60, 66); --ln-code-bg: rgb(33, 33, 45); }
-.post .post-content p, .post .post-content li { color: var(--ln-ink); }
-.post .post-content .digest-meta { color: var(--ln-muted); border-left: 3px solid var(--ln-accent); padding-left: 0.8em; }
-.post .post-content h2 { counter-increment: lesson; border-top: 1px solid var(--ln-rule); }
-.post .post-content h2::before { content: counter(lesson, decimal-leading-zero); display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: var(--ln-accent); margin-bottom: 0.3em; }
-.post .post-content h3 { color: var(--ln-ink); }
-.post .post-content strong { color: var(--ln-ink); }
-.post .post-content code { background: var(--ln-code-bg); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.92em; }
-.post .post-content pre code { padding: 0; background: none; }
-.post .post-content .highlight pre { background: var(--ln-code-bg); border: 1px solid var(--ln-rule); border-radius: 8px; padding: 0.9em 1em; line-height: 1.6; font-size: 13px; }
-.post .post-content table { border-collapse: collapse; width: 100%; margin: 1em 0 1.3em; font-size: 14px; }
-.post .post-content th, .post .post-content td { border: 1px solid var(--ln-rule); padding: 0.5em 0.7em; text-align: left; vertical-align: top; color: var(--ln-ink); }
-.post .post-content th { background: var(--ln-code-bg); font-weight: 650; }
-.post .post-content blockquote { background: var(--ln-code-bg); border-left-color: var(--ln-rule); }
-.post .post-content blockquote p { color: var(--ln-ink); }
-.post .post-content blockquote.ln-key { border-left-color: var(--ln-accent); background: var(--ln-accent-soft); }
-.post .post-content blockquote.ln-key > p:first-child strong:first-child { color: var(--ln-accent); }
-.post .post-content blockquote.ln-ask { border-left-color: var(--ln-ask); background: var(--ln-ask-soft); }
-.post .post-content blockquote.ln-ask > p:first-child strong:first-child { color: var(--ln-ask); }
-.post .post-content blockquote.ln-fix { border-left-color: var(--ln-fix); background: var(--ln-fix-soft); }
-.post .post-content blockquote.ln-fix > p:first-child strong:first-child { color: var(--ln-fix); }
-.post .post-content blockquote.ln-ext { border-left-color: var(--ln-ext); background: var(--ln-ext-soft); }
-.post .post-content blockquote.ln-ext > p:first-child strong:first-child { color: var(--ln-ext); }
-""".strip()
-_CALLOUTS = {"原则": "ln-key", "要点": "ln-key", "我的理解": "ln-key", "思考题": "ln-ask", "修正": "ln-fix", "举一反三": "ln-ext"}
-_CALLOUT_RE = re.compile(r"<blockquote>(\s*<p><strong>([^<]+)</strong>)")
-
-
-def _uses_column(post: Post, column: str) -> bool:
-    return any(name == column for name, _slug in post.categories + post.tags)
-
-
-def _uses_trading_column(post: Post) -> bool:
-    return _uses_column(post, TRADING_COLUMN)
-
-
-def mark_learning_callouts(html: str) -> str:
-    """Class a blockquote by the bold word it opens with, such as **思考题**."""
-
-    def repl(match: re.Match[str]) -> str:
-        label = match.group(2).strip().rstrip("：:")
-        cls = _CALLOUTS.get(label)
-        return f'<blockquote class="{cls}">{match.group(1)}' if cls else match.group(0)
-
-    return _CALLOUT_RE.sub(repl, html)
-
-
-def insert_daily_nav(html: str) -> str:
-    """Add the 日报 link to the Anatole menu and the left sidebar.
-
-    The menu is the top nav. The sidebar link sits under the bio. Pages
-    without that chrome, including the daily feed itself, are left as they are.
-    """
-    html = _insert_daily_menu_link(html)
-    html = _insert_daily_sidebar_link(html)
-    return html
-
-
-def _insert_daily_menu_link(html: str) -> str:
-    start = html.find('id="navMenu"')
-    if start < 0:
-        return html
-    end = html.find("</ul>", start)
-    if end < 0:
-        return html
-    block = html[start:end]
-    if 'href="/daily/"' in block:
-        return html
-    match = re.search(r'\n([ \t]*)<li><a\b[^>]*href="/post/"', block)
-    if not match:
-        return html
-    indent = match.group(1)
-    item = (
-        f'\n{indent}<li><a \n'
-        f'{indent}       href="/daily/"\n'
-        f'{indent}            \n'
-        f'{indent}       title="">日报</a></li>'
-    )
-    at = start + match.start()
-    return html[:at] + item + html[at:]
-
-
-def _insert_daily_sidebar_link(html: str) -> str:
-    start = html.find('<div class="sidebar')
-    if start < 0:
-        return html
-    end = html.find('<div class="main">', start)
-    if end < 0:
-        return html
-    if 'href="/daily/"' in html[start:end]:
-        return html
-    needle = (
-        "            </div>\n"
-        "        </div>\n"
-        "    </div>\n"
-        '    <ul class="social-links">'
-    )
-    at = html.find(needle, start)
-    if at < 0 or at > end:
-        return html
-    # Inline size overrides the theme rule that enlarges every link in .title.
-    link = (
-        '            <p><a href="/daily/" '
-        'style="font-size:15px;font-weight:650;letter-spacing:0;'
-        'text-transform:none;color:#2660ab">日报</a></p>\n'
-    )
-    insert_at = at + len("            </div>\n")
-    return html[:insert_at] + link + html[insert_at:]
-
-
-def insert_trading_column_nav(html: str) -> str:
-    """Add the 每日交易资讯 link beside 日报 on rewritten Anatole pages."""
-    return insert_column_nav(html, TRADING_COLUMN, TRADING_COLUMN_HREF)
-
-
-def insert_column_nav(html: str, name: str, href: str) -> str:
-    """Add a column's menu item and sidebar link on rewritten Anatole pages.
-
-    Both point at the column's category index and follow 日报 and the columns
-    listed before it in COLUMNS. Pages that already have the link are left
-    unchanged. The 日报 link stays.
-    """
-    names = [column for column, _href in COLUMNS]
-    before = ["日报"] + names[: names.index(name)] if name in names else ["日报"]
-    html = _insert_column_menu_link(html, name, href, before)
-    html = _insert_column_sidebar_link(html, name, href, before)
-    return html
-
-
-def _column_menu_item(indent: str, name: str, href: str) -> str:
-    return (
-        f'\n{indent}<li><a \n'
-        f'{indent}       href="{href}"\n'
-        f'{indent}            \n'
-        f'{indent}       title="">{name}</a></li>'
-    )
-
-
-def _insert_column_menu_link(html: str, name: str, href: str, before: list[str]) -> str:
-    start = html.find('id="navMenu"')
-    if start < 0:
-        return html
-    end = html.find("</ul>", start)
-    if end < 0:
-        return html
-    block = html[start:end]
-    if href in block:
-        return html
-    for previous in reversed(before):
-        marker = f'title="">{previous}</a></li>'
-        prev_end = block.find(marker)
-        if prev_end < 0:
-            continue
-        li_at = block.rfind("<li>", 0, prev_end)
-        line_start = block.rfind("\n", 0, li_at if li_at >= 0 else prev_end) + 1
-        indent = re.match(r"[ \t]*", block[line_start:]).group(0)
-        at = start + prev_end + len(marker)
-        return html[:at] + _column_menu_item(indent, name, href) + html[at:]
-    match = re.search(r'\n([ \t]*)<li><a\b[^>]*href="/post/"', block)
-    if not match:
-        return html
-    at = start + match.start()
-    return html[:at] + _column_menu_item(match.group(1), name, href) + html[at:]
-
-
-def _insert_column_sidebar_link(html: str, name: str, href: str, before: list[str]) -> str:
-    start = html.find('<div class="sidebar')
-    if start < 0:
-        return html
-    end = html.find('<div class="main">', start)
-    if end < 0:
-        return html
-    if href in html[start:end]:
-        return html
-    link = (
-        f'            <p><a href="{href}" '
-        'style="font-size:15px;font-weight:650;letter-spacing:0;'
-        f'text-transform:none;color:#2660ab">{name}</a></p>\n'
-    )
-    for previous in reversed(before):
-        marker = f">{previous}</a></p>"
-        at = html.find(marker, start)
-        if 0 <= at < end:
-            insert_at = at + len(marker)
-            if html[insert_at:insert_at + 1] == "\n":
-                insert_at += 1
-            return html[:insert_at] + link + html[insert_at:]
-    needle = (
-        "            </div>\n"
-        "        </div>\n"
-        "    </div>\n"
-        '    <ul class="social-links">'
-    )
-    found = html.find(needle, start)
-    if found < 0 or found > end:
-        return html
-    insert_at = found + len("            </div>\n")
-    return html[:insert_at] + link + html[insert_at:]
-
-
-class SiteWriter:
-    def __init__(self, root: Path, dry_run: bool, columns: tuple = ()) -> None:
-        self.root = root
-        self.dry_run = dry_run
-        self.columns = columns
-        self.changed: list[str] = []
-
-    def write(self, relative: str, text: str) -> None:
-        if relative.endswith(".html") and relative != DAILY_INDEX_REL:
-            text = insert_daily_nav(text)
-            for name, href in self.columns:
-                text = insert_column_nav(text, name, href)
-        path = self.root / relative
-        existing = path.read_text(encoding="utf-8") if path.is_file() else None
-        if existing == text:
-            return
-        if relative not in self.changed:
-            self.changed.append(relative)
-        if self.dry_run:
-            return
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding="utf-8", newline="\n")
-
-    def read(self, relative: str) -> str:
-        path = self.root / relative
-        if not path.is_file():
-            raise PublishError(f"missing {relative}")
-        return path.read_text(encoding="utf-8")
-
-
-def _drop_post_from_taxonomy(writer: SiteWriter, kind: str, keep: set[str], post_href: str, abs_url: str) -> None:
-    base = writer.root / kind
-    if not base.is_dir():
-        return
-    for page in sorted(base.glob("*/index.html")):
-        slug = page.parent.name
-        text = page.read_text(encoding="utf-8")
-        if slug in keep or post_href not in text:
-            continue
-        writer.write(f"{kind}/{slug}/index.html", remove_archive_href(text, post_href))
-    for feed in sorted(base.glob("*/index.xml")):
-        slug = feed.parent.name
-        text = feed.read_text(encoding="utf-8")
-        if slug in keep or abs_url not in text:
-            continue
-        writer.write(f"{kind}/{slug}/index.xml", remove_rss_item(text, abs_url))
-
-
-def _upsert_term(
-    writer: SiteWriter,
-    kind: str,
-    name: str,
-    slug: str,
-    post: Post,
-    description_xml: str,
-) -> None:
-    term_href = f"/{kind}/{slug}/"
-    page_rel = f"{kind}/{slug}/index.html"
-    feed_rel = f"{kind}/{slug}/index.xml"
-    page_path = writer.root / page_rel
-    if page_path.is_file():
-        current = page_path.read_text(encoding="utf-8")
-        writer.write(page_rel, replace_archive(current, post.path, post.title_html, post.when))
-    else:
-        writer.write(
-            page_rel,
-            clone_term_page(writer.root, kind, name, slug, post.path, post.title_html, post.when),
-        )
-    feed_path = writer.root / feed_rel
-    if feed_path.is_file():
-        writer.write(
-            feed_rel,
-            upsert_feed(feed_path.read_text(encoding="utf-8"), post.title, post.abs_url, post.when, description_xml),
-        )
-    else:
-        writer.write(
-            feed_rel,
-            new_term_feed(kind, name, slug, post.title, post.abs_url, post.when, description_xml),
-        )
-    index_rel = f"{kind}/index.html"
-    index_html = writer.read(index_rel)
-    title_html = hugo_escape(name)
-    if term_index_needs_update(index_html, term_href, title_html, post.when):
-        writer.write(index_rel, replace_archive(index_html, term_href, title_html, post.when))
-    index_xml_rel = f"{kind}/index.xml"
-    index_xml = writer.read(index_xml_rel)
-    term_link = f"{SITE_BASE}{term_href}"
-    existing_item = _feed_item(index_xml, term_link)
-    if existing_item is not None:
-        old_title, old_when = existing_item
-        if old_title == xml_escape(name) and old_when >= post.when:
-            return
-    writer.write(index_xml_rel, upsert_feed(index_xml, name, term_link, post.when, ""))
+# Kept for callers of the old names.
+mark_learning_callouts = mark_callouts
+render_daily_page = sitegen.render_daily_page
 
 
 def _require_text(value, field: str) -> str:
@@ -1761,15 +862,6 @@ def filter_items(items: list[dict], **kwargs) -> list[dict]:
     return [item for item in items if item_matches(item, **kwargs)]
 
 
-def render_daily_page() -> str:
-    if not DAILY_TEMPLATE.is_file():
-        raise PublishError(f"missing template {DAILY_TEMPLATE}")
-    html = DAILY_TEMPLATE.read_text(encoding="utf-8")
-    if "@@" in html:
-        raise PublishError("daily template has an unfilled placeholder")
-    return html
-
-
 def _read_existing_items(root: Path) -> list:
     path = root / DAILY_ITEMS_REL
     if not path.is_file():
@@ -1780,28 +872,82 @@ def _read_existing_items(root: Path) -> list:
     return data
 
 
-def publish_digest(root: Path, items: list, dry_run: bool = False) -> list[str]:
-    """Upsert digest items and regenerate /daily/ plus the items JSON."""
+class SiteWriter:
+    """Writes only files whose text changed, and records what it touched."""
+
+    def __init__(self, root: Path, dry_run: bool) -> None:
+        self.root = root
+        self.dry_run = dry_run
+        self.changed: list[str] = []
+        self.notes: list[str] = []
+
+    def _mark(self, relative: str) -> None:
+        if relative not in self.changed:
+            self.changed.append(relative)
+
+    def write(self, relative: str, text: str) -> None:
+        path = self.root / relative
+        existing = path.read_text(encoding="utf-8") if path.is_file() else None
+        if existing == text:
+            return
+        self._mark(relative)
+        if self.dry_run:
+            return
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8", newline="\n")
+
+    def remove_file(self, relative: str) -> None:
+        path = self.root / relative
+        if not path.is_file():
+            return
+        self._mark(relative + " (removed)")
+        if not self.dry_run:
+            path.unlink()
+
+    def remove_dir(self, path: Path) -> None:
+        relative = path.relative_to(self.root).as_posix() + "/"
+        self._mark(relative + " (removed)")
+        if not self.dry_run:
+            shutil.rmtree(path)
+
+    def read(self, relative: str) -> str:
+        path = self.root / relative
+        if not path.is_file():
+            raise PublishError(f"missing {relative}")
+        return path.read_text(encoding="utf-8")
+
+
+def load_records(root: Path) -> list[PostRecord]:
+    return sitegen.load_records(root / POSTS_REL)
+
+
+def rebuild(root: Path, writer: SiteWriter, records: list[PostRecord], items: list | None = None) -> None:
+    """Write every generated page from the records and remove stale pages."""
     for relative in ("daily/feed.css", "daily/feed.js"):
         if not (root / relative).is_file():
             raise PublishError(f"missing {relative}")
+    rows = _read_existing_items(root) if items is None else items
+    dates = [row["date"] for row in rows if isinstance(row, dict) and isinstance(row.get("date"), str)]
+    files = sitegen.build_site(root, records, dates)
+    for relative, text in files.items():
+        writer.write(relative, text)
+    removable, kept = sitegen.stale_dirs(root, files)
+    for path in removable:
+        writer.remove_dir(path)
+    for path in kept:
+        relative = path.relative_to(root).as_posix()
+        note = f"left {relative}/ in place: it holds files the publisher did not write"
+        writer.notes.append(note)
+        print(f"warning: {note}", file=sys.stderr)
+
+
+def publish_digest(root: Path, items: list, dry_run: bool = False) -> list[str]:
+    """Upsert digest items, then rebuild the site (the /daily/ page and sitemap)."""
     merged = upsert_items(_read_existing_items(root), items)
     writer = SiteWriter(root, dry_run)
     payload = json.dumps(merged, ensure_ascii=False, indent=2) + "\n"
     writer.write(DAILY_ITEMS_REL, payload)
-    writer.write(DAILY_INDEX_REL, render_daily_page())
-    for relative in ("index.html", "post/index.html"):
-        if (root / relative).is_file():
-            writer.write(relative, writer.read(relative))
-    if merged and (root / "sitemap.xml").is_file():
-        newest = max(item["date"] for item in merged)
-        sitemap = set_sitemap_lastmod(
-            writer.read("sitemap.xml"),
-            f"{SITE_BASE}/daily/",
-            sitemap_date(parse_when(newest)),
-            "set",
-        )
-        writer.write("sitemap.xml", sitemap)
+    rebuild(root, writer, load_records(root), merged)
     return writer.changed
 
 
@@ -1812,52 +958,32 @@ def _wants_post(args: argparse.Namespace, payload: dict) -> bool:
 
 
 def publish(root: Path, post: Post, dry_run: bool = False) -> list[str]:
-    # A column the site already has stays in the nav of every page this rewrites.
-    columns = tuple(
-        (name, href)
-        for name, href in COLUMNS
-        if _uses_column(post, name) or (root / "categories" / urlize(name) / "index.html").is_file()
-    )
-    writer = SiteWriter(root, dry_run, columns=columns)
-    writer.write(f"post/{post.slug}/index.html", render_single(post))
-    writer.write("index.html", replace_homepage(writer.read("index.html"), post))
-    writer.write(
-        "post/index.html",
-        replace_archive(writer.read("post/index.html"), post.path, post.title_html, post.when),
-    )
-    description_xml = xml_escape(post.summary_html)
-    writer.write(
-        "index.xml",
-        upsert_feed(writer.read("index.xml"), post.title, post.abs_url, post.when, description_xml),
-    )
-    writer.write(
-        "post/index.xml",
-        upsert_feed(writer.read("post/index.xml"), post.title, post.abs_url, post.when, description_xml),
-    )
-    category_slugs = {slug for _, slug in post.categories}
-    tag_slugs = {slug for _, slug in post.tags}
-    _drop_post_from_taxonomy(writer, "categories", category_slugs, post.path, post.abs_url)
-    _drop_post_from_taxonomy(writer, "tags", tag_slugs, post.path, post.abs_url)
-    for name, slug in post.categories:
-        _upsert_term(writer, "categories", name, slug, post, description_xml)
-    for name, slug in post.tags:
-        _upsert_term(writer, "tags", name, slug, post, description_xml)
-    lastmod = sitemap_date(post.when)
-    sitemap = writer.read("sitemap.xml")
-    sitemap = set_sitemap_lastmod(sitemap, post.abs_url, lastmod, "set")
-    for loc in (
-        f"{SITE_BASE}/",
-        f"{SITE_BASE}/post/",
-        f"{SITE_BASE}/categories/",
-    ):
-        sitemap = set_sitemap_lastmod(sitemap, loc, lastmod, "max")
-    if post.tags:
-        sitemap = set_sitemap_lastmod(sitemap, f"{SITE_BASE}/tags/", lastmod, "max")
-    for _name, slug in post.categories:
-        sitemap = set_sitemap_lastmod(sitemap, f"{SITE_BASE}/categories/{slug}/", lastmod, "max")
-    for _name, slug in post.tags:
-        sitemap = set_sitemap_lastmod(sitemap, f"{SITE_BASE}/tags/{slug}/", lastmod, "max")
-    writer.write("sitemap.xml", sitemap)
+    """Store the post's record (replacing one with the same slug) and rebuild."""
+    writer = SiteWriter(root, dry_run)
+    records = {record.slug: record for record in load_records(root)}
+    record = post.to_record()
+    records[record.slug] = record
+    writer.write(f"{POSTS_REL}/{record.slug}.json", record.to_json())
+    rebuild(root, writer, list(records.values()))
+    return writer.changed
+
+
+def remove_post(root: Path, slug: str, dry_run: bool = False) -> list[str]:
+    """Delete a post's record and rebuild; its page is removed with the stale pages."""
+    slug = validate_slug(slug)
+    relative = f"{POSTS_REL}/{slug}.json"
+    if not (root / relative).is_file():
+        raise PublishError(f"no post record {relative}")
+    writer = SiteWriter(root, dry_run)
+    writer.remove_file(relative)
+    records = [record for record in load_records(root) if record.slug != slug]
+    rebuild(root, writer, records)
+    return writer.changed
+
+
+def rebuild_only(root: Path, dry_run: bool = False) -> list[str]:
+    writer = SiteWriter(root, dry_run)
+    rebuild(root, writer, load_records(root))
     return writer.changed
 
 
@@ -1936,6 +1062,8 @@ def load_post(args: argparse.Namespace) -> Post:
         description = re.sub(r"\s+", " ", str(description_override)).strip()
     else:
         description = plain_text(summary_html)[:180]
+    headline = args.headline if args.headline is not None else payload.get("headline")
+    headline = re.sub(r"\s+", " ", str(headline or "")).strip()
     return Post(
         title=str(title).strip(),
         when=parse_when(str(when_raw)),
@@ -1945,6 +1073,7 @@ def load_post(args: argparse.Namespace) -> Post:
         body_html=body_html,
         summary_html=summary_html,
         description=description,
+        headline=headline,
     )
 
 
@@ -1976,6 +1105,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--format", choices=["markdown", "html"], help="default: markdown")
     parser.add_argument("--summary", help="plain-text listing summary; default is the first paragraph")
     parser.add_argument("--description", help="meta description; default is the plain summary")
+    parser.add_argument(
+        "--headline",
+        help="optional one-line headline for the homepage card, such as the day's main news",
+    )
+    parser.add_argument("--remove", metavar="SLUG", help="delete the post with this slug and rebuild")
+    parser.add_argument("--rebuild", action="store_true", help="regenerate every page from the stored records")
     parser.add_argument("--dry-run", action="store_true", help="report files that would change and write nothing")
     return parser
 
@@ -1984,8 +1119,20 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     root = Path(args.root).resolve() if args.root else HERE.parent
-    if not (root / "index.html").is_file():
-        raise PublishError(f"{root} does not look like the site root (no index.html)")
+    if not (root / "daily" / "feed.js").is_file():
+        raise PublishError(f"{root} does not look like the site root (no daily/feed.js)")
+    action = "would update" if args.dry_run else "updated"
+    if args.remove or args.rebuild:
+        if args.remove and args.rebuild:
+            raise PublishError("pass only one of --remove and --rebuild")
+        if args.remove:
+            changed = remove_post(root, args.remove, dry_run=args.dry_run)
+            print(f"removed /post/{validate_slug(args.remove)}/")
+        else:
+            changed = rebuild_only(root, dry_run=args.dry_run)
+            print("rebuilt the site")
+        _report(changed, action)
+        return 0
     payload: dict = {}
     item_rows = None
     if args.input:
@@ -2014,11 +1161,15 @@ def main(argv: list[str] | None = None) -> int:
         changed.extend(publish(root, published_post, dry_run=args.dry_run))
     if item_rows is not None:
         changed.extend(publish_digest(root, item_rows, dry_run=args.dry_run))
-    action = "would update" if args.dry_run else "updated"
     if published_post is not None:
         print(f"published {published_post.path}")
     if item_rows is not None:
         print("published /daily/")
+    _report(changed, action)
+    return 0
+
+
+def _report(changed: list[str], action: str) -> None:
     seen: set[str] = set()
     unique = []
     for relative in changed:
@@ -2026,12 +1177,15 @@ def main(argv: list[str] | None = None) -> int:
             continue
         seen.add(relative)
         unique.append(relative)
-    if unique:
-        for relative in unique:
-            print(f"{action} {relative}")
-    else:
+    if not unique:
         print("no file changes")
-    return 0
+        return
+    for relative in unique:
+        if relative.endswith(" (removed)"):
+            verb = "would remove" if action.startswith("would") else "removed"
+            print(f"{verb} {relative[: -len(' (removed)')]}")
+        else:
+            print(f"{action} {relative}")
 
 
 if __name__ == "__main__":

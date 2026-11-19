@@ -1,11 +1,11 @@
 :root {
-    --paper: #f3f0e8;
-    --paper-2: #faf8f4;
-    --card: #fffdf9;
+    --paper: #f6f4ef;
+    --paper-2: #fbfaf7;
+    --card: #ffffff;
     --ink: #1c1915;
     --body: #322e28;
     --muted: #6d675e;
-    --line: #e4ddd0;
+    --line: #e8e5de;
     --blue: #2f5fa8;
     --blue-deep: #1d4e96;
     --insight: #f4f7fc;
@@ -23,7 +23,6 @@ html { scroll-padding-top: 88px; }
 body {
     margin: 0;
     background:
-        radial-gradient(1200px 420px at 10% -10%, rgba(47, 95, 168, 0.08), transparent 55%),
         var(--paper);
     color: var(--ink);
     font-family: var(--sans);

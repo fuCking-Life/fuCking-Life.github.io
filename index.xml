@@ -3,196 +3,77 @@
   <channel>
     <title>Fucking Life</title>
     <link>https://fuCking-Life.github.io/</link>
-    <description>Recent content on Fucking Life</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate><atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Agent 学习笔记（2026-11-19）：什么才算 agent</title>
-      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</link>
-      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</guid>
-      <description>&lt;p&gt;覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。&lt;/p&gt;
-&lt;p&gt;今天最大的收获是一个判断标准：&lt;strong&gt;下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。&lt;/strong&gt;两道判断题我都答对了，但有两处说法不准：一是以为 ReAct 里有&amp;#34;反思&amp;#34;这一步，二是把&amp;#34;有工具&amp;#34;当成了 agent 的标志。还有一道题没答完。&lt;/p&gt;</description>
-    </item>
-    
+    <description>做 Agent 和语音 AI，也研究 A 股短线。这里每天更新 AI 简报、交易资讯和学习笔记。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>每日交易资讯（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-19/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/trading-2026-11-19/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-19（新加坡时间）&lt;/p&gt;
 &lt;p&gt;本文只做信息整理，不构成投资建议。当天多数来源的共同事实是：沪深成交约 1.31 万亿、再创年内低位，下跌远多于上涨，不含 ST 的涨停约 23 只、封板率跌破五成，最高连板 3 板并列；科创50 独红、半导体制造局部抱团，但 1 进 2 很弱，午后缺少新的进攻方向。lichi 当天无更新。&lt;/p&gt;</description>
     </item>
-    
-    <item>
-      <title>每日 AI 与移动端智能体简报（2026-11-19）</title>
-      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</link>
-      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</guid>
-      <description>&lt;p&gt;时间窗口：2026-11-18 08:34 – 2026-11-19 08:32（新加坡时间）&lt;/p&gt;
-&lt;p&gt;本期 5 条：Reson8 开源 0.5B 手机级 ASR、ChatGPT Live Dictation 取消 10 分钟上限、DoorDash 助手进 iMessage，以及 Gemini 4 Neon 与 Genie 4。&lt;/p&gt;</description>
-    </item>
-    
     <item>
       <title>Luna 全双工语音日报（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-19/</link>
       <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/lumi-2026-11-19/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-18 08:45 – 2026-11-19 08:42（新加坡时间）&lt;/p&gt;
 &lt;p&gt;本期 10 条：Kuroko 在 TurnBench 暂列第一但未做直播流测试，Inworld 开源 SAVA 与 Voice Isolator，打断后裁剪对话历史，以及 Pipecat Audience 多人场景澄清；另有 Sophon-Realtime 1.5.0、Nemotron Bolt E4B、Qwen-Audio-3.1-ASR Message、tiny-voca/Kokoro 接入 llama.cpp、临床短话轮情绪实测和 LiveKit Agents 1.8.13。&lt;/p&gt;</description>
     </item>
-    
+    <item>
+      <title>Agent 学习笔记（2026-11-19）：什么才算 agent</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</guid>
+      <description>&lt;p&gt;覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是一个判断标准：&lt;strong&gt;下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。&lt;/strong&gt;两道判断题我都答对了，但有两处说法不准：一是以为 ReAct 里有&amp;#34;反思&amp;#34;这一步，二是把&amp;#34;有工具&amp;#34;当成了 agent 的标志。还有一道题没答完。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-19）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</link>
+      <pubDate>Thu, 19 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-18 08:34 – 2026-11-19 08:32（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 5 条：Reson8 开源 0.5B 手机级 ASR、ChatGPT Live Dictation 取消 10 分钟上限、DoorDash 助手进 iMessage，以及 Gemini 4 Neon 与 Genie 4。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日交易资讯（2026-11-18）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-18/</link>
       <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/trading-2026-11-18/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-18（新加坡时间）&lt;/p&gt;
 &lt;p&gt;本文只做信息整理。「短线情绪方向」和「我的独立看法」都是整理性分析，不构成投资建议。当天综合判断为震荡偏空、情绪强度偏弱：指数微涨或午后翻红，但成交约 1.37 万亿元处在低位，下跌远多于上涨，连板晋级失败；算力硬件是局部主线。&lt;/p&gt;</description>
     </item>
-    
-    <item>
-      <title>每日 AI 与移动端智能体简报（2026-11-18）</title>
-      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</link>
-      <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</guid>
-      <description>&lt;p&gt;时间窗口：2026-11-17 08:32 – 2026-11-18 08:34（新加坡时间）&lt;/p&gt;</description>
-    </item>
-    
     <item>
       <title>Luna 全双工语音日报（2026-11-18）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-18/</link>
       <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/lumi-2026-11-18/</guid>
       <description>&lt;p&gt;时间窗口：2026-11-17 08:42 – 2026-11-18 08:45（新加坡时间）&lt;/p&gt;</description>
     </item>
-    
     <item>
-      <title>每日 AI 与移动端智能体简报（2026-11-17）</title>
-      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</link>
-      <pubDate>Tue, 17 Nov 2026 08:00:00 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</guid>
-      <description>&lt;p&gt;2026年11月17日（星期二）· 新加坡时间&lt;/p&gt;</description>
+      <title>每日 AI 与移动端智能体简报（2026-11-18）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</link>
+      <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-18/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-17 08:32 – 2026-11-18 08:34（新加坡时间）&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Luna 全双工语音日报（2026-11-17）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-17/</link>
       <pubDate>Tue, 17 Nov 2026 08:00:00 +0800</pubDate>
-      
       <guid>https://fuCking-Life.github.io/post/lumi-2026-11-17/</guid>
       <description>&lt;p&gt;时间窗口：11-16 08:43 – 11-17 08:42（新加坡时间，接上一份报告）&lt;/p&gt;</description>
     </item>
-    
     <item>
-      <title>虽迟但到的30岁</title>
-      <link>https://fuCking-Life.github.io/life/initlife/</link>
-      <pubDate>Thu, 10 Nov 2022 20:30:09 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/life/initlife/</guid>
-      <description>&lt;p&gt;  我30岁了~这篇文章应该在好早之前就应该写出来的，不过事情实在是太多，也就搁置了一次又一次。突然今天看到已经11月中旬了，觉得这件事情已经不可以再继续搁置了，就提上了日程。&lt;/p&gt;</description>
+      <title>每日 AI 与移动端智能体简报（2026-11-17）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</link>
+      <pubDate>Tue, 17 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-17/</guid>
+      <description>&lt;p&gt;2026年11月17日（星期二）· 新加坡时间&lt;/p&gt;</description>
     </item>
-    
-    <item>
-      <title>cocoapods 私有库即私有组件搭建</title>
-      <link>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</link>
-      <pubDate>Sun, 04 Jul 2021 18:55:59 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/cocoapods/privatespecs/</guid>
-      <description>&lt;p&gt;从本篇文章开始，会开始介绍关于cocoapods的东西，包括cocoapods的原理，私有库的搭建，包括组件化，解决耦合，二进制化，CI/CD，单元测试等。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>shit_algorithm_index</title>
-      <link>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</link>
-      <pubDate>Thu, 13 May 2021 09:36:45 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/fuck_algorithm/fuck_algorithm_index/</guid>
-      <description>&lt;p&gt;作为一个算法渣渣，看到算法题只想fuck它们，但是奈何还是需要刷，只能写点儿题解，收集点典型的题目勉强度日了。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>一些有用的网址合集</title>
-      <link>https://fuCking-Life.github.io/post/some_webs/</link>
-      <pubDate>Mon, 26 Apr 2021 14:12:01 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/some_webs/</guid>
-      <description>&lt;p&gt;一些有用的网址集合&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>iOS底层历险记-目录</title>
-      <link>https://fuCking-Life.github.io/post/objc_essence_0/</link>
-      <pubDate>Fri, 23 Apr 2021 21:55:05 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/objc_essence_0/</guid>
-      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
-&lt;p&gt;现在的iOS开发已经进入到了后iOS开发时代，不再是那个会点网络请求、会拖个界面、会写个自定义控件就可以找个不错的工作的年代了。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Objective-C 一、对象本质——对象的分类</title>
-      <link>https://fuCking-Life.github.io/post/objc_essence_1/</link>
-      <pubDate>Tue, 13 Apr 2021 22:07:09 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/objc_essence_1/</guid>
-      <description>整个OC对象的分类可以分为以下三种：
-   实例对象 instance    类对象 class    元类对象 meta-class    接下来呢，我要一一开始讨论三类对象，每个对象，都会从内存布局、源码分析等角度切入，然后扩展，说到哪儿算哪儿。</description>
-    </item>
-    
-    <item>
-      <title>Hugo的使用和主题的修改</title>
-      <link>https://fuCking-Life.github.io/post/inithugo/</link>
-      <pubDate>Sat, 10 Apr 2021 22:07:20 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/inithugo/</guid>
-      <description>&lt;p&gt;Hugo是比较火的blog搭设框架，简单讲解安装和关联git数据。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>iOS内存缓存的方案比较</title>
-      <link>https://fuCking-Life.github.io/post/memory_cache/</link>
-      <pubDate>Tue, 11 Dec 2018 17:34:38 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/memory_cache/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;主要关注这三个框架的内存缓存。以及LRU算法的实现。&lt;/strong&gt;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>weex(三)weex &amp; Native交互</title>
-      <link>https://fuCking-Life.github.io/post/weex/weex3/</link>
-      <pubDate>Tue, 05 Jun 2018 09:19:59 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/weex/weex3/</guid>
-      <description>&lt;p&gt;weex与native的交互设计&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>weex(二)weex实时更新实现</title>
-      <link>https://fuCking-Life.github.io/post/weex/weex2/</link>
-      <pubDate>Mon, 21 May 2018 17:56:59 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/weex/weex2/</guid>
-      <description>&lt;p&gt;weex第二篇主要关于hotreload&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>weex(一)环境搭建&#43;iOS现有项目集成</title>
-      <link>https://fuCking-Life.github.io/post/weex/weex1/</link>
-      <pubDate>Thu, 17 May 2018 11:43:59 +0800</pubDate>
-      
-      <guid>https://fuCking-Life.github.io/post/weex/weex1/</guid>
-      <description>&lt;p&gt;weex第一篇主要关于环境搭建&lt;/p&gt;</description>
-    </item>
-    
   </channel>
 </rss>
