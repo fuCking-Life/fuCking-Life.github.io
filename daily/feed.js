@@ -15,6 +15,9 @@
         "评测结果", "论文", "行业数据"
     ];
     var WEEKDAYS = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    var VIEWS = { daily: true, all: true, tags: true, favorites: true };
+    /* Browser-only. Never written back to items.json or sent anywhere. */
+    var FAV_KEY = "daily-favorites";
 
     var state = {
         view: "daily",
@@ -28,12 +31,61 @@
         sort: "time"
     };
     var ITEMS = [];
+    var favorites = new Set();
     var booted = false;
+
+    function readFavorites() {
+        favorites = new Set();
+        try {
+            var raw = localStorage.getItem(FAV_KEY);
+            if (!raw) return;
+            var list = JSON.parse(raw);
+            if (!Array.isArray(list)) return;
+            list.forEach(function (id) {
+                if (typeof id === "string" && id) favorites.add(id);
+            });
+        } catch (err) {
+            favorites = new Set();
+        }
+    }
+
+    function writeFavorites() {
+        try {
+            localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(favorites)));
+        } catch (err) {
+            /* Keep the in-memory set when storage is unavailable. */
+        }
+    }
+
+    function toggleFavorite(id) {
+        if (favorites.has(id)) favorites.delete(id);
+        else favorites.add(id);
+        writeFavorites();
+    }
+
+    function favoriteCount() {
+        var count = 0;
+        ITEMS.forEach(function (item) {
+            if (item && favorites.has(item.id)) count += 1;
+        });
+        return count;
+    }
+
+    /* Digest publishes rewrite index.html from a template without this view. */
+    function ensureFavoritesNav() {
+        var nav = document.querySelector("nav.views");
+        if (!nav || nav.querySelector('[data-view="favorites"]')) return;
+        var button = document.createElement("button");
+        button.type = "button";
+        button.dataset.view = "favorites";
+        button.textContent = "收藏";
+        nav.appendChild(button);
+    }
 
     function readUrl() {
         var params = new URLSearchParams(location.search);
         var view = params.get("view");
-        if (view === "daily" || view === "all" || view === "tags") state.view = view;
+        if (VIEWS[view]) state.view = view;
         var match = params.get("match");
         if (match === "all" || match === "any") state.match = match;
         var rel = Number(params.get("rel"));
@@ -91,8 +143,13 @@
         return hits.every(Boolean);
     }
 
+    function inView(item) {
+        if (state.view !== "favorites") return true;
+        return Boolean(item && favorites.has(item.id));
+    }
+
     function visible(item, ignoreDate) {
-        return passesBase(item, ignoreDate) && passesFacets(item);
+        return inView(item) && passesBase(item, ignoreDate) && passesFacets(item);
     }
 
     function weekdayLabel(iso) {
@@ -158,6 +215,28 @@
         return parts.join(" · ");
     }
 
+    function starIcon() {
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("aria-hidden", "true");
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M12 2.8l2.55 5.45 5.95.62-4.45 3.95 1.3 5.78L12 15.9 6.65 18.6l1.3-5.78L3.5 8.87l5.95-.62z");
+        svg.appendChild(path);
+        return svg;
+    }
+
+    function favoriteButton(item) {
+        var on = favorites.has(item.id);
+        var button = el("button", "fav" + (on ? " is-on" : ""));
+        button.type = "button";
+        button.dataset.fav = item.id;
+        button.setAttribute("aria-pressed", on ? "true" : "false");
+        button.setAttribute("aria-label", on ? "取消收藏" : "收藏");
+        button.appendChild(starIcon());
+        button.appendChild(el("span", null, on ? "已收藏" : "收藏"));
+        return button;
+    }
+
     function renderCard(item, ordinal) {
         var article = el("article", "card");
         article.style.setProperty("--score", COLORS[(item.relevance || 1) - 1]);
@@ -169,7 +248,10 @@
         date.appendChild(time);
         date.appendChild(el("span", "brief", briefLabel(item.source_brief)));
         date.appendChild(el("span", "ordinal", "当天日报第 " + ordinal + " 条"));
-        article.appendChild(date);
+        var top = el("div", "card-top");
+        top.appendChild(date);
+        top.appendChild(favoriteButton(item));
+        article.appendChild(top);
 
         var rel = el("p", "relevance");
         rel.appendChild(el("span", "relevance-label", "相关度"));
@@ -282,7 +364,9 @@
             button.classList.toggle("is-chosen", score === state.minRelevance);
             button.setAttribute("aria-pressed", score === state.minRelevance ? "true" : "false");
         });
-        var base = ITEMS.filter(function (item) { return passesBase(item, false); });
+        var base = ITEMS.filter(function (item) {
+            return inView(item) && passesBase(item, false);
+        });
         var domains = DOMAINS.filter(function (name) {
             return ITEMS.some(function (item) { return item.domains.indexOf(name) !== -1; });
         });
@@ -389,10 +473,15 @@
     function renderList() {
         var host = document.getElementById("feed-list");
         var shown = ITEMS.filter(function (item) { return visible(item, false); }).sort(compareItems);
-        document.getElementById("result-title").textContent = "全部消息 " + shown.length + " 条";
+        var title = state.view === "favorites" ? "收藏" : "全部消息";
+        document.getElementById("result-title").textContent = title + " " + shown.length + " 条";
         host.textContent = "";
         if (!shown.length) {
-            host.appendChild(el("p", "empty", "没有符合条件的消息。"));
+            var message = "没有符合条件的消息。";
+            if (state.view === "favorites" && favoriteCount() === 0) {
+                message = "还没有收藏。在卡片上点一下收藏即可。";
+            }
+            host.appendChild(el("p", "empty", message));
             return;
         }
         var numbers = ordinals(ITEMS);
@@ -436,7 +525,9 @@
             document.getElementById("q").value = state.query;
             booted = true;
         }
-        var base = ITEMS.filter(function (item) { return passesBase(item, false); });
+        var base = ITEMS.filter(function (item) {
+            return inView(item) && passesBase(item, false);
+        });
         renderFilters();
         renderChart();
         renderChips();
@@ -450,10 +541,19 @@
         else set.add(value);
     }
 
+    function cssEscape(value) {
+        if (window.CSS && CSS.escape) return CSS.escape(value);
+        return String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    }
+
     function onClick(event) {
-        var node = event.target.closest("[data-view], [data-match], [data-rel], [data-facet], [data-tag], [data-date], [data-sort], [data-clear], [data-open-filters], [data-close-filters]");
+        var node = event.target.closest("[data-fav], [data-view], [data-match], [data-rel], [data-facet], [data-tag], [data-date], [data-sort], [data-clear], [data-open-filters], [data-close-filters]");
         if (!node) return;
-        if (node.dataset.view) state.view = node.dataset.view;
+        var focusFav = "";
+        if (node.dataset.fav) {
+            focusFav = node.dataset.fav;
+            toggleFavorite(focusFav);
+        } else if (node.dataset.view) state.view = node.dataset.view;
         else if (node.dataset.match) state.match = node.dataset.match;
         else if (node.dataset.rel) {
             var score = Number(node.dataset.rel);
@@ -478,6 +578,13 @@
             document.getElementById("filters").classList.remove("is-open");
         }
         render();
+        if (!focusFav) return;
+        var again = document.querySelector('[data-fav="' + cssEscape(focusFav) + '"]');
+        if (again) again.focus();
+        else {
+            var nav = document.querySelector('[data-view="favorites"]');
+            if (nav) nav.focus();
+        }
     }
 
     function showError(message) {
@@ -501,6 +608,8 @@
         }
     });
 
+    ensureFavoritesNav();
+    readFavorites();
     readUrl();
     fetch("items.json", { cache: "no-cache" })
         .then(function (response) {
