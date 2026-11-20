@@ -179,7 +179,7 @@ An `--input` object may include both post fields and `items`. The post is writte
 
 ## Learning calendar
 
-`/learn/` is the calendar for the 8-week agent study plan. Like `/daily/`, it is static HTML, CSS, and JS: `learn/index.html` is copied from `_publisher/templates/learn.html` on every publish (edit the template, not the page), and `learn/learn.css` and `learn/learn.js` are hand-written. The nav link 学习进度 points to it.
+`/learn/` is the calendar for the agent study plan. Weeks can be appended to `plan.json` to extend it. Like `/daily/`, it is static HTML, CSS, and JS: `learn/index.html` is copied from `_publisher/templates/learn.html` on every publish (edit the template, not the page), and `learn/learn.css` and `learn/learn.js` are hand-written. The nav link 学习进度 points to it.
 
 The page reads two data files in the browser, so updating progress needs no rebuild:
 

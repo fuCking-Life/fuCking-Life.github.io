@@ -107,16 +107,17 @@
         var total = 0, done = 0;
         days.forEach(function (d) { total += d.tasks.length; done += dayDone(d); });
         var pct = total ? Math.round(done * 100 / total) : 0;
-        var left = Math.max(0, diffDays(today, plan.end));
+        var last = days[days.length - 1].date;   // weeks can be appended later; the plan ends on its last day
+        var left = Math.max(0, diffDays(today, last));
         var first = days[0].date;
-        var span = diffDays(first, plan.end) + 1;
+        var span = diffDays(first, last) + 1;
         var started = today >= first;
         var dayN = started ? Math.min(diffDays(first, today) + 1, span) : 0;
         $("lp-stats").innerHTML =
             stat(pct + "%", "总进度", true) +
             stat(done + " / " + total, "已完成任务") +
             stat(streak() + " 天", "连续学习") +
-            stat(started ? ("第 " + dayN + " / " + span + " 天") : ("还有 " + diffDays(today, first) + " 天开始"), left ? ("距毕业还有 " + left + " 天") : "已到毕业日");
+            stat(started ? ("第 " + dayN + " / " + span + " 天") : ("还有 " + diffDays(today, first) + " 天开始"), left ? ("计划还剩 " + left + " 天") : "计划已走完");
         var bar = $("lp-bar");
         bar.setAttribute("aria-valuenow", String(pct));
         requestAnimationFrame(function () { bar.firstElementChild.style.width = pct + "%"; });

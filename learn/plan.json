@@ -1,9 +1,10 @@
 {
- "title": "Agent 转型 8 周冲刺",
- "subtitle": "跟着项目学 agent 设计：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Codex → 毕业项目",
+ "title": "Agent 学习冲刺",
+ "subtitle": "跟着别人的项目和经验学 agent：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Codex → 一线团队经验 → 记忆、协议、浏览器、语音",
  "hours": "每天约 3 小时；每周日是复盘 + 补课日",
  "start": "2026-11-23",
  "end": "2027-01-17",
+ "note": "计划可以往后加周：在 weeks 末尾追加，页面会自动显示。",
  "weeks": [
   {
    "n": 0,
@@ -1319,91 +1320,111 @@
   {
    "n": 7,
    "title": "第 7 周",
-   "theme": "毕业项目（上）",
+   "theme": "向一线团队学经验：必读文章 + 开源 coding agent",
    "days": [
     {
      "date": "2027-01-04",
-     "label": "选题 + 设计文档",
-     "goal": "你写设计，AI 写代码",
+     "label": "OpenAI：harness engineering",
+     "goal": "精读 OpenAI《Harness engineering: leveraging Codex in an agent-first world》",
      "tasks": [
       {
        "id": "20270104-1",
-       "text": "选题：优先选工作里的真实场景",
-       "min": 30
+       "text": "精读全文，摘出 5 条可以直接拿来用的经验",
+       "min": 70
       },
       {
        "id": "20270104-2",
-       "text": "写设计文档：每个旋钮的选择和理由",
-       "min": 90
+       "text": "对照自己仓库的 CLAUDE.md：哪些做法已经有了，哪些没有",
+       "min": 40
       },
       {
        "id": "20270104-3",
-       "text": "写“为什么不用另一种主流做法”",
-       "min": 30
+       "text": "挑一条用到 CLAUDE.md 或 learn-claude-code 上",
+       "min": 40
+      },
+      {
+       "id": "20270104-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-05",
-     "label": "设计自审",
-     "goal": "用 review 清单审自己",
+     "label": "Anthropic：长任务与上下文",
+     "goal": "精读 Anthropic 的 harness 设计和 context engineering 文章",
      "tasks": [
       {
        "id": "20270105-1",
-       "text": "逐项过 16 个旋钮，标出风险",
+       "text": "读 Anthropic Engineering 上关于长时间运行应用的 harness 设计文章（规划者 / 执行者 / 评估者）",
        "min": 60
       },
       {
        "id": "20270105-2",
-       "text": "定评估方案：结果 + 轨迹两层",
+       "text": "读《Effective context engineering for AI agents》",
        "min": 50
       },
       {
        "id": "20270105-3",
-       "text": "修改设计文档",
-       "min": 30
+       "text": "和 learn-claude-code 的 s08、s17 对照：哪些想法课程里已经有了",
+       "min": 40
+      },
+      {
+       "id": "20270105-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-06",
-     "label": "实现 v1",
-     "goal": "AI 实现，你读 trace",
+     "label": "多 agent 之争",
+     "goal": "该不该拆成多个 agent？看三方观点",
      "tasks": [
       {
        "id": "20270106-1",
-       "text": "让 AI 按设计文档实现 v1",
-       "min": 70
+       "text": "读 Anthropic《How we built our multi-agent research system》",
+       "min": 45
       },
       {
        "id": "20270106-2",
-       "text": "跑第一次，完整读 trace",
-       "min": 50
+       "text": "读 Cognition《Don't Build Multi-Agents》",
+       "min": 35
       },
       {
        "id": "20270106-3",
-       "text": "记下和设计不一致的地方",
+       "text": "读 LangChain《Organizing Context in a Multi-Agent Harness》：子 agent 是 fork 还是隔离",
+       "min": 40
+      },
+      {
+       "id": "20270106-4",
+       "text": "写你的判断：什么情况拆、什么情况不拆",
        "min": 30
       }
      ]
     },
     {
      "date": "2027-01-07",
-     "label": "建评估集",
-     "goal": "20 条以上用例",
+     "label": "mini-swe-agent",
+     "goal": "100 行的 agent 为什么能在 SWE-bench 上拿高分",
      "tasks": [
       {
        "id": "20270107-1",
-       "text": "写 20 条用例，覆盖正常、边界、失败场景",
-       "min": 80
+       "text": "读完 mini-swe-agent 的全部核心代码",
+       "min": 60
       },
       {
        "id": "20270107-2",
-       "text": "为每条写结果检查和轨迹检查",
-       "min": 50
+       "text": "跑一个小任务，读 trace",
+       "min": 40
       },
       {
        "id": "20270107-3",
+       "text": "和 s01 对比：它刻意不做什么？为什么极简反而有效",
+       "min": 50
+      },
+      {
+       "id": "20270107-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -1411,72 +1432,77 @@
     },
     {
      "date": "2027-01-08",
-     "label": "跑评估",
-     "goal": "失败分析",
+     "label": "OpenHands",
+     "goal": "一个完整的开源 coding agent 平台",
      "tasks": [
       {
        "id": "20270108-1",
-       "text": "跑一遍评估，记录通过率",
-       "min": 40
+       "text": "读架构文档：事件流、agent 控制器、沙箱",
+       "min": 60
       },
       {
        "id": "20270108-2",
-       "text": "逐个分析失败案例，归到具体旋钮",
-       "min": 70
+       "text": "跑起来做一个小任务，读事件日志",
+       "min": 50
       },
       {
        "id": "20270108-3",
-       "text": "写出 v2 的修改意见",
-       "min": 30
+       "text": "和 Claude Code 对比：沙箱和权限各怎么做",
+       "min": 40
+      },
+      {
+       "id": "20270108-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-09",
-     "label": "迭代 v2",
-     "goal": "评估者分离 + 记忆",
+     "label": "opencode",
+     "goal": "最火的开源 coding agent 之一",
      "tasks": [
       {
        "id": "20270109-1",
-       "text": "加入独立评估者",
-       "min": 60
+       "text": "跑起来，体验一次完整任务",
+       "min": 40
       },
       {
        "id": "20270109-2",
-       "text": "决定要不要跨会话记忆，要的话怎么防过时",
-       "min": 40
+       "text": "读它的工具定义和权限设计",
+       "min": 60
       },
       {
        "id": "20270109-3",
-       "text": "重跑评估，对比 v1",
+       "text": "和 Claude Code、Codex 放进第 6 周的对比表",
        "min": 40
+      },
+      {
+       "id": "20270109-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-10",
      "label": "第 7 周复盘",
-     "goal": "复盘 + 补课日：没做完的任务在今天补上",
+     "goal": "复盘 + 补课",
      "tasks": [
       {
        "id": "20270110-1",
        "text": "补完本周没做完的任务",
-       "min": 60
+       "min": 50
       },
       {
        "id": "20270110-2",
-       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
-       "min": 40
+       "text": "写《一线团队的 10 条 agent 经验》，发到 blog",
+       "min": 60
       },
       {
        "id": "20270110-3",
-       "text": "review 清单：补本周见过的例子（毕业项目涉及的旋钮）",
-       "min": 20
-      },
-      {
-       "id": "20270110-4",
-       "text": "看一眼下周计划，有疑问就记下来",
-       "min": 10
+       "text": "review 清单：把新经验补进对应的旋钮",
+       "min": 30
       }
      ]
     }
@@ -1485,25 +1511,30 @@
   {
    "n": 8,
    "title": "第 8 周",
-   "theme": "毕业项目（下）+ 作品集",
+   "theme": "扩展广度：记忆、协议、浏览器、语音、评估",
    "days": [
     {
      "date": "2027-01-11",
-     "label": "可移植能力",
-     "goal": "做成 skill / MCP / 插件",
+     "label": "记忆系统",
+     "goal": "Letta / mem0 / Anthropic 记忆分层",
      "tasks": [
       {
        "id": "20270111-1",
-       "text": "挑一项能力做成可移植的 skill 或 MCP",
-       "min": 90
+       "text": "读 Letta 的记忆设计（从 MemGPT 演化来的分层记忆）",
+       "min": 50
       },
       {
        "id": "20270111-2",
-       "text": "在另一个 agent 里验证能用",
+       "text": "读 mem0 的记忆层设计",
        "min": 40
       },
       {
        "id": "20270111-3",
+       "text": "三方对照：存什么、什么时候写、怎么检索、怎么防过时",
+       "min": 50
+      },
+      {
+       "id": "20270111-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -1511,118 +1542,148 @@
     },
     {
      "date": "2027-01-12",
-     "label": "可观测与成本",
-     "goal": "trace + 成本统计",
+     "label": "协议：MCP + A2A",
+     "goal": "agent 接工具 vs agent 和 agent 对话",
      "tasks": [
       {
        "id": "20270112-1",
-       "text": "记录完整 trace",
-       "min": 50
+       "text": "读 MCP 最新规范的核心部分",
+       "min": 60
       },
       {
        "id": "20270112-2",
-       "text": "统计每次运行的成本和耗时，找出钱花在哪",
+       "text": "读 A2A 协议的核心概念",
        "min": 50
       },
       {
        "id": "20270112-3",
-       "text": "做一处降本优化",
-       "min": 40
+       "text": "写清楚：两者分别解决什么，什么时候用哪个",
+       "min": 30
+      },
+      {
+       "id": "20270112-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-13",
-     "label": "迭代 v3",
-     "goal": "稳定性",
+     "label": "浏览器 agent",
+     "goal": "browser-use：agent 怎么看网页、怎么动手",
      "tasks": [
       {
        "id": "20270113-1",
-       "text": "用 pass^k 测稳定性",
-       "min": 50
+       "text": "读 browser-use 的架构：页面怎么变成模型能看的上下文",
+       "min": 60
       },
       {
        "id": "20270113-2",
-       "text": "修掉最不稳定的 2 个点",
-       "min": 70
+       "text": "跑一个小任务，读 trace，找它出错的地方",
+       "min": 50
       },
       {
        "id": "20270113-3",
-       "text": "重跑评估",
-       "min": 30
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-14",
-     "label": "项目文档",
-     "goal": "作品集核心",
+     "label": "语音 agent（一）",
+     "goal": "Pipecat：实时语音管线",
      "tasks": [
       {
        "id": "20270114-1",
-       "text": "写项目 README：问题、设计、评估、结果",
-       "min": 90
+       "text": "读 Pipecat 的管线设计：ASR → LLM → TTS 怎么串起来",
+       "min": 60
       },
       {
        "id": "20270114-2",
-       "text": "截图 / 录屏一次完整运行",
+       "text": "看它怎么处理打断和话轮",
+       "min": 50
+      },
+      {
+       "id": "20270114-3",
+       "text": "对照你 blog 的 lumi 日报，挑 2 条最近的进展理解透",
        "min": 40
+      },
+      {
+       "id": "20270114-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-15",
-     "label": "方法论",
-     "goal": "整理 review 清单",
+     "label": "语音 agent（二）",
+     "goal": "LiveKit Agents：话轮检测与语音里的工具调用",
      "tasks": [
       {
        "id": "20270115-1",
-       "text": "把 review 清单整理成你自己的 agent 设计方法论",
-       "min": 90
+       "text": "读 LiveKit Agents 的 turn detection 设计",
+       "min": 60
       },
       {
        "id": "20270115-2",
-       "text": "发到 blog",
-       "min": 40
+       "text": "看语音场景下工具调用怎么不卡住对话",
+       "min": 50
+      },
+      {
+       "id": "20270115-3",
+       "text": "和文本 agent 比：停止条件和主动性边界有什么不同",
+       "min": 30
+      },
+      {
+       "id": "20270115-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-16",
-     "label": "面试讲稿",
-     "goal": "讲清设计取舍",
+     "label": "评估实战",
+     "goal": "给一个跑过的 agent 建轨迹评估",
      "tasks": [
       {
        "id": "20270116-1",
-       "text": "准备 3 个设计取舍的故事（问题 → 选项 → 选择 → 结果）",
-       "min": 90
+       "text": "挑一个前面跑过的 agent，写 10 条用例",
+       "min": 60
       },
       {
        "id": "20270116-2",
-       "text": "对着讲一遍并录音，回听修改",
+       "text": "每条写结果检查 + 轨迹检查（该调的工具有没有调）",
+       "min": 50
+      },
+      {
+       "id": "20270116-3",
+       "text": "跑一遍，分析失败案例",
        "min": 40
       }
      ]
     },
     {
      "date": "2027-01-17",
-     "label": "毕业",
-     "goal": "8 周总复盘",
+     "label": "第 8 周复盘",
+     "goal": "复盘 + 选下一批要学的",
      "tasks": [
       {
        "id": "20270117-1",
-       "text": "对照最初的 4 个目标逐一自评",
+       "text": "补完本周没做完的任务",
        "min": 50
       },
       {
        "id": "20270117-2",
-       "text": "整理作品集：4 篇拆解 + 1 个项目 + 方法论",
-       "min": 50
+       "text": "回顾 8 周的 review 清单，标出还想深挖的旋钮",
+       "min": 40
       },
       {
        "id": "20270117-3",
-       "text": "写毕业总结发到 blog",
-       "min": 40
+       "text": "从前沿雷达和 blog 日报里挑下一批要拆的项目，和 Claude 一起排进新的周",
+       "min": 50
       }
      ]
     }
