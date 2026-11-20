@@ -39,6 +39,9 @@
 .lp-tasks .is-done .t { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--c-learn); color: var(--muted); }
 .lp-tasks .tag { display: inline-block; margin-left: 6px; font-size: 11px; padding: 0 6px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); text-decoration: none; vertical-align: 1px; }
 .lp-tasks input:disabled { cursor: default; }
+.lp-tasks .lk { display: inline-flex; flex-wrap: wrap; gap: 4px 8px; margin-left: 8px; vertical-align: 1px; }
+.lp-tasks .lk a { font-size: 12px; color: var(--link); text-decoration: none; border-bottom: 1px solid currentColor; white-space: nowrap; }
+.lp-tasks .is-done .lk a { color: var(--muted); }
 .lp-tasks .is-synced label { cursor: default; }
 
 /* calendar */

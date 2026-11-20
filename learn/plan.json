@@ -78,7 +78,13 @@
       {
        "id": "20261121-1",
        "text": "把模型 API key 填进 learn-claude-code 的 .env",
-       "min": 10
+       "min": 10,
+       "links": [
+        {
+         "label": ".env 示例",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/.env.example"
+        }
+       ]
       },
       {
        "id": "20261121-2",
@@ -88,12 +94,24 @@
       {
        "id": "20261121-3",
        "text": "读课程中文 README：agent = 模型 + harness",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "课程中文 README",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/README-zh.md"
+        }
+       ]
       },
       {
        "id": "20261121-4",
        "text": "读学习路线里的“2026 年的大图”",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "学习路线 README",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/README.md"
+        }
+       ]
       }
      ]
     },
@@ -105,12 +123,24 @@
       {
        "id": "20261122-1",
        "text": "运行 s01，随便问它一个问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s01 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s01_agent_loop/code.py"
+        }
+       ]
       },
       {
        "id": "20261122-2",
        "text": "回看 TradingAgents 笔记，和 s01 的循环对照",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "11/19 笔记",
+         "url": "/post/learn-agent-2026-11-19/"
+        }
+       ]
       },
       {
        "id": "20261122-3",
@@ -134,12 +164,24 @@
       {
        "id": "20261123-1",
        "text": "读 s01 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s01 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s01_agent_loop/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261123-2",
        "text": "运行 s01，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s01 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s01_agent_loop/code.py"
+        }
+       ]
       },
       {
        "id": "20261123-3",
@@ -166,12 +208,24 @@
       {
        "id": "20261124-1",
        "text": "读 s02 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s02 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s02_tool_use/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261124-2",
        "text": "运行 s02，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s02 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s02_tool_use/code.py"
+        }
+       ]
       },
       {
        "id": "20261124-3",
@@ -198,12 +252,24 @@
       {
        "id": "20261125-1",
        "text": "读 s03 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s03 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s03_permission/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261125-2",
        "text": "运行 s03，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s03 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s03_permission/code.py"
+        }
+       ]
       },
       {
        "id": "20261125-3",
@@ -230,12 +296,24 @@
       {
        "id": "20261126-1",
        "text": "读 s04 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s04 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s04_hooks/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261126-2",
        "text": "运行 s04，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s04 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s04_hooks/code.py"
+        }
+       ]
       },
       {
        "id": "20261126-3",
@@ -262,12 +340,24 @@
       {
        "id": "20261127-1",
        "text": "读 s05 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s05 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s05_todo_write/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261127-2",
        "text": "运行 s05，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s05 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s05_todo_write/code.py"
+        }
+       ]
       },
       {
        "id": "20261127-3",
@@ -294,12 +384,24 @@
       {
        "id": "20261128-1",
        "text": "读 s06 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s06 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s06_subagent/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261128-2",
        "text": "运行 s06，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s06 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s06_subagent/code.py"
+        }
+       ]
       },
       {
        "id": "20261128-3",
@@ -360,12 +462,24 @@
       {
        "id": "20261130-1",
        "text": "读 s07 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s07 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s07_skill_loading/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261130-2",
        "text": "运行 s07，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s07 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s07_skill_loading/code.py"
+        }
+       ]
       },
       {
        "id": "20261130-3",
@@ -392,12 +506,24 @@
       {
        "id": "20261201-1",
        "text": "读 s08 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s08 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s08_context_compact/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261201-2",
        "text": "运行 s08，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s08 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s08_context_compact/code.py"
+        }
+       ]
       },
       {
        "id": "20261201-3",
@@ -424,12 +550,24 @@
       {
        "id": "20261202-1",
        "text": "读 s09 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s09 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s09_memory/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261202-2",
        "text": "运行 s09，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s09 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s09_memory/code.py"
+        }
+       ]
       },
       {
        "id": "20261202-3",
@@ -456,12 +594,24 @@
       {
        "id": "20261203-1",
        "text": "读 s10 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s10 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s10_task_system/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261203-2",
        "text": "运行 s10，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s10 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s10_task_system/code.py"
+        }
+       ]
       },
       {
        "id": "20261203-3",
@@ -488,17 +638,39 @@
       {
        "id": "20261204-1",
        "text": "读 s11、s12 的 README.zh.md",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "s11 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s11_background_tasks/README.zh.md"
+        },
+        {
+         "label": "s12 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s12_cron_scheduler/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261204-2",
        "text": "运行 s11：让它跑一个慢命令，同时继续干别的",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s11 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s11_background_tasks/code.py"
+        }
+       ]
       },
       {
        "id": "20261204-3",
        "text": "运行 s12：设一个 2 分钟后触发的任务",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s12 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s12_cron_scheduler/code.py"
+        }
+       ]
       },
       {
        "id": "20261204-4",
@@ -520,12 +692,24 @@
       {
        "id": "20261205-1",
        "text": "读 s13 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s13 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s13_agent_teams/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261205-2",
        "text": "运行 s13，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s13 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s13_agent_teams/code.py"
+        }
+       ]
       },
       {
        "id": "20261205-3",
@@ -586,12 +770,24 @@
       {
        "id": "20261207-1",
        "text": "读 s14 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s14 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s14_mcp_plugin/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261207-2",
        "text": "运行 s14，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s14 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s14_mcp_plugin/code.py"
+        }
+       ]
       },
       {
        "id": "20261207-3",
@@ -618,12 +814,24 @@
       {
        "id": "20261208-1",
        "text": "读 s15 的 README.zh.md",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s15 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s15_integrated_harness/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261208-2",
        "text": "运行 s15，给它一个需要用到 3 种以上机制的任务",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "s15 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s15_integrated_harness/code.py"
+        }
+       ]
       },
       {
        "id": "20261208-3",
@@ -650,12 +858,24 @@
       {
        "id": "20261209-1",
        "text": "读 s16 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s16 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s16_workflow_runtime/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261209-2",
        "text": "运行 s16，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s16 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s16_workflow_runtime/code.py"
+        }
+       ]
       },
       {
        "id": "20261209-3",
@@ -682,12 +902,24 @@
       {
        "id": "20261210-1",
        "text": "读 s17 的 README.zh.md，用自己的话说出这一课加了什么机制、解决什么问题",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s17 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s17_goal_loop/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20261210-2",
        "text": "运行 s17，给它 2 个真实小任务（在临时测试目录里跑）",
-       "min": 30
+       "min": 30,
+       "links": [
+        {
+         "label": "s17 代码",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s17_goal_loop/code.py"
+        }
+       ]
       },
       {
        "id": "20261210-3",
@@ -736,7 +968,13 @@
       {
        "id": "20261212-1",
        "text": "装好 TradingAgents v0.7.1 的环境，用便宜的模型配置",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "TradingAgents",
+         "url": "https://github.com/TauricResearch/TradingAgents"
+        }
+       ]
       },
       {
        "id": "20261212-2",
@@ -824,7 +1062,13 @@
       {
        "id": "20261215-1",
        "text": "读 settlement.py：决策什么时候结算、怎么算 alpha",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "settlement.py",
+         "url": "https://github.com/TauricResearch/TradingAgents/blob/v0.7.1/tradingagents/memory/settlement.py"
+        }
+       ]
       },
       {
        "id": "20261215-2",
@@ -1154,7 +1398,13 @@
       {
        "id": "20261228-1",
        "text": "按 README 跑起来（npx 或源码）",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "deepseek-harness",
+         "url": "https://github.com/deepseek-ai/deepseek-harness"
+        }
+       ]
       },
       {
        "id": "20261228-2",
@@ -1208,7 +1458,13 @@
       {
        "id": "20261230-1",
        "text": "跑起 OpenAI Codex CLI",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "codex",
+         "url": "https://github.com/openai/codex"
+        }
+       ]
       },
       {
        "id": "20261230-2",
@@ -1330,7 +1586,13 @@
       {
        "id": "20270104-1",
        "text": "精读全文，摘出 5 条可以直接拿来用的经验",
-       "min": 70
+       "min": 70,
+       "links": [
+        {
+         "label": "OpenAI 原文",
+         "url": "https://openai.com/index/harness-engineering/"
+        }
+       ]
       },
       {
        "id": "20270104-2",
@@ -1357,12 +1619,24 @@
       {
        "id": "20270105-1",
        "text": "读 Anthropic Engineering 上关于长时间运行应用的 harness 设计文章（规划者 / 执行者 / 评估者）",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "Anthropic Engineering",
+         "url": "https://www.anthropic.com/engineering"
+        }
+       ]
       },
       {
        "id": "20270105-2",
        "text": "读《Effective context engineering for AI agents》",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        }
+       ]
       },
       {
        "id": "20270105-3",
@@ -1384,17 +1658,35 @@
       {
        "id": "20270106-1",
        "text": "读 Anthropic《How we built our multi-agent research system》",
-       "min": 45
+       "min": 45,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+        }
+       ]
       },
       {
        "id": "20270106-2",
        "text": "读 Cognition《Don't Build Multi-Agents》",
-       "min": 35
+       "min": 35,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://cognition.ai/blog/dont-build-multi-agents"
+        }
+       ]
       },
       {
        "id": "20270106-3",
        "text": "读 LangChain《Organizing Context in a Multi-Agent Harness》：子 agent 是 fork 还是隔离",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.langchain.com/blog/organizing-context-in-a-multi-agent-harness"
+        }
+       ]
       },
       {
        "id": "20270106-4",
@@ -1411,7 +1703,13 @@
       {
        "id": "20270107-1",
        "text": "读完 mini-swe-agent 的全部核心代码",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "mini-swe-agent",
+         "url": "https://github.com/SWE-agent/mini-swe-agent"
+        }
+       ]
       },
       {
        "id": "20270107-2",
@@ -1438,7 +1736,13 @@
       {
        "id": "20270108-1",
        "text": "读架构文档：事件流、agent 控制器、沙箱",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "OpenHands",
+         "url": "https://github.com/OpenHands/OpenHands"
+        }
+       ]
       },
       {
        "id": "20270108-2",
@@ -1465,7 +1769,13 @@
       {
        "id": "20270109-1",
        "text": "跑起来，体验一次完整任务",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "opencode",
+         "url": "https://github.com/anomalyco/opencode"
+        }
+       ]
       },
       {
        "id": "20270109-2",
@@ -1521,17 +1831,35 @@
       {
        "id": "20270111-1",
        "text": "读 Letta 的记忆设计（从 MemGPT 演化来的分层记忆）",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "letta",
+         "url": "https://github.com/letta-ai/letta"
+        }
+       ]
       },
       {
        "id": "20270111-2",
        "text": "读 mem0 的记忆层设计",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "mem0",
+         "url": "https://github.com/mem0ai/mem0"
+        }
+       ]
       },
       {
        "id": "20270111-3",
        "text": "三方对照：存什么、什么时候写、怎么检索、怎么防过时",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "Anthropic 记忆文章",
+         "url": "https://www.anthropic.com/research/components-of-agent-memory"
+        }
+       ]
       },
       {
        "id": "20270111-4",
@@ -1548,12 +1876,24 @@
       {
        "id": "20270112-1",
        "text": "读 MCP 最新规范的核心部分",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "MCP 官网",
+         "url": "https://modelcontextprotocol.io"
+        }
+       ]
       },
       {
        "id": "20270112-2",
        "text": "读 A2A 协议的核心概念",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "A2A",
+         "url": "https://github.com/a2aproject/A2A"
+        }
+       ]
       },
       {
        "id": "20270112-3",
@@ -1602,7 +1942,13 @@
       {
        "id": "20270114-1",
        "text": "读 Pipecat 的管线设计：ASR → LLM → TTS 怎么串起来",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "pipecat",
+         "url": "https://github.com/pipecat-ai/pipecat"
+        }
+       ]
       },
       {
        "id": "20270114-2",
@@ -1629,7 +1975,13 @@
       {
        "id": "20270115-1",
        "text": "读 LiveKit Agents 的 turn detection 设计",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "agents",
+         "url": "https://github.com/livekit/agents"
+        }
+       ]
       },
       {
        "id": "20270115-2",
@@ -1771,7 +2123,13 @@
       {
        "id": "20270120-2",
        "text": "读 SileroVAD.swift：32 ms 一次概率，0.5 进入、0.35 退出",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "Silero VAD",
+         "url": "https://github.com/snakers4/silero-vad"
+        }
+       ]
       },
       {
        "id": "20270120-3",
@@ -1930,7 +2288,13 @@
       {
        "id": "20270126-1",
        "text": "搞懂 ONNX 是什么：模型格式和运行时",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "ONNX Runtime",
+         "url": "https://onnxruntime.ai"
+        }
+       ]
       },
       {
        "id": "20270126-2",
@@ -2001,7 +2365,13 @@
       {
        "id": "20270129-1",
        "text": "搞懂 LiteRT（原 TensorFlow Lite）和 LiteRT-LM",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "LiteRT-LM",
+         "url": "https://ai.google.dev/edge/litert-lm/overview"
+        }
+       ]
       },
       {
        "id": "20270129-2",
@@ -2028,12 +2398,24 @@
       {
        "id": "20270130-1",
        "text": "搞懂 ExecuTorch（PyTorch 的端侧方案）适合什么场景",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "executorch",
+         "url": "https://github.com/pytorch/executorch"
+        }
+       ]
       },
       {
        "id": "20270130-2",
        "text": "搞懂 MLX 在 Mac 上做实验的定位",
-       "min": 40
+       "min": 40,
+       "links": [
+        {
+         "label": "mlx",
+         "url": "https://github.com/ml-explore/mlx"
+        }
+       ]
       },
       {
        "id": "20270130-3",
@@ -2235,7 +2617,13 @@
       {
        "id": "20270208-1",
        "text": "搞懂 App Intents：App 怎么把功能暴露给系统",
-       "min": 50
+       "min": 50,
+       "links": [
+        {
+         "label": "App Intents 文档",
+         "url": "https://developer.apple.com/documentation/appintents"
+        }
+       ]
       },
       {
        "id": "20270208-2",
@@ -2257,7 +2645,13 @@
       {
        "id": "20270209-1",
        "text": "读 Foundation Models 框架的官方文档：会话、引导式生成、工具调用",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "Foundation Models 文档",
+         "url": "https://developer.apple.com/documentation/foundationmodels"
+        }
+       ]
       },
       {
        "id": "20270209-2",
@@ -2323,7 +2717,13 @@
       {
        "id": "20270212-1",
        "text": "读 AppFunctions 官方文档：App 怎么把功能暴露给 agent",
-       "min": 60
+       "min": 60,
+       "links": [
+        {
+         "label": "Android 官方博客",
+         "url": "https://android-developers.googleblog.com/2026/05/android-ai-intelligence-system.html"
+        }
+       ]
       },
       {
        "id": "20270212-2",

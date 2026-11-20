@@ -194,13 +194,21 @@
         return parts.join(" · ");
     }
 
+    function taskLinks(t) {
+        if (!t.links || !t.links.length) return "";
+        return '<span class="lk">' + t.links.map(function (l) {
+            var ext = /^https?:/.test(l.url);
+            return '<a href="' + esc(l.url) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + ">" + esc(l.label) + " ↗</a>";
+        }).join("") + "</span>";
+    }
+
     function taskList(d) {
         return '<ul class="lp-tasks">' + d.tasks.map(function (t) {
             var done = isDone(t.id), isSynced = !!synced[t.id];
             var tag = isSynced ? "" : (local[t.id] ? '<span class="tag" title="只记在这个浏览器里，学完会同步">本机</span>' : "");
             return '<li class="' + (done ? "is-done" : "") + (isSynced ? " is-synced" : "") + '"><label>' +
                 '<input type="checkbox" data-task="' + esc(t.id) + '"' + (done ? " checked" : "") + (isSynced ? ' disabled title="已同步"' : "") + ">" +
-                '<span class="t">' + esc(t.text) + tag + "</span>" +
+                '<span class="t">' + esc(t.text) + tag + taskLinks(t) + "</span>" +
                 '<span class="m">' + esc(t.min) + " 分钟</span>" +
                 "</label></li>";
         }).join("") + "</ul>";
