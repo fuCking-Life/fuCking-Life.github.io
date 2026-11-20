@@ -5,8 +5,24 @@
     <link>https://fuCking-Life.github.io/categories/日报/</link>
     <description>日报 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 20 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/日报/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-20）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-20/</link>
+      <pubDate>Fri, 20 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-20/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-19 08:42 – 2026-11-20 08:47（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 9 条：FluidAudio 0.18.4 让 Nemotron 流式编码器能在 M2/M3 ANE 编译并修了 Parakeet EOU 丢词、决策层论文把旁听误触发从 41% 降到 7–10%、Kikiwake 端上语种识别、sherpa-onnx v2.0.2、Kwindla 谈低延迟与长对话工具调用、Hugging Face speech-to-speech 按中文句号切开、LiveKit Agents 与 Scribe v3 turn prediction、mlx-audio / mlx-audio-swift 性能修补，以及 Sophon Voice Call 打断后只保留已播出内容。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-20）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-20/</link>
+      <pubDate>Fri, 20 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-20/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-19 08:32 – 2026-11-20 08:38（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 7 条：OpenAI 将 GPT-Live-1.1 开放到 Live API 并新增更便宜的 WebRTC 待机计费、Simplex AI 开源本地个人智能体 Linger、Gemini Tool Retrieval 按需加载工具 schema、苹果招聘主动式跨应用 Agent、Gemini Mac 应用推出电脑操控、OpenAI Performance Factory 用 Codex 查性能回退，以及 Genie 4 对开发者开放。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Luna 全双工语音日报（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-19/</link>

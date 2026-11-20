@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/tags/lumi/</link>
     <description>带 #lumi 标签的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 20 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/lumi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-20）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-20/</link>
+      <pubDate>Fri, 20 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-20/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-19 08:42 – 2026-11-20 08:47（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 9 条：FluidAudio 0.18.4 让 Nemotron 流式编码器能在 M2/M3 ANE 编译并修了 Parakeet EOU 丢词、决策层论文把旁听误触发从 41% 降到 7–10%、Kikiwake 端上语种识别、sherpa-onnx v2.0.2、Kwindla 谈低延迟与长对话工具调用、Hugging Face speech-to-speech 按中文句号切开、LiveKit Agents 与 Scribe v3 turn prediction、mlx-audio / mlx-audio-swift 性能修补，以及 Sophon Voice Call 打断后只保留已播出内容。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Luna 全双工语音日报（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-19/</link>

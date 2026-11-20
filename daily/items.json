@@ -1,5 +1,728 @@
 [
   {
+    "id": "agent-app-2026-11-20-gpt-live-1-1",
+    "date": "2026-11-20",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "OpenAI 将全双工语音模型 GPT-Live-1.1 开放到 Live API，并新增更便宜的 WebRTC 待机计费",
+    "summary": "GPT-Live-1.1 可在 Live API 使用；活跃 0.05 美元/分钟，WebRTC 待机 0.02 美元/分钟；支持语音唤醒策略与 idle 超时。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "手机语音助手最贵的往往不是说话那几十秒，而是会话一直挂开、模型却在空转。云端语音层现在给出了「连接不断、推理暂停」的中间态：本地做唤醒和 VAD，云端只在真正开口时按活跃费率跑，并把查资料、工具调用交给后端模型。若要接到 iOS 语音助手里，需要自己量待机唤醒后的首响延迟，尤其是「好的」「取消」这类短确认；同时也别把待机当成永远在听——官方写明关闭后的 Live 会话无法再监听，真正的端侧唤醒仍要留在设备上。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "全双工",
+      "个人 Agent"
+    ],
+    "types": [
+      "模型发布",
+      "产品发布"
+    ],
+    "tags": [
+      "语音助手",
+      "Live API",
+      "全双工",
+      "移动 App"
+    ],
+    "source": {
+      "name": "OpenAIDevs",
+      "handle": "@OpenAIDevs",
+      "identity": "OpenAI 官方开发者账号；OpenAI API 更新说明、模型页与定价页"
+    },
+    "links": [
+      {
+        "label": "官方帖",
+        "url": "https://x.com/OpenAIDevs/status/2123506733524136446"
+      },
+      {
+        "label": "API 更新说明",
+        "url": "https://developers.openai.com/api/docs/changelog"
+      },
+      {
+        "label": "模型页",
+        "url": "https://developers.openai.com/api/docs/models/gpt-live-1.1"
+      },
+      {
+        "label": "会话指南",
+        "url": "https://developers.openai.com/api/docs/guides/live-conversations"
+      },
+      {
+        "label": "定价",
+        "url": "https://developers.openai.com/api/docs/pricing"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-fluidaudio-0184",
+    "date": "2026-11-20",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "FluidAudio 0.18.4：Nemotron 流式编码器能在 M2/M3 ANE 上编译，并修了 Parakeet EOU 丢词",
+    "summary": "FluidAudio 发布 v0.18.4。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若在用 FluidAudio 的 Nemotron 流式 ASR，先升级并确认 iPhone ANE 实际编译的是 v2 编码器，不要只看 M2 Pro 的数字。Parakeet EOU 的 rearm 说明“检出话轮结束”之后必须重建解码状态，否则司机接着说的词会丢。中文改进来自长音频切分，短指令和车噪还要单独测。若 TTS 用 Kokoro ANE，在 A19 Pro 上先对比 fp16 / fp32 起音。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "打断与轮次",
+      "iOS"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布",
+      "话轮控制"
+    ],
+    "source": {
+      "name": "FluidInference/FluidAudio 面向 iOS / macOS 的 Swift + Core ML 语音 SDK",
+      "handle": "@Alex_tra_memory",
+      "identity": "FluidInference/FluidAudio 面向 iOS / macOS 的 Swift + Core ML 语音 SDK；核心贡献者 @Alex_tra_memory。窗口内未见该账号发帖，内容来自我读取的 GitHub Release。"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/FluidInference/FluidAudio/releases/tag/v0.18.4"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/FluidInference/FluidAudio"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "agent-app-2026-11-20-linger",
+    "date": "2026-11-20",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "Simplex AI 开源本地个人智能体 Linger：宣称可在 12 GB 显卡上跑 125B 模型",
+    "summary": "Linger 开源本地个人智能体；PolyStrata 分层加载 MoE；文档自承部分 Mac/NVIDIA 档位为模拟测速。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这是完整的「模型 + harness 一起为本地算力设计」思路：用 expert 分层把大 MoE 塞进消费级硬件，再用夜间记忆整理和短规则，而不是指望端上模型记住一切。对 iOS 语音助手更直接的参考，是 16 GB 档他们只推荐 4B 级模型，以及文档自己写明的模拟档位与真实机器差距。手机统一内存更紧，不能直接套用 12 GB 显卡跑 125B 的数字；更值得迁移的是调度（前台对话优先、后台任务让路）和把长期记忆做成可搜索的本机 wiki，而不是把桌面级模型硬搬进 iPhone。"
+    },
+    "relevance": 4,
+    "domains": [
+      "个人 Agent",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "本地 Agent",
+      "端侧推理",
+      "Apple 芯片",
+      "开源"
+    ],
+    "source": {
+      "name": "Tony Zhang",
+      "handle": "@zhangboknight",
+      "identity": "Simplex AI 创始人；GitHub 仓库 README 与本地推理文档"
+    },
+    "links": [
+      {
+        "label": "宣布帖",
+        "url": "https://x.com/zhangboknight/status/2123237197050794364"
+      },
+      {
+        "label": "GitHub 仓库",
+        "url": "https://github.com/simplexai-labs/linger"
+      },
+      {
+        "label": "项目主页",
+        "url": "https://heylinger.com"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-decision-layer-paper",
+    "date": "2026-11-20",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "论文：把“该不该行动”从识别里拆出来，旁听误触发从 41% 降到 7–10%",
+    "summary": "我读了摘要（未读全文 PDF）。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "把“听到了什么”和“现在该不该搜地点、改路线或开口”拆开。车里至少要同时看：是不是在对 Luna 说话、是不是司机、这句话是否说完、以及这个工具调用的风险。高风险动作（改目的地、退出导航）在拿不准时先追问或等待，不要只看 ASR 置信度。可用车舱录音按“旁听误触发率 / 有效指令服务率”复现他们的门控对比。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "语音 Agent",
+      "论文"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "话轮控制",
+      "唤醒与声纹",
+      "论文"
+    ],
+    "source": {
+      "name": "arXiv 2611.23847 Siddique Latif、Moid Sandu、Farrukh Pervez、Raja Jurdak 的立场文章与实验",
+      "handle": "",
+      "identity": "arXiv 2611.23847 Siddique Latif、Moid Sandu、Farrukh Pervez、Raja Jurdak 的立场文章与实验"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.23847"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-18"
+  },
+  {
+    "id": "agent-app-2026-11-20-tool-retrieval",
+    "date": "2026-11-20",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "Gemini API 预览 Tool Retrieval：工具 schema 按需加载，可与远程 MCP 一起用",
+    "summary": "Gemini Interactions API 预览 Tool Retrieval：defer_loading 延迟参数 schema，可与远程 MCP 和前缀缓存配合。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "端侧语音或 App 智能体同样会碰到「工具一多，系统提示就先被 schema 占满」的问题，而手机上下文窗口更贵。可复用的分层是：名称和一句话描述始终可见，完整参数只在真正要调用时再加载；常用工具常驻，长尾和 MCP 服务器按需展开。若检索在端上做，还可以按当前 App 权限、登录态和场景过滤工具，避免把用户并未授权的能力送到模型面前。前缀缓存这一点对多轮语音尤其重要：不要每轮都改工具列表开头，否则端云都无法复用已计算的前缀。"
+    },
+    "relevance": 5,
+    "domains": [
+      "工具与 MCP",
+      "Agent 架构",
+      "大模型"
+    ],
+    "types": [
+      "产品发布",
+      "技术解读"
+    ],
+    "tags": [
+      "工具调用",
+      "MCP",
+      "Agent 架构",
+      "Gemini API"
+    ],
+    "source": {
+      "name": "Google AI Studio",
+      "handle": "@GoogleAIStudio",
+      "identity": "Lucia Loher 与 Nora Kassner；Google 官方博客与 AI Studio 账号"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/"
+      },
+      {
+        "label": "官方帖",
+        "url": "https://x.com/GoogleAIStudio/status/2123489911684866251"
+      },
+      {
+        "label": "Gemini API 更新说明",
+        "url": "https://aistudio.google.com/docs/changelog"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-kikiwake",
+    "date": "2026-11-20",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "Kikiwake：189 MB 的端上语种识别，1.5 秒音频、不必先转写",
+    "summary": "Shahir 发布了完全本地的语种识别模型 Kikiwake，仓库创建于 11-19。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "适合放在流式 ASR 前面做语种路由，但先在 iPhone ANE 上测 189 MB 的加载、耗电，以及 1.5 秒窗口对“去第 3 出口”这类短指令是否够。普通话数字好看，英语不在已验证列表里，司机中英切换和语码转换都要单独测。不要把 M1 上的 19 ms 直接当成 iPhone 数字。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "语音识别 ASR",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "@TslShahir Shahir，端上 ML 工程师，研究 Apple Neural Engine 推理，Haku 相关工作",
+      "handle": "@TslShahir",
+      "identity": "@TslShahir Shahir，端上 ML 工程师，研究 Apple Neural Engine 推理，Haku 相关工作"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/TslShahir/status/2123446881766474002"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/shershah1024/haku-kikiwake"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/ShahirHF/haku-kikiwake"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "agent-app-2026-11-20-apple-agentic-hiring",
+    "date": "2026-11-20",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "彭博报道苹果新招聘启事：正在组建可跨应用操作、写代码并调度子智能体的主动式 Agent",
+    "summary": "苹果招聘主动式 Agentic AI 工程经理；启事写明跨 App/浏览器/命令行/代码与子智能体协作，强调隐私；非产品发布。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "苹果把「跨 App、浏览器、命令行、代码和 API 选对工具，并能调度子智能体」写进了官方岗位，同时还强调隐私和苹果式完成度。对 iOS 端侧语音助手来说，值得提前对齐的是权限模型和可解释的操作确认：能写代码、调用已登录服务的智能体，必须把沙箱、授权和可撤回做进主路径，而不是事后补。和 Siri、系统 UI 框架、Foundation Models 的协作关系也说明，这类能力更可能长在系统助理里，而不是只作为独立第三方 App；第三方要做的，是让自己的垂直技能能被系统级智能体安全调用。"
+    },
+    "relevance": 4,
+    "domains": [
+      "苹果生态",
+      "个人 Agent",
+      "Agent 架构"
+    ],
+    "types": [
+      "行业数据",
+      "观点讨论"
+    ],
+    "tags": [
+      "苹果",
+      "智能体",
+      "端侧",
+      "招聘"
+    ],
+    "source": {
+      "name": "The Verge / 9to5Mac",
+      "handle": "",
+      "identity": "转述 Bloomberg Mark Gurman 报道与苹果招聘启事原文"
+    },
+    "links": [
+      {
+        "label": "The Verge 报道",
+        "url": "https://www.theverge.com/tech/1038227/apple-ai-agent-engineer-job-listing"
+      },
+      {
+        "label": "9to5Mac 报道",
+        "url": "https://9to5mac.com/2026/11/19/report-apple-job-listings-detail-plans-for-autonomous-ai-agents/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-sherpa-onnx-202",
+    "date": "2026-11-20",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx v2.0.2：修了流式丢字、VAD Flush 丢样本，以及一次 iOS 崩溃",
+    "summary": "sherpa-onnx 发布 v2.0.2。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若生产管道用 sherpa-onnx，优先升级并回归三件事：流式 ASR 是否还丢字、VAD flush / 打断后是否丢尾巴、以及 iOS 符号解析崩溃是否还在。Whisper 按流指定语言可和语种识别一起用。系统 TTS 那条 Pali 提交在 tag 之后，不要当成 2.0.2 已发布能力。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "打断与轮次",
+      "iOS"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "k2-fsa/sherpa-onnx Next-gen Kaldi 的端上 ONNX 语音工具包，主要由 @csukuangfj 维护。窗口内未见该账号发帖，内",
+      "handle": "@csukuangfj",
+      "identity": "k2-fsa/sherpa-onnx Next-gen Kaldi 的端上 ONNX 语音工具包，主要由 @csukuangfj 维护。窗口内未见该账号发帖，内容来自我读取的 GitHub Release 及随后提交。"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/v2.0.2"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/k2-fsa/sherpa-onnx"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "agent-app-2026-11-20-gemini-mac-computer-use",
+    "date": "2026-11-20",
+    "seq": 5,
+    "source_brief": "agent-app",
+    "title": "Gemini Mac 应用在美国向 Plus/Pro/Ultra 用户推出电脑操控，在隔离窗口里代为点击和输入",
+    "summary": "Gemini Mac 应用推出 computer use：隔离后台窗口点击输入，用户保留主屏幕与光标；美国 Plus/Pro/Ultra，Apple 芯片 + Sequoia 15+。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "桌面 computer use 的产品形状已经比较清楚：隔离窗口、实时预览、应用级权限和关键步骤确认，同时不抢走用户的光标。手机端还做不到同等的后台窗口，但权限分层和「先预览再执行」可以直接搬到 iOS 语音助手里，尤其是要跨 App 下单、填表或改文件的时候。当前只在 Apple 芯片 Mac 上开放，也说明这类能力仍绑在本地系统集成，而不是一个马上能装进 iPhone 的云端演示。"
+    },
+    "relevance": 4,
+    "domains": [
+      "个人 Agent",
+      "Agent 架构",
+      "苹果生态"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "Computer Use",
+      "Mac",
+      "Gemini",
+      "桌面 Agent"
+    ],
+    "source": {
+      "name": "GeminiApp",
+      "handle": "@GeminiApp",
+      "identity": "Michael Friedman；Google 官方博客与 Gemini 应用官方账号"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/"
+      },
+      {
+        "label": "官方帖",
+        "url": "https://x.com/GeminiApp/status/2123513377268109331"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-kwindla-latency",
+    "date": "2026-11-20",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Kwindla：语音 agent 更吃低延迟和长对话工具调用，而不是推理模型",
+    "summary": "Kwindla 在一条长回复里说：Decagon 已公开表示，其客服语音 agent 超过 70% 的分钟数在用微调后的 LLM；他们自己的大客户也有类似部署。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "云端兜底不要默认上带长思考的推理模型，否则首字延迟和打断都会变差。本地小模型和云端中等模型都应针对“短指令 + 导航工具调用 + 多轮不跑偏”微调，而不是通用聊天。GPT-4.1 若在用，要准备迁移方案。端上更小的模型更要自己测长对话里 function calling 的稳定性，不要假设通用模型在无思考模式下够用。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "工具与 MCP"
+    ],
+    "types": [
+      "观点讨论"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "端上小模型"
+    ],
+    "source": {
+      "name": "@kwindla Kwindla Hultman Kramer，Pipecat 作者、Daily 创始人，现任 Deepgram 开源负责人",
+      "handle": "@kwindla",
+      "identity": "@kwindla Kwindla Hultman Kramer，Pipecat 作者、Daily 创始人，现任 Deepgram 开源负责人"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/kwindla/status/2123465157053645067"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "agent-app-2026-11-20-performance-factory",
+    "date": "2026-11-20",
+    "seq": 6,
+    "source_brief": "agent-app",
+    "title": "OpenAI 介绍 Performance Factory：用 Codex 智能体自动调查并验证 ChatGPT 性能回退",
+    "summary": "OpenAI 内部 Performance Factory：Codex 自动调查性能回退并复核；三个多月超 1700 次调查、600+ 根因；人工复核 70% 准确。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "长期运行的语音或端云助手，性能回退会直接变成首字延迟和耗电。可借鉴的不是把 Codex 搬进手机，而是把「告警 → 调查技能 → 人工过补丁 → 上线后再验证」做成可重复工作流，并把调查步骤写成稳定的 skill，而不是每次靠工程师口头指挥。70% 的根因准确率也提醒：自动调查可以扩规模，但涉及正式发布的修复仍需要人审；端侧更要把这类检查限定在可回滚的配置和模型路由上。"
+    },
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "大模型"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "编码智能体",
+      "Agent 工作流",
+      "可靠性",
+      "OpenAI"
+    ],
+    "source": {
+      "name": "OpenAI",
+      "handle": "@OpenAIDevs",
+      "identity": "Okay Zed 与 Cyrus Forbes；OpenAI 官方博客"
+    },
+    "links": [
+      {
+        "label": "OpenAI 官方博客",
+        "url": "https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast/"
+      },
+      {
+        "label": "官方帖",
+        "url": "https://x.com/OpenAIDevs/status/2123471880292299171"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-hf-sts-zh-period",
+    "date": "2026-11-20",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Hugging Face speech-to-speech：按中文句号切开，流式 TTS 不再等整段说完",
+    "summary": "我读了 11-19 合并的 PR #842。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "中文导航播报必须按 `。！？` 分句流式送入 TTS，否则“前方出口左转”要等整段生成完才出声。不要只用 Punkt 或按英文句号切。分句时注意不要把代码或数字里的符号切开，也不要在小数点处断开。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音合成 TTS",
+      "全双工",
+      "打断与轮次"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "端上语音"
+    ],
+    "source": {
+      "name": "huggingface/speech-to-speech Hugging Face 的级联语音 agent 仓库",
+      "handle": "",
+      "identity": "huggingface/speech-to-speech Hugging Face 的级联语音 agent 仓库"
+    },
+    "links": [
+      {
+        "label": "代码",
+        "url": "https://github.com/huggingface/speech-to-speech"
+      },
+      {
+        "label": "PR",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/842"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "agent-app-2026-11-20-genie-4-api",
+    "date": "2026-11-20",
+    "seq": 7,
+    "source_brief": "agent-app",
+    "title": "Genie 4 对开发者开放：可在 Gemini API 和 AI Studio 里生成带同步音频的可交互世界",
+    "summary": "Genie 4 以 models/genie-4 对开发者 GA：720p 24fps 可交互世界含同步音频；约每秒 0.10 美元；输出带 SynthID。",
+    "insight": {
+      "heading": "对世界模型 / 具身智能的启发",
+      "body": "世界模型从「订阅用户可玩」变成了可嵌入自己应用的 API，计费按输入和视频输出 token 走，大约每秒 0.10 美元，更适合短时预演而不是长时间开着当仿真器。对机器人或端侧智能体，价值仍是在真实动作前先在可中途改写的环境里试策略；训练和评测流水线现在可以直接调 API，不必只停留在 Ultra 的浏览器画布里。手机端侧目前还跑不动这类 720p 实时世界模型，但可以用它为端上策略生成合成演示数据。"
+    },
+    "relevance": 4,
+    "domains": [
+      "多模态",
+      "大模型"
+    ],
+    "types": [
+      "产品发布",
+      "技术解读"
+    ],
+    "tags": [
+      "世界模型",
+      "Genie",
+      "开发者 API",
+      "具身智能"
+    ],
+    "source": {
+      "name": "Google AI Studio",
+      "handle": "@GoogleAIStudio",
+      "identity": "Google 官方博客；Logan Kilpatrick 个人观点帖"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/"
+      },
+      {
+        "label": "Gemini API 更新说明",
+        "url": "https://aistudio.google.com/docs/changelog"
+      },
+      {
+        "label": "Logan Kilpatrick 帖",
+        "url": "https://x.com/OfficialLoganK/status/2123467449257623770"
+      },
+      {
+        "label": "官方帖",
+        "url": "https://x.com/GoogleAIStudio/status/2123479057996116143"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-livekit-scribe-v3",
+    "date": "2026-11-20",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "LiveKit Agents：Scribe v3 的 turn prediction 要搭配本地 VAD，防止被强制提交",
+    "summary": "我读了已合并的 PR #8628：为 ElevenLabs Scribe v3 live 增加 `commit_strategy=\"turn_prediction\"`，并用本地 VAD 处理疑似 forced commit，以及在没有…",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "即使某路云端 ASR 自称能预测话轮结束，也不要单独信它。用端上 VAD 卡住“模型想提交、但人还在说”的 forced commit，并给一个超时以免一直等不到 final。36 秒这个阈值是他们针对该 API 的讨论，不能直接搬到车载短指令。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "语音 Agent",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "livekit/agents LiveKit 开源语音 agent 框架。这是窗口内合入的 PR，不是新的版本发布。",
+      "handle": "",
+      "identity": "livekit/agents LiveKit 开源语音 agent 框架。这是窗口内合入的 PR，不是新的版本发布。"
+    },
+    "links": [
+      {
+        "label": "PR",
+        "url": "https://github.com/livekit/agents/pull/8628"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/livekit/agents"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-20-mlx-audio",
+    "date": "2026-11-20",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "mlx-audio 0.6.7 / mlx-audio-swift 0.2.1：性能修补，以及导航播报会用到的数目正规化",
+    "summary": "mlx-audio v0.6.7（11-20 00:51 新加坡时间）和 mlx-audio-swift v0.2.1（07:02）在窗口内发布。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若导航 TTS 会读“第 3 出口”或带序数、时刻、负数的路况，先看正规化器会不会漏读或读错，Swift 包这几处正是这类问题。mlx-audio 的性能数字目前是 Apple Silicon / MLX 语境，不要直接当成 iPhone Core ML 预算。"
+    },
+    "relevance": 3,
+    "domains": [
+      "端侧",
+      "语音合成 TTS",
+      "iOS"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Neywa-Labs/mlx-audio 与 mlx-audio-swift Apple Silicon 上的 MLX 语音库",
+      "handle": "@Prince_Canuma",
+      "identity": "Neywa-Labs/mlx-audio 与 mlx-audio-swift Apple Silicon 上的 MLX 语音库；作者包括 @Prince_Canuma、@lllucas。窗口内两人没有相关原创帖，内容来自 Release。"
+    },
+    "links": [
+      {
+        "label": "mlx-audio 发布说明",
+        "url": "https://github.com/Neywa-Labs/mlx-audio/releases/tag/v0.6.7"
+      },
+      {
+        "label": "mlx-audio-swift 发布说明",
+        "url": "https://github.com/Neywa-Labs/mlx-audio-swift/releases/tag/v0.2.1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-20-sophon-voice-call",
+    "date": "2026-11-20",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "Sophon Voice Call：开源全双工插件，打断后只保留用户真正听到的内容",
+    "summary": "BK Jin 发布了面向 SillyTavern 的开源插件 Sophon Voice Call，用于和角色做全双工语音通话，可随时打断，并支持声音克隆。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可参考的是产品行为，不是把 4B/32B GPU 模型搬上 iPhone：打断后上下文只保留已播出的部分，和昨日 Hugging Face speech-to-speech 的裁剪是同一原则。0.7 s / 0.16 s 是他们在同机房教程里的测量，不能当成车载目标。"
+    },
+    "relevance": 3,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "话轮控制",
+      "开源发布"
+    ],
+    "source": {
+      "name": "@BKJinAI BK Jin，Adventists AI 创始人，Sophon-Realtime 作者",
+      "handle": "@BKJinAI",
+      "identity": "@BKJinAI BK Jin，Adventists AI 创始人，Sophon-Realtime 作者"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/BKJinAI/status/2123275865257807933"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/adventists-ai/sophon-sillytavern"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-20/",
+    "posted_at": "2026-11-19"
+  },
+  {
     "id": "agent-app-2026-11-19-rumble-2-flash",
     "date": "2026-11-19",
     "seq": 1,

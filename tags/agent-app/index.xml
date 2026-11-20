@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/tags/agent-app/</link>
     <description>带 #agent-app 标签的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 20 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/agent-app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-20）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-20/</link>
+      <pubDate>Fri, 20 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-20/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-19 08:32 – 2026-11-20 08:38（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 7 条：OpenAI 将 GPT-Live-1.1 开放到 Live API 并新增更便宜的 WebRTC 待机计费、Simplex AI 开源本地个人智能体 Linger、Gemini Tool Retrieval 按需加载工具 schema、苹果招聘主动式跨应用 Agent、Gemini Mac 应用推出电脑操控、OpenAI Performance Factory 用 Codex 查性能回退，以及 Genie 4 对开发者开放。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-19）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-19/</link>
