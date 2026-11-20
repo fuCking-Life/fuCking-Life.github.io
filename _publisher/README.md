@@ -184,7 +184,7 @@ An `--input` object may include both post fields and `items`. The post is writte
 The page reads two data files in the browser, so updating progress needs no rebuild:
 
 - `learn/plan.json`: the fixed day-by-day plan. Weeks hold days; each day has `date`, `label` (shown in the calendar cell), `goal`, and `tasks` (`id`, `text`, `min`). Task ids are `YYYYMMDD-N`.
-- `learn/log.json`: what was actually learned, keyed by date: `done` (task ids from `plan.json`), `summary` (one line, shown in the cell), `points` (2–4 bullets in the day view), and `note` (the site path of that day's 学习笔记 post, or empty). A leave day is `{"leave": true, "done": []}`: the cell shows 请假, the day is not counted as owed work, and it does not break the streak.
+- `learn/log.json`: what was actually learned, keyed by date: `done` (task ids from `plan.json`), `summary` (one line, shown in the cell), `points` (2–4 bullets in the day view), and `note` (the site path of that day's 学习笔记 post, or empty). A day may also carry `review` (`{"recall": [asked, correct], "transfer": n, "think": n}`), shown in the day view. The top-level `review_due` (`{"date", "recall", "transfer", "think"}`) is the number of questions due, shown on the today card. A leave day is `{"leave": true, "done": []}`: the cell shows 请假, the day is not counted as owed work, and it does not break the streak.
 
 Ticks made on the page stay in that browser (localStorage) and are labelled 本机 until `log.json` lists them.
 

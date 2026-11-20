@@ -21,6 +21,11 @@
 .lp-today .lp-kicker { font-size: 13px; color: var(--c-learn); font-weight: 600; margin: 0 0 4px; }
 .lp-today .lp-catchup { margin: 12px 0 0; font-size: 14px; color: var(--ask); }
 .lp-today .lp-catchup button { color: inherit; text-decoration: underline; }
+.lp-review { margin: -4px 0 12px; font-size: 14px; color: var(--ink-2); padding: 8px 12px; border-radius: 8px; background: var(--code-bg); }
+.lp-review b { color: var(--ext); margin-right: 8px; }
+.lp-ahead { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--rule); }
+.lp-ahead h3 { font-size: 16px; margin: 0 0 2px; }
+.lp-ahead .lp-kicker { color: var(--ext); }
 .lp-cheer { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--ink); font-weight: 600; }
 
 /* task list */

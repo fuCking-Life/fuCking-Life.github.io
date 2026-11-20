@@ -154,13 +154,44 @@
         var html = '<p class="lp-kicker">' + esc(kicker) + "</p>" +
             "<h2>" + esc(d.label) + "</h2>" +
             '<p class="lp-goal">' + esc(d.goal) + "</p>" +
+            reviewDue() +
             taskList(d);
-        if (dayState(d) === "done") html += '<p class="lp-cheer">今天的任务全部完成 ✓ 记得对 Claude 说“今天就到这”，把总结同步过来。</p>';
+        if (dayState(d) === "done") {
+            html += '<p class="lp-cheer">今天的任务全部完成 ✓ 记得对 Claude 说“今天就到这”，把总结同步过来。</p>';
+            var next = days.filter(function (x) { return x.date > d.date && dayState(x) !== "done"; })[0];
+            if (next) {
+                html += '<div class="lp-ahead"><p class="lp-kicker">想多学？接着做 · ' + esc(md(next.date)) + " 周" + WEEKDAYS[weekday(next.date)] + "</p>" +
+                    "<h3>" + esc(next.label) + "</h3>" +
+                    '<p class="lp-goal">' + esc(next.goal) + "</p>" +
+                    taskList(next) + "</div>";
+            }
+        }
         if (behindTasks) {
             html += '<p class="lp-catchup">之前还有 ' + behindTasks + " 项没做完，最早一天是 " + md(behind[0].date) +
                 '。<button type="button" class="lp-linkbtn" data-open="' + esc(behind[0].date) + '">去补上 →</button></p>';
         }
         $("lp-today").innerHTML = html;
+    }
+
+    function reviewDue() {
+        var r = log.review_due;
+        if (!r || !r.date || r.date > today) return "";
+        var parts = [];
+        if (r.recall) parts.push("复习 " + r.recall + " 道");
+        if (r.transfer) parts.push("举一反三 " + r.transfer + " 道");
+        if (r.think) parts.push("思考题 " + r.think + " 道");
+        if (!parts.length) return '<p class="lp-review">今天没有到期的题目。</p>';
+        var stale = r.date < today ? "（" + md(r.date) + " 统计）" : "";
+        return '<p class="lp-review"><b>今日题目</b>' + esc(parts.join(" · ")) + esc(stale) + "。开始学习时 Claude 会先带你做。</p>";
+    }
+
+    function reviewDone(r) {
+        if (!r) return "";
+        var parts = [];
+        if (r.recall && r.recall[0]) parts.push("复习 " + r.recall[1] + "/" + r.recall[0] + " 答对");
+        if (r.transfer) parts.push("举一反三 " + r.transfer + " 道");
+        if (r.think) parts.push("思考题 " + r.think + " 道");
+        return parts.join(" · ");
     }
 
     function taskList(d) {
@@ -228,6 +259,8 @@
             '<p class="lp-goal">' + esc(d.goal) + "</p>" +
             (isLeave(date) ? '<p class="lp-leave-note">这一天请假了。下面是原定的任务，想补的时候可以直接勾。</p>' : "") +
             "<h3>任务</h3>" + taskList(d);
+        var rv = reviewDone(entry.review);
+        if (rv) html += "<h3>做题</h3><p>" + esc(rv) + "</p>";
         if (!entry.leave && (entry.summary || (entry.points || []).length)) {
             html += "<h3>当天总结</h3>";
             if (entry.summary) html += '<p class="lp-sum">' + esc(entry.summary) + "</p>";
