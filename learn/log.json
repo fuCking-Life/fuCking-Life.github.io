@@ -1,7 +1,7 @@
 {
  "review_due": {
-  "date": "2026-11-20",
-  "recall": 8,
+  "date": "2026-11-21",
+  "recall": 15,
   "transfer": 2,
   "think": 2
  },
@@ -30,15 +30,27 @@
     "20261120-4",
     "20261120-5",
     "20261121-1",
-    "20261121-2"
+    "20261121-2",
+    "20261121-3",
+    "20261121-4",
+    "20261122-1"
    ],
-   "summary": "定下 8 周路线和 2026 年 agent 设计大图，两台电脑开始同步进度。",
+   "summary": "定下学习路线；读懂 agent = 模型 + harness，学会分层判断 workflow 和 agent，第一次跑通 s01。",
    "points": [
-    "2026 年的设计重心在 harness：模型外面的整套运行环境",
-    "review 清单：16 个设计旋钮，其中 6 个是 2026 年才变重要的",
-    "阶段 0 改为跟着 learn-claude-code 从零搭 harness"
+    "Agency 来自模型训练；agent 产品 = 模型 + harness，模型做决策，harness 执行",
+    "分层看主控制流：下一步和何时停由代码定死是 workflow，由模型选是 agent；审批、上限只是护栏",
+    "TradingAgents 是外层 workflow + 分析师里的小 agent；端侧小模型适合外层固定流程",
+    "prompt → context → harness 是瓶颈外移，三者是包含关系"
    ],
-   "note": ""
+   "note": "",
+   "review": {
+    "recall": [
+     0,
+     0
+    ],
+    "transfer": 0,
+    "think": 1
+   }
   }
  }
 }
