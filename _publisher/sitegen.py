@@ -42,6 +42,8 @@ MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct
 WEEKDAYS_ZH = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 # Opening lines of a digest that say when or what it covers, not what happened.
 META_LINE = re.compile(r"^(?:时间窗口|覆盖范围|\d{4}年)")
+# The trading disclaimer that opens a summary; the footer already says it.
+DISCLAIMER_LEAD = re.compile(r"^本文只做信息整理(?:[，,]?\s*不构成投资建议)?[。.]\s*")
 
 # Directories a build owns. A subdirectory of these that holds only
 # index.html / index.xml and matches no current post or term is removed.
@@ -145,6 +147,162 @@ def mark_callouts(html: str) -> str:
         return f'<blockquote class="{cls}">{match.group(1)}' if cls else match.group(0)
 
     return _CALLOUT_RE.sub(repl, html)
+
+
+# Digest items. A brief lists its items as a heading (``### 标题`` or a bold-only
+# paragraph) followed by ``相关度 N/5。标签：a、b。``, then 来源, the text, an
+# ``对 X 的启发`` quote and a 原帖 link line. The records keep that Markdown
+# shape; the post page groups each item into its own block at render time.
+_BLOCK_OPEN = re.compile(r"<(p|h[1-6]|blockquote|ul|ol|table|pre|div|figure|hr)\b[^>]*>", re.I)
+_HEADING_BLOCK = re.compile(r"^<(h[34])((?:\s[^>]*)?)>(.*)</\1>$", re.S)
+_STRONG_BLOCK = re.compile(r"^<p>\s*<strong>(.+?)</strong>\s*</p>$", re.S)
+_REL_LINE = re.compile(r"^相关度\s*(\d)\s*/\s*5")
+_TAGS_IN_REL = re.compile(r"标签[：:]\s*(.+)$")
+_ID_ATTR = re.compile(r'\sid="([^"]+)"')
+
+
+def split_blocks(html: str) -> list[str]:
+    """Top-level blocks of rendered Markdown, each with its own closing tag."""
+    blocks: list[str] = []
+    pos = 0
+    while True:
+        match = _BLOCK_OPEN.search(html, pos)
+        if not match:
+            rest = html[pos:].strip()
+            if rest:
+                blocks.append(rest)
+            return blocks
+        stray = html[pos : match.start()].strip()
+        if stray:
+            blocks.append(stray)
+        tag = match.group(1).lower()
+        if tag == "hr":
+            blocks.append(match.group(0))
+            pos = match.end()
+            continue
+        pair = re.compile(rf"<{tag}\b[^>]*>|</{tag}\s*>", re.I)
+        depth, end = 1, match.end()
+        while depth:
+            step = pair.search(html, end)
+            if not step:
+                end = len(html)
+                break
+            depth += -1 if step.group(0).startswith("</") else 1
+            end = step.end()
+        blocks.append(html[match.start() : end])
+        pos = end
+
+
+def _item_heading(block: str) -> tuple[str, str] | None:
+    """(inner HTML, existing id) when the block can head a digest item."""
+    match = _HEADING_BLOCK.match(block)
+    if match:
+        found = _ID_ATTR.search(match.group(2) or "")
+        return match.group(3).strip(), found.group(1) if found else ""
+    match = _STRONG_BLOCK.match(block)
+    if match:
+        return match.group(1).strip(), ""
+    return None
+
+
+def _is_rel_line(block: str) -> bool:
+    return block.startswith("<p") and bool(_REL_LINE.match(plain_text(block)))
+
+
+def _rel_meta(block: str) -> tuple[int, str]:
+    """Score and the meta row that replaces the 相关度 paragraph."""
+    text = plain_text(block)
+    score = int(_REL_LINE.match(text).group(1))
+    score = max(0, min(score, 5))
+    found = _TAGS_IN_REL.search(text)
+    tags = []
+    if found:
+        tags = [t.strip() for t in re.split(r"[、，,；;/]", found.group(1).rstrip("。. ")) if t.strip()]
+    bars = "".join('<i class="on"></i>' if n < score else "<i></i>" for n in range(5))
+    chips = "".join(f'<span class="it-chip">{esc(tag)}</span>' for tag in tags)
+    meta = (
+        '<div class="it-meta">'
+        f'<span class="it-rel" title="相关度 {score}/5" aria-label="相关度 {score}/5">{bars}</span>'
+        f"{chips}</div>"
+    )
+    return score, meta
+
+
+def _dress_item_block(block: str) -> str:
+    """Class an item's 来源 / 原帖 lines and its 启发 quote."""
+    if block.startswith("<p>"):
+        text = plain_text(block)
+        if text.startswith("来源"):
+            return '<p class="it-src">' + block[3:]
+        if re.match(r"^(?:原帖|原文|链接)[：:]", text):
+            return '<p class="it-links">' + block[3:]
+        return block
+    if block.startswith("<blockquote>"):
+        first = re.search(r"<strong>([^<]+)</strong>", block)
+        if first and first.group(1).strip().rstrip("：:").endswith("启发"):
+            return '<blockquote class="it-insight">' + block[len("<blockquote>") :]
+    return block
+
+
+def structure_digest(html: str) -> tuple[str, list[tuple[str, str, int]]]:
+    """Group digest items into blocks and add a contents list.
+
+    Returns the new HTML and the items as (anchor id, plain title, score). A
+    body with fewer than two items comes back unchanged with no items.
+    """
+    blocks = split_blocks(html)
+    starts = {
+        i for i in range(len(blocks) - 1) if _item_heading(blocks[i]) and _is_rel_line(blocks[i + 1])
+    }
+    if len(starts) < 2:
+        return html, []
+
+    def ends_item(i: int) -> bool:
+        block = blocks[i]
+        return i in starts or block.startswith("<hr") or bool(re.match(r"<h[1-3]\b", block))
+
+    first_section = next(
+        i for i, block in enumerate(blocks) if i in starts or re.match(r"<h[1-4]\b", block)
+    )
+    used: set[str] = set()
+    items: list[tuple[str, str, int]] = []
+    out: list[str] = []
+    toc_at = 0
+    i = 0
+    while i < len(blocks):
+        if i == first_section:
+            toc_at = len(out)
+        if i not in starts:
+            out.append(blocks[i])
+            i += 1
+            continue
+        inner, anchor = _item_heading(blocks[i])
+        inner = re.sub(r"^\d{1,2}\s*[.、．]\s*", "", inner)  # the badge shows the number
+        number = len(items) + 1
+        anchor = anchor if anchor and anchor not in used else f"item-{number}"
+        used.add(anchor)
+        score, meta = _rel_meta(blocks[i + 1])
+        title = plain_text(inner)
+        items.append((anchor, title, score))
+        body = []
+        j = i + 2
+        while j < len(blocks) and not ends_item(j):
+            body.append(_dress_item_block(blocks[j]))
+            j += 1
+        out.append(
+            f'<section class="item" id="{esc(anchor)}">\n'
+            f'<h3 class="it-title"><span class="it-no">{number}</span><span>{inner}</span></h3>\n'
+            f"{meta}\n" + "\n".join(body) + "\n</section>"
+        )
+        i = j
+    rows = "".join(
+        f'<li><a href="#{esc(anchor)}">{esc(title)}</a>'
+        f'<span class="toc-rel{" hi" if score >= 5 else ""}" title="相关度 {score}/5">{score}</span></li>'
+        for anchor, title, score in items
+    )
+    toc = f'<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 {len(items)} 条</div><ol>{rows}</ol></nav>'
+    out.insert(toc_at, toc)
+    return "\n".join(out), items
 
 
 # --------------------------------------------------------------------- columns
@@ -294,8 +452,13 @@ class PostRecord:
         if not paragraphs:
             return plain_text(self.summary_html)
         texts = [plain_text(p) for p in paragraphs]
-        kept = [t for t in texts if t and not META_LINE.match(t)]
-        return " ".join(kept) or " ".join(texts)
+        kept = [DISCLAIMER_LEAD.sub("", t) for t in texts if t and not META_LINE.match(t)]
+        return " ".join(t for t in kept if t) or " ".join(texts)
+
+    @property
+    def digest_titles(self) -> list[str]:
+        """Plain titles of the digest items in the body, in order (empty if none)."""
+        return [title for _id, title, _score in structure_digest(self.body_html)[1]]
 
     @property
     def item_count(self) -> int | None:
@@ -338,6 +501,13 @@ THEME_BOOT = (
     "<script>try{var t=localStorage.getItem('theme');"
     "if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>"
 )
+# Headings use Noto Serif SC (Google Fonts serves it in unicode-range slices, so
+# a page only downloads the glyphs it shows); body text stays on system sans.
+FONT_LINKS = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">'
+)
 THEME_ICON = (
     '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">'
     '<circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/>'
@@ -361,11 +531,8 @@ class Shell:
         current: str = "",
         kind: str = "website",
         extra_body: str = "",
+        wide: bool = False,
     ) -> str:
-        nav = "".join(
-            f'<a{" class=\"on\" aria-current=\"page\"" if key == current else ""} href="{esc(href)}">{esc(label)}</a>'
-            for key, label, href in self.nav
-        )
         full_title = title if title == SITE_TITLE else f"{title} · {SITE_TITLE}"
         v = self.asset_version
         return (
@@ -385,14 +552,11 @@ class Shell:
             f'<link rel="alternate" type="application/rss+xml" href="/index.xml" title="{SITE_TITLE}">\n'
             '<link rel="icon" href="/favicons/favicon.ico">\n'
             f"{THEME_BOOT}\n"
+            f"{FONT_LINKS}\n"
             f'<link rel="stylesheet" href="/{CSS_REL}?v={v}">\n'
             "</head>\n"
-            "<body>\n"
-            '<header class="site-header"><div class="wrap">'
-            '<a class="brand" href="/">Fucking<span>·</span>Life</a>'
-            f'<nav class="nav" aria-label="栏目">{nav}</nav>'
-            f'<button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色">{THEME_ICON}</button>'
-            "</div></header>\n"
+            + ('<body class="wide">\n' if wide else "<body>\n")
+            + f"{self.header(current)}\n"
             f'<main class="wrap">\n{body}\n</main>\n'
             '<footer class="site-footer"><div class="wrap">'
             f'<span>© {self.year} {AUTHOR} · <a href="/index.xml">RSS</a></span>'
@@ -402,6 +566,20 @@ class Shell:
             f'<script src="/{JS_REL}?v={v}" defer></script>\n'
             "</body>\n"
             "</html>\n"
+        )
+
+    def header(self, current: str = "") -> str:
+        """The site header, shared by generated pages and the /daily/ template."""
+        nav = "".join(
+            f'<a{" class=\"on\" aria-current=\"page\"" if key == current else ""} href="{esc(href)}">{esc(label)}</a>'
+            for key, label, href in self.nav
+        )
+        return (
+            '<header class="site-header"><div class="wrap">'
+            '<a class="brand" href="/">Fucking<span>·</span>Life</a>'
+            f'<nav class="nav" aria-label="栏目">{nav}</nav>'
+            f'<button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色">{THEME_ICON}</button>'
+            "</div></header>"
         )
 
 
@@ -448,21 +626,30 @@ def day_card(post: PostRecord) -> str:
     else:
         kicker = count_text.lstrip(" ·")
         heading = post.series_title
-    summary = post.summary_text
+    titles = post.digest_titles
+    if titles:
+        shown = titles[:3]
+        rows = "".join(f"<li>{esc(title)}</li>" for title in shown)
+        if len(titles) > len(shown):
+            rows += f'<li class="rest">还有 {len(titles) - len(shown)} 条 →</li>'
+        detail = f'<ul class="dcard-items">{rows}</ul>'
+    else:
+        summary = post.summary_text
+        detail = f"<p>{esc(summary)}</p>" if summary else ""
     return (
-        f'<a class="card" href="{post.path}">'
+        f'<a class="dcard" href="{post.path}">'
         + (f'<div class="kicker">{kicker}</div>' if kicker else "")
         + f"<h3>{esc(heading)}</h3>"
-        + (f"<p>{esc(summary)}</p>" if summary else "")
+        + detail
         + "</a>"
     )
 
 
-def section_head(title: str, color: str, links: list[tuple[str, str]]) -> str:
+def section_head(title: str, color: str, links: list[tuple[str, str]], note: str = "") -> str:
     more = "".join(f'<a class="more" href="{esc(href)}">{esc(label)}</a>' for href, label in links)
     return (
         '<div class="sec-head">'
-        f"<h2>{dot(color)}{esc(title)}</h2>"
+        f"<h2>{dot(color)}{esc(title)}{note}</h2>"
         f'<div class="sec-links">{more}</div>'
         "</div>"
     )
@@ -476,26 +663,35 @@ def column_section(column: Column, posts: list[PostRecord]) -> str:
         links.append(column.extra_link)
     else:
         links.append((column.href, "全部 →"))
-    parts = [f'<section class="section" id="{esc(column.slug)}">', section_head(column.name, column.color, links)]
     if column.layout == "days":
-        parts.append(f'<p class="sec-desc">{esc(column.description)}</p>')
         newest = ymd(posts[0].when)
         today = [post for post in posts if ymd(post.when) == newest]
         rest = [post for post in posts if ymd(post.when) != newest][: column.limit]
-        parts.append(
-            '<div class="day">'
-            f'<div class="day-label"><b>{month_day(posts[0].when)}</b>{weekday_zh(posts[0].when)}</div>'
-            f'<div class="cards">{"".join(day_card(post) for post in today)}</div>'
-            "</div>"
+        note = (
+            f'<span class="sec-date"><b>{month_day(posts[0].when)}</b>{weekday_zh(posts[0].when)}'
+            " · 最新一期</span>"
         )
+        parts = [
+            f'<section class="section hero" id="{esc(column.slug)}">',
+            section_head(column.name, column.color, links, note),
+            f'<div class="dcards">{"".join(day_card(post) for post in today)}</div>',
+        ]
         if rest:
-            rows = "".join(
-                f'<li><a href="{post.path}">{esc(post.series_title)}</a><span>{month_day(post.when)}</span></li>'
-                for post in rest
-            )
+            parts.append('<h3 class="sub-h">往期</h3>')
+        if rest:
+            def compact_row(post: PostRecord) -> str:
+                lead = post.headline or next(iter(post.digest_titles), "")
+                lead_html = f"<em>{esc(lead)}</em>" if lead else ""
+                return (
+                    f'<li><a href="{post.path}"><b>{esc(post.series_title)}</b>{lead_html}</a>'
+                    f"<span>{month_day(post.when)}</span></li>"
+                )
+
+            rows = "".join(compact_row(post) for post in rest)
             parts.append(f'<ul class="compact">{rows}</ul>')
         parts.append(f'<p class="sec-all"><a href="{column.href}">全部{esc(column.name)} →</a></p>')
     else:
+        parts = [f'<section class="section panel" id="{esc(column.slug)}">', section_head(column.name, column.color, links)]
         parts.extend(entry_html(post) for post in posts[: column.limit])
     parts.append("</section>")
     return "".join(parts)
@@ -504,7 +700,7 @@ def column_section(column: Column, posts: list[PostRecord]) -> str:
 def other_section(name: str, posts: list[PostRecord]) -> str:
     slug = urlize(name)
     parts = [
-        f'<section class="section" id="{esc(slug)}">',
+        f'<section class="section panel" id="{esc(slug)}">',
         section_head(name, "other", [(f"/categories/{slug}/", "全部 →")]),
     ]
     parts.extend(entry_html(post) for post in posts[:3])
@@ -528,9 +724,13 @@ def render_home(shell: Shell, posts: list[PostRecord]) -> str:
         '<a href="/index.xml">RSS</a>'
         "</div></div></section>"
     )
-    sections = [intro]
+    # Wide screens: the daily briefs fill the main column; the other columns
+    # sit beside them as panels. Phones get one column in the same order.
+    main: list[str] = []
+    side: list[str] = []
     for column in COLUMNS:
-        sections.append(column_section(column, [p for p in posts if column.name in p.categories]))
+        html = column_section(column, [p for p in posts if column.name in p.categories])
+        (main if column.layout == "days" else side).append(html)
     claimed = {column.name for column in COLUMNS}
     others: dict[str, list[PostRecord]] = {}
     for post in posts:
@@ -538,15 +738,24 @@ def render_home(shell: Shell, posts: list[PostRecord]) -> str:
             continue
         others.setdefault(post.primary_category, []).append(post)
     for name in sorted(others, key=lambda n: others[n][0].when, reverse=True):
-        sections.append(other_section(name, others[name]))
+        side.append(other_section(name, others[name]))
+    main = [s for s in main if s]
+    side = [s for s in side if s]
     if not posts:
-        sections.append('<p class="empty">还没有文章。</p>')
+        main.append('<p class="empty">还没有文章。</p>')
+    grid = (
+        '<div class="home-grid">'
+        f'<div class="home-main">{"".join(main)}</div>'
+        + (f'<aside class="home-side" aria-label="其他栏目">{"".join(side)}</aside>' if side else "")
+        + "</div>"
+    )
     return shell.page(
         title=SITE_TITLE,
         description=BIO,
         path="/",
-        body="\n".join(s for s in sections if s),
+        body=intro + "\n" + grid,
         current="home",
+        wide=True,
     )
 
 
@@ -575,7 +784,8 @@ def render_post(shell: Shell, post: PostRecord, prev: PostRecord | None, nxt: Po
         f'<div class="post-meta"><span>约 {post.reading_minutes} 分钟</span>{tags}</div>'
         "</header>"
     )
-    body = f'<article class="prose">\n{mark_callouts(post.body_html.strip())}\n</article>'
+    content, _items = structure_digest(mark_callouts(post.body_html.strip()))
+    body = f'<article class="prose" style="--col:var(--c-{crumb_color})">\n{content}\n</article>'
 
     def nav_link(target: PostRecord | None, label: str, cls: str) -> str:
         if target is None:
@@ -684,10 +894,29 @@ def render_404(shell: Shell) -> str:
     )
 
 
-def render_daily_page() -> str:
+def daily_asset_version(root: Path) -> str:
+    digest = hashlib.sha256()
+    for rel in ("daily/feed.css", "daily/feed.js"):
+        path = root / rel
+        if path.is_file():
+            digest.update(path.read_bytes())
+    return digest.hexdigest()[:10]
+
+
+def render_daily_page(shell: Shell, root: Path) -> str:
+    """The /daily/ page: the template with the shared header and asset versions filled in."""
     if not DAILY_TEMPLATE.is_file():
         raise PublishError(f"missing template {DAILY_TEMPLATE}")
     html = DAILY_TEMPLATE.read_text(encoding="utf-8")
+    fills = {
+        "@@THEME_BOOT@@": THEME_BOOT,
+        "@@FONT_LINKS@@": FONT_LINKS,
+        "@@SITE_HEADER@@": shell.header(COLUMNS[0].name),
+        "@@SITE_V@@": shell.asset_version,
+        "@@FEED_V@@": daily_asset_version(root),
+    }
+    for key, value in fills.items():
+        html = html.replace(key, value)
     if "@@" in html:
         raise PublishError("daily template has an unfilled placeholder")
     return html
@@ -845,7 +1074,7 @@ def build_site(root: Path, records: list[PostRecord], daily_dates: list[str] | N
     files["index.xml"] = rss_channel(SITE_TITLE, "/", BIO, feed)
     files["post/index.xml"] = rss_channel(f"归档 · {SITE_TITLE}", "/post/", "全部文章", feed)
 
-    files["daily/index.html"] = render_daily_page()
+    files["daily/index.html"] = render_daily_page(shell, root)
 
     newest = posts[0].when if posts else None
     daily_newest = None

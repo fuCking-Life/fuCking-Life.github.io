@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <title>日报 · Fucking Life</title>
     <meta name="description" content="Ermao 的日报。Lumi 和 agent-app 的每日简报，按相关度、领域和类型筛选。">
     <link rel="canonical" href="/daily/">
-    <link rel="stylesheet" href="feed.css">
+    <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+    <link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+    <link rel="stylesheet" href="feed.css?v=1bde067109">
     <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="/">
-            <span class="brand-name">Fucking Life</span>
-            <span class="brand-sub">Ermao</span>
-        </a>
-        <nav class="views" aria-label="日报视图">
-            <button type="button" data-view="daily" class="is-active">日报</button>
-            <button type="button" data-view="all">全部消息</button>
-            <button type="button" data-view="tags">标签</button>
-            <button type="button" data-view="favorites">收藏</button>
-        </nav>
-        <div class="top-tools">
-            <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
-            <form id="search-form" role="search">
-                <label class="sr-only" for="q">搜索标题、讲解、来源</label>
-                <input id="q" type="search" placeholder="搜索标题、讲解、来源" autocomplete="off" enterkeyhint="search">
-            </form>
+<body class="wide">
+    <header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+    <div class="subbar">
+        <div class="subbar-in">
+            <nav class="views" aria-label="日报视图">
+                <button type="button" data-view="daily" class="is-active">按天</button>
+                <button type="button" data-view="all">全部消息</button>
+                <button type="button" data-view="tags">标签</button>
+                <button type="button" data-view="favorites">收藏</button>
+            </nav>
+            <div class="top-tools">
+                <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
+                <form id="search-form" role="search">
+                    <label class="sr-only" for="q">搜索标题、讲解、来源</label>
+                    <input id="q" type="search" placeholder="搜索标题、讲解、来源" autocomplete="off" enterkeyhint="search">
+                </form>
+            </div>
         </div>
-    </header>
+    </div>
     <div class="layout">
         <aside id="filters" class="filters" aria-label="筛选">
             <div class="drawer-bar">
@@ -86,6 +89,7 @@
         </main>
     </div>
     <noscript><p class="noscript">日报需要 JavaScript 才能筛选和展开卡片。</p></noscript>
-    <script src="feed.js"></script>
+    <script src="feed.js?v=1bde067109"></script>
+    <script src="/js/site.js?v=3d7bb42cef" defer></script>
 </body>
 </html>

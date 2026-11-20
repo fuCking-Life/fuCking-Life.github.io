@@ -1,35 +1,36 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <title>日报 · Fucking Life</title>
     <meta name="description" content="Ermao 的日报。Lumi 和 agent-app 的每日简报，按相关度、领域和类型筛选。">
     <link rel="canonical" href="/daily/">
-    <link rel="stylesheet" href="feed.css">
+    @@THEME_BOOT@@
+    @@FONT_LINKS@@
+    <link rel="stylesheet" href="/css/site.css?v=@@SITE_V@@">
+    <link rel="stylesheet" href="feed.css?v=@@FEED_V@@">
     <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
 </head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="/">
-            <span class="brand-name">Fucking Life</span>
-            <span class="brand-sub">Ermao</span>
-        </a>
-        <nav class="views" aria-label="日报视图">
-            <button type="button" data-view="daily" class="is-active">日报</button>
-            <button type="button" data-view="all">全部消息</button>
-            <button type="button" data-view="tags">标签</button>
-            <button type="button" data-view="favorites">收藏</button>
-        </nav>
-        <div class="top-tools">
-            <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
-            <form id="search-form" role="search">
-                <label class="sr-only" for="q">搜索标题、讲解、来源</label>
-                <input id="q" type="search" placeholder="搜索标题、讲解、来源" autocomplete="off" enterkeyhint="search">
-            </form>
+<body class="wide">
+    @@SITE_HEADER@@
+    <div class="subbar">
+        <div class="subbar-in">
+            <nav class="views" aria-label="日报视图">
+                <button type="button" data-view="daily" class="is-active">按天</button>
+                <button type="button" data-view="all">全部消息</button>
+                <button type="button" data-view="tags">标签</button>
+                <button type="button" data-view="favorites">收藏</button>
+            </nav>
+            <div class="top-tools">
+                <button type="button" class="filter-toggle" data-open-filters aria-expanded="false">筛选</button>
+                <form id="search-form" role="search">
+                    <label class="sr-only" for="q">搜索标题、讲解、来源</label>
+                    <input id="q" type="search" placeholder="搜索标题、讲解、来源" autocomplete="off" enterkeyhint="search">
+                </form>
+            </div>
         </div>
-    </header>
+    </div>
     <div class="layout">
         <aside id="filters" class="filters" aria-label="筛选">
             <div class="drawer-bar">
@@ -86,6 +87,7 @@
         </main>
     </div>
     <noscript><p class="noscript">日报需要 JavaScript 才能筛选和展开卡片。</p></noscript>
-    <script src="feed.js"></script>
+    <script src="feed.js?v=@@FEED_V@@"></script>
+    <script src="/js/site.js?v=@@SITE_V@@" defer></script>
 </body>
 </html>

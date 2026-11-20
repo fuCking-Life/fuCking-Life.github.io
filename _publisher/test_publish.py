@@ -582,9 +582,62 @@ class DigestPublishTests(unittest.TestCase):
         self.assertIn("Qwen4-Max", " ".join(titles.values()))
 
     def test_template_matches_the_live_daily_page(self):
-        template = (HERE / "templates" / "daily.html").read_text(encoding="utf-8")
+        shell = sitegen.Shell(asset_version=sitegen.asset_version(SITE), year=2026, nav=sitegen.build_nav())
+        rendered = sitegen.render_daily_page(shell, SITE)
         live = (SITE / "daily" / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(template, live.replace("\r\n", "\n"))
+        self.assertEqual(rendered, live.replace("\r\n", "\n"))
+        # The feed page shares the site header, theme switch and stylesheet.
+        self.assertIn('<header class="site-header">', live)
+        self.assertIn('<a class="on" aria-current="page" href="/daily/">日报</a>', live)
+        self.assertIn('href="/css/site.css?v=', live)
+        self.assertIn('class="theme-btn"', live)
+        self.assertNotIn("@@", live)
+
+
+class DigestStructureTests(unittest.TestCase):
+    BODY = (
+        '<p class="digest-meta">时间窗口：昨天</p>\n'
+        "<p>本期 2 条：甲、乙。</p>\n"
+        '<h3 id="a">1. 甲消息</h3>\n'
+        "<p>相关度 5/5。标签：端上语音、开源发布。</p>\n"
+        "<p>来源：某人。发帖日期：2026-11-20。</p>\n"
+        "<p>正文甲。</p>\n"
+        "<blockquote>\n<p><strong>对 Luna 的启发</strong>\n启发甲。</p></blockquote>\n"
+        '<p>原帖：<a href="https://example.com/a">原帖</a></p>\n'
+        "<h3>分组标题</h3>\n"
+        "<p><strong>乙消息</strong></p>\n"
+        "<p>相关度 3/5。标签：论文。</p>\n"
+        "<p>正文乙。</p>\n"
+        "<h2>结语</h2>\n<p>收尾。</p>"
+    )
+
+    def test_items_are_grouped_with_a_contents_list(self):
+        html, items = sitegen.structure_digest(self.BODY)
+        self.assertEqual(items, [("a", "甲消息", 5), ("item-2", "乙消息", 3)])
+        self.assertLess(html.index('<nav class="toc"'), html.index('id="a"'))
+        self.assertGreater(html.index('<nav class="toc"'), html.index("本期 2 条"))
+        self.assertIn('<span class="it-no">1</span><span>甲消息</span>', html)
+        self.assertIn('<span class="it-chip">端上语音</span><span class="it-chip">开源发布</span>', html)
+        self.assertEqual(html.count('<i class="on"></i>'), 5 + 3)
+        self.assertIn('<p class="it-src">来源', html)
+        self.assertIn('<p class="it-links">原帖', html)
+        self.assertIn('<blockquote class="it-insight">', html)
+        self.assertNotIn("相关度 5/5。", html)
+        # A non-item heading ends the item before it and stays in the flow.
+        self.assertLess(html.index("</section>"), html.index("<h3>分组标题</h3>"))
+        self.assertIn("<h2>结语</h2>\n<p>收尾。</p>", html)
+
+    def test_plain_posts_are_left_alone(self):
+        body = "<p>一段话。</p>\n<h3>小标题</h3>\n<p>又一段。</p>"
+        self.assertEqual(sitegen.structure_digest(body), (body, []))
+
+    def test_summary_drops_the_trading_disclaimer(self):
+        rec = sitegen.PostRecord(
+            slug="trading-x", title="t", when=sitegen.datetime(2026, 11, 20, tzinfo=sitegen.TZ),
+            categories=["每日交易资讯"], tags=[], body_html="",
+            summary_html="<p>本文只做信息整理，不构成投资建议。成交缩量。</p>", description="",
+        )
+        self.assertEqual(rec.summary_text, "成交缩量。")
 
 
 if __name__ == "__main__":

@@ -14,13 +14,16 @@
 <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
 <link rel="icon" href="/favicons/favicon.ico">
 <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
-<link rel="stylesheet" href="/css/site.css?v=286da8fc5f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
 </head>
 <body>
 <header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a class="on" aria-current="page" href="/categories/agent-学习笔记/">学习笔记</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
 <main class="wrap">
 <header class="post-head"><div class="crumb"><a href="/categories/agent-学习笔记/" style="color:var(--c-learn)">Agent 学习笔记</a> · <time datetime="2026-11-19T08:00:00+08:00">2026-11-19</time></div><h1>什么才算 agent</h1><div class="post-meta"><span>约 6 分钟</span><a class="tag" href="/tags/tradingagents/">#TradingAgents</a><a class="tag" href="/tags/langgraph/">#LangGraph</a></div></header>
-<article class="prose">
+<article class="prose" style="--col:var(--c-learn)">
 <p class="digest-meta">覆盖范围：TradingAgents v0.7.1（TauricResearch 开源的 LangGraph 多 agent 交易框架）。今天聊了三件事：什么才算 agent、辩论为什么是状态机、这个项目把自主权放在了哪里。</p>
 <p>今天最大的收获是一个判断标准：<strong>下一步做什么、什么时候停，由模型决定的才是 agent；规则事先就能写死的部分，交给代码。</strong>两道判断题我都答对了，但有两处说法不准：一是以为 ReAct 里有&#34;反思&#34;这一步，二是把&#34;有工具&#34;当成了 agent 的标志。还有一道题没答完。</p>
 <h2 id="背景这个项目长什么样">背景：这个项目长什么样</h2>
@@ -87,6 +90,6 @@ response = llm.invoke(prompt)   # prompt 里塞好了所有报告和辩论历史
 <section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
 </main>
 <footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
-<script src="/js/site.js?v=286da8fc5f" defer></script>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
 </body>
 </html>
