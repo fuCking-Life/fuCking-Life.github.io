@@ -60,6 +60,9 @@
 .lp-day.is-part { border-color: color-mix(in srgb, var(--c-learn) 45%, var(--rule)); }
 .lp-day.is-miss { border-style: dashed; border-color: var(--ask); }
 .lp-day.is-future .l { color: var(--ink-2); font-weight: 500; }
+.lp-day.is-leave { background: var(--code-bg); border-style: solid; border-color: var(--rule); }
+.lp-day.is-leave .l, .lp-day.is-leave .s { color: var(--muted); }
+.lp-leave-note { margin: 0 0 6px; padding: 8px 10px; border-radius: 8px; background: var(--code-bg); color: var(--ink-2); font-size: 14px; }
 .lp-day.is-today { box-shadow: 0 0 0 2px var(--accent); border-color: var(--accent); }
 
 .lp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 14px 0 6px; }
@@ -68,6 +71,7 @@
 .lg-part { border-color: var(--c-learn); }
 .lg-miss { border: 1px dashed var(--ask); }
 .lg-today { border: 2px solid var(--accent); }
+.lg-leave { background: var(--code-bg); }
 .lp-note { font-size: 12px; color: var(--muted); margin: 0; max-width: 70ch; }
 
 /* detail sheet */

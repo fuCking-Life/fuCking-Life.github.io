@@ -51,9 +51,11 @@
 
     function isDone(id) { return !!synced[id] || !!local[id]; }
     function dayDone(d) { return d.tasks.filter(function (t) { return isDone(t.id); }).length; }
+    function isLeave(date) { var e = (log.days || {})[date]; return !!(e && e.leave); }
     function dayState(d) {
         var n = dayDone(d), total = d.tasks.length;
         if (total && n === total) return "done";
+        if (isLeave(d.date) && n === 0) return "leave";
         if (n > 0) return "part";
         if (d.date < today) return "miss";
         return "future";
@@ -87,7 +89,8 @@
     function activeDates() {
         var set = {};
         Object.keys(log.days || {}).forEach(function (date) {
-            if ((log.days[date].done || []).length) set[date] = true;
+            // A leave day neither counts as studying nor breaks the streak.
+            if ((log.days[date].done || []).length || log.days[date].leave) set[date] = true;
         });
         Object.keys(local).forEach(function (id) { set[local[id]] = true; });
         return set;
@@ -139,10 +142,15 @@
     function renderToday() {
         var pick = todayDay();
         var d = pick.day;
-        var behind = days.filter(function (x) { return x.date < today && dayState(x) !== "done"; });
+        var behind = days.filter(function (x) { return x.date < today && dayState(x) !== "done" && !isLeave(x.date); });
         var behindTasks = 0;
         behind.forEach(function (x) { behindTasks += x.tasks.length - dayDone(x); });
         var kicker = pick.exact ? "今天 · " + md(d.date) + " 周" + WEEKDAYS[weekday(d.date)] : "下一个学习日 · " + md(d.date);
+        if (pick.exact && isLeave(d.date)) {
+            $("lp-today").innerHTML = '<p class="lp-kicker">' + esc(kicker) + "</p><h2>今天请假</h2>" +
+                '<p class="lp-goal">好好休息。原定内容是“' + esc(d.label) + "”，想补的时候点日历上这一天。</p>";
+            return;
+        }
         var html = '<p class="lp-kicker">' + esc(kicker) + "</p>" +
             "<h2>" + esc(d.label) + "</h2>" +
             '<p class="lp-goal">' + esc(d.goal) + "</p>" +
@@ -196,7 +204,7 @@
         var n = dayDone(d), total = d.tasks.length;
         var entry = (log.days || {})[d.date];
         var cls = "lp-day is-" + state + (d.date === today ? " is-today" : "");
-        var summary = entry && entry.summary ? entry.summary : "";
+        var summary = entry && entry.summary ? entry.summary : (state === "leave" ? "请假" : "");
         var label = md(d.date) + " " + d.label + "，完成 " + n + "/" + total + (summary ? "。" + summary : "");
         return '<button type="button" class="' + cls + '" data-open="' + esc(d.date) + '" aria-label="' + esc(label) + '">' +
             '<span class="d"><span>' + esc(md(d.date)) + "</span>" + (state === "done" ? '<span class="ok">✓</span>' : "") + "</span>" +
@@ -218,8 +226,9 @@
         var html = "<h2 id=\"lp-d-title\">" + esc(d.label) + "</h2>" +
             '<p class="lp-meta">' + esc(date) + " 周" + WEEKDAYS[weekday(date)] + " · 完成 " + n + "/" + d.tasks.length + " · 计划约 " + Math.round(minutes / 6) / 10 + " 小时</p>" +
             '<p class="lp-goal">' + esc(d.goal) + "</p>" +
+            (isLeave(date) ? '<p class="lp-leave-note">这一天请假了。下面是原定的任务，想补的时候可以直接勾。</p>' : "") +
             "<h3>任务</h3>" + taskList(d);
-        if (entry.summary || (entry.points || []).length) {
+        if (!entry.leave && (entry.summary || (entry.points || []).length)) {
             html += "<h3>当天总结</h3>";
             if (entry.summary) html += '<p class="lp-sum">' + esc(entry.summary) + "</p>";
             if ((entry.points || []).length) {
@@ -228,6 +237,8 @@
         }
         if (entry.note) {
             html += '<a class="lp-report" href="' + esc(entry.note) + '">查看详细学习报告 →</a>';
+        } else if (entry.leave) {
+            html += "";
         } else if (entry.summary) {
             html += '<p class="lp-pending">这一天的详细笔记在私有学习仓库里，还没有发到 blog。</p>';
         } else {
