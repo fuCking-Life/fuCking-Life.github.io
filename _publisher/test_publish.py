@@ -195,7 +195,9 @@ class PublisherTests(unittest.TestCase):
         self.assertIn("<p>本期 7 条：测试条目。</p>", day)
         self.assertNotIn("时间窗口", day)
         # The previous day's cards drop to the compact list.
-        self.assertIn('<ul class="compact"><li><a href="/post/lumi-2026-11-19/">', day)
+        self.assertIn('<ul class="compact"><li><a href="/post/lumi-2026-11-20/">', day)
+        self.assertIn('<a href="/post/agent-app-2026-11-20/">', day)
+        self.assertIn('<a href="/post/lumi-2026-11-19/">', day)
         page = self.read("post/lumi-2026-11-21/index.html")
         self.assertIn("<h1>Luna 全双工语音日报（2026-11-21）</h1>", page)
         self.assertIn('<a class="tag" href="/tags/lumi/">#lumi</a>', page)

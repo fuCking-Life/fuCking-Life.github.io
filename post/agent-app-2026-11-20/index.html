@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日 AI 与移动端智能体简报（2026-11-20） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-19 08:32 – 2026-11-20 08:38（新加坡时间） 本期 7 条：OpenAI 将 GPT-Live-1.1 开放到 Live API 并新增更便宜的 WebRTC 待机计费、Simplex AI 开源本地个人智能体 Linger、Gemini Tool Retrieval 按需加载工具 schema、苹果招聘主动">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/agent-app-2026-11-20/">
+<meta property="og:title" content="每日 AI 与移动端智能体简报（2026-11-20）">
+<meta property="og:description" content="时间窗口：2026-11-19 08:32 – 2026-11-20 08:38（新加坡时间） 本期 7 条：OpenAI 将 GPT-Live-1.1 开放到 Live API 并新增更便宜的 WebRTC 待机计费、Simplex AI 开源本地个人智能体 Linger、Gemini Tool Retrieval 按需加载工具 schema、苹果招聘主动">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/agent-app-2026-11-20/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="/css/site.css?v=286da8fc5f">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-20T08:00:00+08:00">2026-11-20</time></div><h1>每日 AI 与移动端智能体简报（2026-11-20）</h1><div class="post-meta"><span>约 13 分钟</span><a class="tag" href="/tags/agent-app/">#agent-app</a></div></header>
+<article class="prose">
+<p class="digest-meta">时间窗口：2026-11-19 08:32 – 2026-11-20 08:38（新加坡时间）</p>
+<p>本期 7 条：OpenAI 将 GPT-Live-1.1 开放到 Live API 并新增更便宜的 WebRTC 待机计费、Simplex AI 开源本地个人智能体 Linger、Gemini Tool Retrieval 按需加载工具 schema、苹果招聘主动式跨应用 Agent、Gemini Mac 应用推出电脑操控、OpenAI Performance Factory 用 Codex 查性能回退，以及 Genie 4 对开发者开放。</p>
+<h3 id="openai-将全双工语音模型-gpt-live-11-开放到-live-api并新增更便宜的-webrtc-待机计费">OpenAI 将全双工语音模型 GPT-Live-1.1 开放到 Live API，并新增更便宜的 WebRTC 待机计费</h3>
+<p>相关度 5/5。标签：语音助手、Live API、全双工、移动 App。</p>
+<p>来源：@OpenAIDevs（OpenAI 官方开发者账号）；OpenAI API 更新说明、模型页与定价页。发帖日期：2026-11-19。</p>
+<p>OpenAI 宣布 GPT-Live-1.1 已可在 Live API（<code>v1/live/sessions</code>）中使用，模型 ID 为 <code>gpt-live-1.1</code>。官方模型页把它定位为面向多语种对话的全双工语音模型，可边说边听；输入和输出都支持音频与文本，并支持流式输出和 function calling，但不支持 Chat Completions、Responses 或旧版 Realtime 等端点。官方称，相较 GPT-Live-1，它转写更准，并且能在不同语言之间保持更稳定的口音和音色；更新说明还写到，可用自然语言说明何时把任务交给后端做推理或调用工具。这些对比是官方表述，文档未公布独立 WER 或任务成功率。计费按会话时长：活跃时段每分钟 0.05 美元，WebRTC 待机每分钟 0.02 美元；后端模型和工具另行计费。官方会话指南写明：创建 WebRTC 会话时可把 <code>session.wake_policy.type</code> 设为 <code>speech</code>，用 5 到 60 秒的 <code>session.idle_timeout_s</code> 在没有输入或输出转写后回到待机；若省略超时，首次唤醒后会一直按活跃费率计费。可选的 <code>vad_threshold</code> 默认 0.5。待机时需保持麦克风轨道开启，连接和会话 ID 不变，历史会在用户再开口时恢复；官方提醒，待机后再对很短的一句话作答，首响可能会更慢。若未设置这项超时，闲置时间不会自动降到更低费率。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+手机语音助手最贵的往往不是说话那几十秒，而是会话一直挂开、模型却在空转。云端语音层现在给出了「连接不断、推理暂停」的中间态：本地做唤醒和 VAD，云端只在真正开口时按活跃费率跑，并把查资料、工具调用交给后端模型。若要接到 iOS 语音助手里，需要自己量待机唤醒后的首响延迟，尤其是「好的」「取消」这类短确认；同时也别把待机当成永远在听——官方写明关闭后的 Live 会话无法再监听，真正的端侧唤醒仍要留在设备上。</p></blockquote>
+<p>原帖：<a href="https://x.com/OpenAIDevs/status/2123506733524136446">官方帖 @OpenAIDevs</a> · <a href="https://developers.openai.com/api/docs/changelog">API 更新说明</a> · <a href="https://developers.openai.com/api/docs/models/gpt-live-1.1">模型页</a> · <a href="https://developers.openai.com/api/docs/guides/live-conversations">会话指南</a> · <a href="https://developers.openai.com/api/docs/pricing">定价</a></p>
+<h3 id="simplex-ai-开源本地个人智能体-linger宣称可在-12-gb-显卡上跑-125b-模型">Simplex AI 开源本地个人智能体 Linger：宣称可在 12 GB 显卡上跑 125B 模型</h3>
+<p>相关度 4/5。标签：本地 Agent、端侧推理、Apple 芯片、开源。</p>
+<p>来源：@zhangboknight（Tony Zhang，Simplex AI 创始人，其简介写明曾是 DeepSeek 最早的核心成员之一）；GitHub 仓库 README 与本地推理文档。发帖日期：2026-11-19。</p>
+<p>Tony Zhang 宣布开源 Linger：一个跑在用户自己电脑上的个人智能体，代码位于 <code>simplexai-labs/linger</code>，采用基于 Apache 2.0 并附加额外条件的 Linger Open Source License。官方 README 把卖点写成「在消费级 Mac 和 PC 上运行的 Claude-class 大脑」，这是公司自己的定位，不是第三方评测结论。推理引擎 PolyStrata 针对 MoE：把最常用的 expert 留在 GPU，其余放到内存或 SSD。速度表给出：Qwen3.8-Flash-Next 在 RTX 3060（12 GB）上为 45.5 tok/s，并称 125B 的该模型可在 12 GB 显卡加 64 GB 内存的机器上运行。面向不同档位的推荐表里，32 GB Mac 默认是 Qwen3.8-27B UD-Q4_K_M，实验室测得单会话 45.44 tok/s，内部 SimplexAI 分数 54.0，对标约等于 Claude Sonnet 4.6；但同一份文档明确写了，Mac 32 GB 数字是在 256 GB 的 M5 Ultra 上用更高档位配置测的，「常见的 32 GB Mac 会更慢」，不少 NVIDIA 档位也是用更大显卡限制显存来模拟，真实机器可能更慢。产品侧，主智能体叫 Another Me：每晚把邮件、聊天和会议整理进本机 wiki，并按你的反应改写主动打扰规则；也可以控制桌面应用，在 Mac/Windows 上使用已经登录的 Chrome。桌面应用支持 macOS 14 及更高版本的 Apple 芯片、Windows x64 和 Linux x64；macOS 安装包尚未签名，首次打开会被系统拦截。仓库没有提供 iPhone 或 iPad 客户端。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+这是完整的「模型 &#43; harness 一起为本地算力设计」思路：用 expert 分层把大 MoE 塞进消费级硬件，再用夜间记忆整理和短规则，而不是指望端上模型记住一切。对 iOS 语音助手更直接的参考，是 16 GB 档他们只推荐 4B 级模型，以及文档自己写明的模拟档位与真实机器差距。手机统一内存更紧，不能直接套用 12 GB 显卡跑 125B 的数字；更值得迁移的是调度（前台对话优先、后台任务让路）和把长期记忆做成可搜索的本机 wiki，而不是把桌面级模型硬搬进 iPhone。</p></blockquote>
+<p>原帖：<a href="https://x.com/zhangboknight/status/2123237197050794364">宣布帖 @zhangboknight</a> · <a href="https://github.com/simplexai-labs/linger">GitHub 仓库</a> · <a href="https://heylinger.com">项目主页</a></p>
+<h3 id="gemini-api-预览-tool-retrieval工具-schema-按需加载可与远程-mcp-一起用">Gemini API 预览 Tool Retrieval：工具 schema 按需加载，可与远程 MCP 一起用</h3>
+<p>相关度 5/5。标签：工具调用、MCP、Agent 架构、Gemini API。</p>
+<p>来源：Lucia Loher（Gemini API 产品经理）与 Nora Kassner（Google DeepMind 研究科学家），Google 官方博客；@GoogleAIStudio（Google AI Studio 官方账号）。发帖日期：2026-11-19。</p>
+<p>Google 在 Gemini Interactions API 中预览上线 Tool Retrieval。官方的问题是：智能体连接到几十甚至上百个工具时，每次请求都把完整参数 schema 塞进上下文，会抬高输入 token、增加延迟，并在候选变多后降低选对工具的准确率。做法是在请求里加入 <code>tool_search</code>，给希望暂缓加载的工具加 <code>defer_loading: true</code>。模型仍能看到每个延迟工具的名称和描述，但参数 schema 先不进上下文；需要时由模型点名，API 在同一次请求里加载 schema 并生成 <code>function_call</code>，这些步骤会出现在 <code>interaction.steps</code> 里，便于调试。常用工具可以保持预加载，长尾再延迟。官方称无需自建索引，服务端检索由 Gemini 完成；把 <code>defer_loading</code> 打在远程 <code>mcp_server</code> 上，则该服务器暴露的全部工具都会按需加载。它也与前缀缓存配合：延迟的 schema 不放在提示开头，后续加载的部分追加在对话后面，缓存前缀可以跨轮保持不变。若开发者已有自己的工具注册表、向量索引或按用户权限过滤，可以把 <code>tool_search</code> 的 <code>execution</code> 设为 <code>client</code>，由应用做检索，并可在对话中途再暴露新工具；这会增加一次往返。该功能没有单独收费，按所用模型的标准 token 计费；开启 <code>tool_search</code> 会增加一小段固定输入 token，被加载的 schema 在之后的对话中按输入计费。官方写明适用于 Gemini 3.6 及更新模型，包括所有 Gemini 4 模型。博客未给出具体能节省多少 token 的统一数字，并提醒要用自己的流量实测。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+端侧语音或 App 智能体同样会碰到「工具一多，系统提示就先被 schema 占满」的问题，而手机上下文窗口更贵。可复用的分层是：名称和一句话描述始终可见，完整参数只在真正要调用时再加载；常用工具常驻，长尾和 MCP 服务器按需展开。若检索在端上做，还可以按当前 App 权限、登录态和场景过滤工具，避免把用户并未授权的能力送到模型面前。前缀缓存这一点对多轮语音尤其重要：不要每轮都改工具列表开头，否则端云都无法复用已计算的前缀。</p></blockquote>
+<p>原帖：<a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/">Google 官方博客</a> · <a href="https://x.com/GoogleAIStudio/status/2123489911684866251">官方帖 @GoogleAIStudio</a> · <a href="https://aistudio.google.com/docs/changelog">Gemini API 更新说明</a></p>
+<h3 id="彭博报道苹果新招聘启事正在组建可跨应用操作写代码并调度子智能体的主动式-agent">彭博报道苹果新招聘启事：正在组建可跨应用操作、写代码并调度子智能体的主动式 Agent</h3>
+<p>相关度 4/5。标签：苹果、智能体、端侧、招聘。</p>
+<p>来源：Bloomberg（Mark Gurman 报道，原文付费，未能全文阅读）；The Verge、9to5Mac 转述；报道中引用的苹果招聘启事「Senior Engineering Manager, Agentic AI – Proactive」。发帖日期：2026-11-19。</p>
+<p>The Verge 和 9to5Mac 今天都跟进了彭博对苹果招聘启事的报道：苹果在招一名高级工程经理，负责主动式智能体（agentic AI assistant）方向。两家都能看到的启事原文包括：「Imagine an AI agent that can use a computer the way a capable person does. It browses the web, works across apps, runs commands, writes and debugs code, and calls services, and it chooses the right tool for each step. It does all this privately and with the polish people expect from Apple。」启事还写，团队在做通用计算机使用智能体，这些智能体「plan and carry out multi-step tasks across apps, browsers, command lines, code, and APIs, and they can coordinate specialized sub-agents along the way」，并将与 Siri、UI 框架和 Apple Foundation Models 等团队协作。这是招聘描述，不是产品发布，也没有说明先上哪些设备、何时面向用户，更没有公布模型规模或端云分工。9to5Mac 认为措辞显示项目仍偏早期。此前彭博关于 Siri 更主动化的报道不在本窗口内，这里不把它当成新宣布的上线时间表。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+苹果把「跨 App、浏览器、命令行、代码和 API 选对工具，并能调度子智能体」写进了官方岗位，同时还强调隐私和苹果式完成度。对 iOS 端侧语音助手来说，值得提前对齐的是权限模型和可解释的操作确认：能写代码、调用已登录服务的智能体，必须把沙箱、授权和可撤回做进主路径，而不是事后补。和 Siri、系统 UI 框架、Foundation Models 的协作关系也说明，这类能力更可能长在系统助理里，而不是只作为独立第三方 App；第三方要做的，是让自己的垂直技能能被系统级智能体安全调用。</p></blockquote>
+<p>原帖：<a href="https://www.theverge.com/tech/1038227/apple-ai-agent-engineer-job-listing">The Verge 报道</a> · <a href="https://9to5mac.com/2026/11/19/report-apple-job-listings-detail-plans-for-autonomous-ai-agents/">9to5Mac 报道</a>（彭博原文未能全文阅读）</p>
+<h3 id="gemini-mac-应用在美国向-plusproultra-用户推出电脑操控在隔离窗口里代为点击和输入">Gemini Mac 应用在美国向 Plus/Pro/Ultra 用户推出电脑操控，在隔离窗口里代为点击和输入</h3>
+<p>相关度 4/5。标签：Computer Use、Mac、Gemini、桌面 Agent。</p>
+<p>来源：Michael Friedman（Gemini 应用集团产品经理），Google 官方博客；@GeminiApp（Gemini 应用官方账号）。发帖日期：2026-11-19。</p>
+<p>Google 宣布，Gemini Mac 应用开始提供 computer use：用户用自然语言描述跨本地文件、桌面应用和网页的多步任务，Gemini 会在隔离的后台窗口中点击、输入和操作菜单，主屏幕和光标仍留给用户，聊天里可以看到实时预览。官方强调用户保持控制：自行选择允许访问的应用，随时暂停，并在关键动作发生前确认。博客举出的例子包括：在设计软件里批量调色或搭建复杂 3D 场景；从本地 PDF 提取重量、尺寸和地址去填多箱运费询价；从多个地区的实时看板拉取指标和截图，并做成 Google 幻灯片；分析本地衣物照片、查价并在二手平台上架。该功能正在美国以英语向个人 Google 账号、年满 18 岁的 Google AI Plus、Pro 和 Ultra 用户推送，需要搭载 Apple 芯片、运行 macOS Sequoia 15.0 或更高版本的 Mac，下载入口为 gemini.google/mac。官方博客和帖子未给出任务成功率、时延或覆盖了哪些具体 Mac 应用的评测数字，也未宣布 iOS 或 Android 版本。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+桌面 computer use 的产品形状已经比较清楚：隔离窗口、实时预览、应用级权限和关键步骤确认，同时不抢走用户的光标。手机端还做不到同等的后台窗口，但权限分层和「先预览再执行」可以直接搬到 iOS 语音助手里，尤其是要跨 App 下单、填表或改文件的时候。当前只在 Apple 芯片 Mac 上开放，也说明这类能力仍绑在本地系统集成，而不是一个马上能装进 iPhone 的云端演示。</p></blockquote>
+<p>原帖：<a href="https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/">Google 官方博客</a> · <a href="https://x.com/GeminiApp/status/2123513377268109331">官方帖 @GeminiApp</a></p>
+<h3 id="openai-介绍-performance-factory用-codex-智能体自动调查并验证-chatgpt-性能回退">OpenAI 介绍 Performance Factory：用 Codex 智能体自动调查并验证 ChatGPT 性能回退</h3>
+<p>相关度 4/5。标签：编码智能体、Agent 工作流、可靠性、OpenAI。</p>
+<p>来源：Okay Zed 与 Cyrus Forbes（OpenAI 技术人员），OpenAI 官方博客；@OpenAIDevs。发帖日期：2026-11-19。</p>
+<p>OpenAI 撰文介绍内部系统 Performance Factory：在云端用 Codex 和自家模型自动处理性能问题。工程师为重复任务定义工作流，并给执行这些任务的 Codex 智能体写说明。其中的 Regression Workflow 会在性能告警触发时建任务：一个智能体调查变慢原因、把发现写进任务并给出修复建议，供工程师审阅；部署后，另一个智能体再接手同一任务，检查性能是否回到基线。官方称，这套流程在三个多月里跟踪了超过 1,700 次调查，定位了 600 多起根因，相当于每天约 17 次自动调查。团队在引入 Codex 之前已积累 30 多种性能工具，后来把调查流程写成共享技能 <code>perf-forensics</code>，指导模型从「变慢从何时开始、影响哪些请求、是否与发布或配置变更有关」等角度排查。官方还给出一次人工复核：在 100 条根因建议中，70% 被评为准确，其余 30% 需要继续完善，或没有充分建立因果关系。文章认为当前瓶颈往往是等待工程师审阅和合并修复，并写到他们已在探索是否让智能体自己完成这一步。这是 OpenAI 的内部生产实践，不是面向外部开发者的新产品。</p>
+<blockquote>
+<p><strong>对端侧 Agent / App 的启发</strong>
+长期运行的语音或端云助手，性能回退会直接变成首字延迟和耗电。可借鉴的不是把 Codex 搬进手机，而是把「告警 → 调查技能 → 人工过补丁 → 上线后再验证」做成可重复工作流，并把调查步骤写成稳定的 skill，而不是每次靠工程师口头指挥。70% 的根因准确率也提醒：自动调查可以扩规模，但涉及正式发布的修复仍需要人审；端侧更要把这类检查限定在可回滚的配置和模型路由上。</p></blockquote>
+<p>原帖：<a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast/">OpenAI 官方博客</a> · <a href="https://x.com/OpenAIDevs/status/2123471880292299171">官方帖 @OpenAIDevs</a></p>
+<h3 id="genie-4-对开发者开放可在-gemini-api-和-ai-studio-里生成带同步音频的可交互世界">Genie 4 对开发者开放：可在 Gemini API 和 AI Studio 里生成带同步音频的可交互世界</h3>
+<p>相关度 4/5。标签：世界模型、Genie、开发者 API、具身智能。</p>
+<p>来源：Google 官方博客；Gemini API 更新说明；@OfficialLoganK（Logan Kilpatrick，Google AI Studio / Gemini API 团队成员，个人观点帖）；@GoogleAIStudio。发帖日期：2026-11-19。</p>
+<p>在前一天向 Google AI Ultra 订阅用户开放 Project Genie 之后，Google 今天把 Genie 4 提供给开发者，可在 Gemini API 的 Interactions API 和 Google AI Studio 中使用。官方博客写明：可用文本提示、参考图或两者作为起点，生成连续的 720p、24fps 世界，并带同步原生音频（环境声、音效和角色对白）；开发者可用实时键盘操作，同时用文本提示改天气、光照、物体或事件，由 Gemini 推理维持世界状态连贯。官方点名的用途包括原型交互体验、空间概念可视化和训练机器人与 AI 智能体；所有输出带有不可见的 SynthID 水印。Gemini API 更新说明将 <code>models/genie-4</code> 列为 GA，付费档定价为每百万输入 token 1.50 美元、文本输出 9.00 美元、视频输出 17.50 美元，并写明约合每秒 0.10 美元，立体声包含在内；视频为实时可引导的 24fps、16:9，音频为同步的 48 kHz 立体声，传输走 WebRTC 和 WebSockets。这篇开发者公告没有重述前一天研究/产品博文里列出的摄像延迟、复杂物理和长期场景持续性等限制。</p>
+<blockquote>
+<p><strong>对世界模型 / 具身智能的启发</strong>
+世界模型从「订阅用户可玩」变成了可嵌入自己应用的 API，计费按输入和视频输出 token 走，大约每秒 0.10 美元，更适合短时预演而不是长时间开着当仿真器。对机器人或端侧智能体，价值仍是在真实动作前先在可中途改写的环境里试策略；训练和评测流水线现在可以直接调 API，不必只停留在 Ultra 的浏览器画布里。手机端侧目前还跑不动这类 720p 实时世界模型，但可以用它为端上策略生成合成演示数据。</p></blockquote>
+<p>原帖：<a href="https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/">Google 官方博客</a> · <a href="https://aistudio.google.com/docs/changelog">Gemini API 更新说明</a> · <a href="https://x.com/OfficialLoganK/status/2123467449257623770">Logan Kilpatrick 帖</a> · <a href="https://x.com/GoogleAIStudio/status/2123479057996116143">官方帖 @GoogleAIStudio</a></p>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/lumi-2026-11-19/"><small>← 上一篇</small>Luna 全双工语音日报（2026-11-19）</a><a class="next" href="/post/lumi-2026-11-20/"><small>下一篇 →</small>Luna 全双工语音日报（2026-11-20）</a></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=286da8fc5f" defer></script>
+</body>
+</html>
