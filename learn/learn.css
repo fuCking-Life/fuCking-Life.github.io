@@ -1,0 +1,120 @@
+/* /learn/ — learning calendar. Colors come from /css/site.css tokens. */
+.lp { padding-bottom: 56px; }
+
+.lp-hero { padding: 36px 0 20px; }
+.lp-hero h1 { font-size: 30px; line-height: 1.25; margin: 0 0 6px; letter-spacing: 0; }
+.lp-sub { color: var(--ink-2); margin: 0; max-width: 62ch; }
+
+.lp-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 22px 0 14px; }
+.lp-stat { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; }
+.lp-stat b { display: block; font-size: 26px; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--ink); }
+.lp-stat span { font-size: 13px; color: var(--muted); }
+.lp-stat.is-key b { color: var(--c-learn); }
+
+.lp-bar { height: 10px; border-radius: 99px; background: var(--rule); overflow: hidden; }
+.lp-bar span { display: block; height: 100%; width: 0; background: var(--c-learn); border-radius: 99px; transition: width .6s ease; }
+
+/* today */
+.lp-today { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--c-learn); border-radius: 12px; padding: 18px 20px; margin: 18px 0 30px; }
+.lp-today h2 { font-size: 18px; margin: 0 0 2px; }
+.lp-today .lp-goal { color: var(--ink-2); margin: 0 0 12px; font-size: 14px; }
+.lp-today .lp-kicker { font-size: 13px; color: var(--c-learn); font-weight: 600; margin: 0 0 4px; }
+.lp-today .lp-catchup { margin: 12px 0 0; font-size: 14px; color: var(--ask); }
+.lp-today .lp-catchup button { color: inherit; text-decoration: underline; }
+.lp-cheer { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+
+/* task list */
+.lp-tasks { list-style: none; margin: 0; padding: 0; }
+.lp-tasks li { border-top: 1px solid var(--rule); }
+.lp-tasks li:first-child { border-top: 0; }
+.lp-tasks label { display: flex; gap: 10px; align-items: flex-start; padding: 9px 2px; cursor: pointer; }
+.lp-tasks input { width: 18px; height: 18px; margin: 2px 0 0; flex: none; accent-color: var(--c-learn); cursor: pointer; }
+.lp-tasks .t { flex: 1; min-width: 0; }
+.lp-tasks .m { flex: none; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.lp-tasks .is-done .t { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--c-learn); color: var(--muted); }
+.lp-tasks .tag { display: inline-block; margin-left: 6px; font-size: 11px; padding: 0 6px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); text-decoration: none; vertical-align: 1px; }
+.lp-tasks input:disabled { cursor: default; }
+.lp-tasks .is-synced label { cursor: default; }
+
+/* calendar */
+.lp-cal-head, .lp-week-days { display: grid; grid-template-columns: 150px repeat(7, minmax(0, 1fr)); gap: 6px; }
+.lp-cal-head { font-size: 12px; color: var(--muted); text-align: center; padding-bottom: 6px; }
+.lp-week { display: grid; grid-template-columns: 150px 1fr; gap: 6px; margin-bottom: 6px; }
+.lp-week-days { grid-column: 2; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.lp-week-label { padding: 8px 8px 8px 0; }
+.lp-week-label b { display: block; font-size: 14px; }
+.lp-week-label span { display: block; font-size: 12px; color: var(--muted); line-height: 1.4; margin: 2px 0 6px; }
+.lp-week-label .lp-bar { height: 5px; }
+
+.lp-day { position: relative; text-align: left; min-height: 104px; padding: 8px 8px 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer; display: flex; flex-direction: column; gap: 4px; font: inherit; overflow: hidden; }
+.lp-day:hover { border-color: var(--c-learn); }
+.lp-day:focus-visible { outline: 2px solid var(--c-learn); outline-offset: 2px; }
+.lp-day.is-empty { visibility: hidden; }
+.lp-day .d { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 4px; }
+.lp-day .l { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.lp-day .s { font-size: 12px; color: var(--ink-2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.lp-day .mini { position: absolute; left: 8px; right: 8px; bottom: 6px; height: 3px; border-radius: 99px; background: var(--rule); overflow: hidden; }
+.lp-day .mini i { display: block; height: 100%; background: var(--c-learn); }
+.lp-day .ok { color: var(--c-learn); font-weight: 700; }
+.lp-day.is-done { background: color-mix(in srgb, var(--c-learn) 12%, var(--surface)); border-color: color-mix(in srgb, var(--c-learn) 45%, var(--rule)); }
+.lp-day.is-part { border-color: color-mix(in srgb, var(--c-learn) 45%, var(--rule)); }
+.lp-day.is-miss { border-style: dashed; border-color: var(--ask); }
+.lp-day.is-future .l { color: var(--ink-2); font-weight: 500; }
+.lp-day.is-today { box-shadow: 0 0 0 2px var(--accent); border-color: var(--accent); }
+
+.lp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 14px 0 6px; }
+.lg { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; border: 1px solid var(--rule); }
+.lg-done { background: color-mix(in srgb, var(--c-learn) 30%, var(--surface)); border-color: var(--c-learn); }
+.lg-part { border-color: var(--c-learn); }
+.lg-miss { border: 1px dashed var(--ask); }
+.lg-today { border: 2px solid var(--accent); }
+.lp-note { font-size: 12px; color: var(--muted); margin: 0; max-width: 70ch; }
+
+/* detail sheet */
+.lp-modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.lp-modal[hidden] { display: none; }
+.lp-modal-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, .45); }
+.lp-sheet { position: relative; width: min(640px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--bg); color: var(--ink); border-radius: 14px; padding: 22px 22px 20px; border: 1px solid var(--rule); }
+.lp-x { position: absolute; top: 10px; right: 12px; font-size: 24px; line-height: 1; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 4px 8px; }
+.lp-sheet h2 { font-size: 20px; margin: 0 0 4px; padding-right: 28px; }
+.lp-sheet .lp-meta { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+.lp-sheet .lp-goal { color: var(--ink-2); margin: 0 0 14px; }
+.lp-sheet h3 { font-size: 14px; margin: 18px 0 6px; color: var(--ink-2); }
+.lp-sheet .lp-sum { margin: 0 0 6px; font-weight: 600; }
+.lp-sheet ul.lp-points { margin: 0; padding-left: 20px; }
+.lp-sheet ul.lp-points li { margin: 4px 0; }
+.lp-report { display: inline-block; margin-top: 16px; padding: 9px 14px; border-radius: 8px; background: var(--c-learn); color: #fff; text-decoration: none; font-weight: 600; }
+.lp-report:hover { filter: brightness(1.08); }
+.lp-pending { margin-top: 16px; font-size: 13px; color: var(--muted); }
+
+.lp-toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 99px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 60; max-width: calc(100% - 32px); }
+.lp-toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+button.lp-linkbtn { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+
+@media (max-width: 900px) {
+  .lp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-cal-head { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .lp-cal-head span:first-child { display: none; }
+  .lp-week { grid-template-columns: 1fr; gap: 4px; margin-bottom: 14px; }
+  .lp-week-days { grid-column: 1; }
+  .lp-week-label { padding: 0; }
+  .lp-week-label span { margin-bottom: 4px; }
+  .lp-day { min-height: 84px; }
+  .lp-day .s { display: none; }
+}
+
+@media (max-width: 640px) {
+  .lp-hero { padding: 24px 0 14px; }
+  .lp-hero h1 { font-size: 24px; }
+  .lp-stat b { font-size: 21px; }
+  .lp-today { padding: 14px 14px; }
+  .lp-week-days { gap: 4px; }
+  .lp-day { min-height: 52px; padding: 5px 4px 9px; border-radius: 7px; align-items: center; }
+  .lp-day .d { font-size: 12px; justify-content: center; }
+  .lp-day .d .ok { display: none; }
+  .lp-day .l { display: none; }
+  .lp-day .mini { left: 5px; right: 5px; bottom: 4px; }
+  .lp-modal { align-items: flex-end; padding: 0; }
+  .lp-sheet { width: 100%; max-height: 88vh; border-radius: 14px 14px 0 0; padding: 20px 16px 24px; }
+}

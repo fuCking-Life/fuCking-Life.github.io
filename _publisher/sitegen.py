@@ -33,6 +33,7 @@ TZ = ZoneInfo("Asia/Shanghai")
 HERE = Path(__file__).resolve().parent
 POSTS_DIR = HERE / "posts"
 DAILY_TEMPLATE = HERE / "templates" / "daily.html"
+LEARN_TEMPLATE = HERE / "templates" / "learn.html"
 CSS_REL = "css/site.css"
 JS_REL = "js/site.js"
 PROFILE_IMAGE = "/images/profile.jpg"
@@ -583,9 +584,13 @@ class Shell:
         )
 
 
+LEARN_NAV_KEY = "learn-progress"
+
+
 def build_nav() -> list[tuple[str, str, str]]:
     nav = [("home", "首页", "/")]
     nav.extend((column.name, column.nav_label, column.nav_target) for column in COLUMNS)
+    nav.append((LEARN_NAV_KEY, "学习进度", "/learn/"))
     nav.append(("archive", "归档", "/post/"))
     return nav
 
@@ -922,6 +927,38 @@ def render_daily_page(shell: Shell, root: Path) -> str:
     return html
 
 
+def learn_asset_version(root: Path) -> str:
+    digest = hashlib.sha256()
+    for rel in ("learn/learn.css", "learn/learn.js"):
+        path = root / rel
+        if path.is_file():
+            digest.update(path.read_bytes())
+    return digest.hexdigest()[:10]
+
+
+def render_learn_page(shell: Shell, root: Path) -> str:
+    """The /learn/ calendar: the template with the shared header and asset versions filled in.
+
+    The page reads learn/plan.json and learn/log.json in the browser, so updating
+    progress means editing those two files; no rebuild is needed.
+    """
+    if not LEARN_TEMPLATE.is_file():
+        raise PublishError(f"missing template {LEARN_TEMPLATE}")
+    html = LEARN_TEMPLATE.read_text(encoding="utf-8")
+    fills = {
+        "@@THEME_BOOT@@": THEME_BOOT,
+        "@@FONT_LINKS@@": FONT_LINKS,
+        "@@SITE_HEADER@@": shell.header(LEARN_NAV_KEY),
+        "@@SITE_V@@": shell.asset_version,
+        "@@LEARN_V@@": learn_asset_version(root),
+    }
+    for key, value in fills.items():
+        html = html.replace(key, value)
+    if "@@" in html:
+        raise PublishError("learn template has an unfilled placeholder")
+    return html
+
+
 # ------------------------------------------------------------------------ feeds
 
 
@@ -1075,6 +1112,7 @@ def build_site(root: Path, records: list[PostRecord], daily_dates: list[str] | N
     files["post/index.xml"] = rss_channel(f"归档 · {SITE_TITLE}", "/post/", "全部文章", feed)
 
     files["daily/index.html"] = render_daily_page(shell, root)
+    files["learn/index.html"] = render_learn_page(shell, root)
 
     newest = posts[0].when if posts else None
     daily_newest = None
@@ -1082,6 +1120,7 @@ def build_site(root: Path, records: list[PostRecord], daily_dates: list[str] | N
     if daily_dates:
         daily_newest = datetime.strptime(max(daily_dates), "%Y-%m-%d").replace(hour=8, tzinfo=TZ)
     sitemap.append(("/daily/", daily_newest))
+    sitemap.append(("/learn/", None))
     sitemap.append(("/categories/", newest))
     sitemap.extend((f"/categories/{urlize(name)}/", ps[0].when) for name, ps in categories)
     if tags:

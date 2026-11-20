@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>学习进度 · Fucking Life</title>
+    <meta name="description" content="Agent 转型 8 周冲刺的学习日历：每天学了什么、完成了多少，点进去看当天的学习报告。">
+    <link rel="canonical" href="/learn/">
+    <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+    <link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+    <link rel="stylesheet" href="learn.css?v=4d44401504">
+    <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+</head>
+<body class="wide">
+    <header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a class="on" aria-current="page" href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+    <main class="wrap lp">
+        <section class="lp-hero">
+            <h1 id="lp-title">学习进度</h1>
+            <p class="lp-sub" id="lp-sub"></p>
+            <div class="lp-stats" id="lp-stats" aria-live="polite"></div>
+            <div class="lp-bar" role="progressbar" aria-label="总进度" aria-valuemin="0" aria-valuemax="100" id="lp-bar"><span></span></div>
+        </section>
+
+        <section class="lp-today" id="lp-today" aria-label="今天的任务"></section>
+
+        <section class="lp-cal" aria-label="学习日历">
+            <div class="lp-cal-head" aria-hidden="true">
+                <span></span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+            </div>
+            <div id="lp-weeks"></div>
+            <p class="lp-legend">
+                <span><i class="lg lg-done"></i>完成</span>
+                <span><i class="lg lg-part"></i>做了一部分</span>
+                <span><i class="lg lg-miss"></i>待补</span>
+                <span><i class="lg lg-today"></i>今天</span>
+            </p>
+            <p class="lp-note">在这个页面上勾选的任务只存在当前浏览器里，会标成“本机”。学完对 Claude 说“今天就到这”，它会写好当天的总结和报告，并同步到这里。</p>
+        </section>
+        <noscript><p>这个页面需要开启 JavaScript。</p></noscript>
+    </main>
+
+    <div class="lp-modal" id="lp-modal" hidden>
+        <div class="lp-modal-bg" data-close></div>
+        <div class="lp-sheet" role="dialog" aria-modal="true" aria-labelledby="lp-d-title">
+            <button type="button" class="lp-x" data-close aria-label="关闭">×</button>
+            <div id="lp-detail"></div>
+        </div>
+    </div>
+    <div class="lp-toast" id="lp-toast" role="status" aria-live="polite"></div>
+
+    <script src="learn.js?v=4d44401504" defer></script>
+    <script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

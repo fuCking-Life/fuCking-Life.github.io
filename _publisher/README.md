@@ -177,7 +177,17 @@ python3 _publisher/publish.py --items _publisher/drafts/items-2026-11-17.json
 
 An `--input` object may include both post fields and `items`. The post is written only when a markdown or HTML body is present. Item ids already in `daily/items.json` are replaced; other items stay. `daily/feed.css` and `daily/feed.js` must already be in the site; the publisher does not regenerate them.
 
-## Check
+## Learning calendar
+
+`/learn/` is the calendar for the 8-week agent study plan. Like `/daily/`, it is static HTML, CSS, and JS: `learn/index.html` is copied from `_publisher/templates/learn.html` on every publish (edit the template, not the page), and `learn/learn.css` and `learn/learn.js` are hand-written. The nav link 学习进度 points to it.
+
+The page reads two data files in the browser, so updating progress needs no rebuild:
+
+- `learn/plan.json`: the fixed day-by-day plan. Weeks hold days; each day has `date`, `label` (shown in the calendar cell), `goal`, and `tasks` (`id`, `text`, `min`). Task ids are `YYYYMMDD-N`.
+- `learn/log.json`: what was actually learned, keyed by date: `done` (task ids from `plan.json`), `summary` (one line, shown in the cell), `points` (2–4 bullets in the day view), and `note` (the site path of that day's 学习笔记 post, or empty).
+
+Ticks made on the page stay in that browser (localStorage) and are labelled 本机 until `log.json` lists them.
+
 
 ```bash
 python3 _publisher/test_publish.py
