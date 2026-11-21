@@ -1,5 +1,416 @@
 [
   {
+    "id": "lumi-2026-11-21-turk-eou-paper",
+    "date": "2026-11-21",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "论文：土耳其语端点检测——文本分数加上静音超时，能在同样打断率下把平均回复延迟压短",
+    "summary": "我读了摘要和 arXiv 摘要页（未读全文 PDF）。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "Luna 不要只靠固定静音切话轮。车里司机常在报地名、门牌或等导航计算时中途停顿，应把端点文本分数（或小分类器）和 VAD 时序合在一起，并按“同样打断率下平均等多久”来调阈值。这项工作用的是土耳其语和当面视频通话，中文、车噪和只有音频、没有面部信号的条件要自己测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "论文",
+      "语音 Agent"
+    ],
+    "types": [
+      "论文"
+    ],
+    "tags": [
+      "话轮控制",
+      "论文",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "arXiv 2611.25489 Ahmet Tuğrul Bayrak、Fatma Nur Korkmaz、Mustafa Sertaç Türkel、Nur Yağmur Tuncer",
+      "handle": "",
+      "identity": "arXiv 2611.25489 Ahmet Tuğrul Bayrak、Fatma Nur Korkmaz、Mustafa Sertaç Türkel、Nur Yağmur Tuncer"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.25489"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-19"
+  },
+  {
+    "id": "lumi-2026-11-21-pipecat-waiting",
+    "date": "2026-11-21",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "Pipecat：把“用户无事可说”和“用户在等工具跑完”分开，并让模型在等待时说一句安抚或保持沉默",
+    "summary": "我读了 PR 正文（未自己跑代码）。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "导航查路、改目的地或调用云端 LLM 时，不要把司机的沉默当成“可以继续催，或当作用户已离开”。先标出“工具在跑”，再决定是播一句很短的“我在查”还是保持安静；级联管线可以这样做，端到端语音模型则要另想信号。评测打断时，VAD 开始、用户开始说、机器人被打断这几条事件会挤在一起，不要用“后一条清空前一条”的队列，否则端点用例会误报超时。这些改动还没有进正式 release，合入后要再对一下版本。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "语音 Agent",
+      "端侧"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程",
+      "端上小模型"
+    ],
+    "source": {
+      "name": "pipecat-ai/pipecat 开源实时语音 agent 框架",
+      "handle": "@pipecat_ai",
+      "identity": "pipecat-ai/pipecat 开源实时语音 agent 框架。窗口内 @pipecat_ai 没有发帖，内容来自我读取的已合并 PR。"
+    },
+    "links": [
+      {
+        "label": "PR #6587",
+        "url": "https://github.com/pipecat-ai/pipecat/pull/6587"
+      },
+      {
+        "label": "PR #6588",
+        "url": "https://github.com/pipecat-ai/pipecat/pull/6588"
+      },
+      {
+        "label": "PR #6913",
+        "url": "https://github.com/pipecat-ai/pipecat/pull/6913"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-21"
+  },
+  {
+    "id": "lumi-2026-11-21-livekit-expo",
+    "date": "2026-11-21",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "LiveKit × Expo：iOS / Android 语音助手模板，默认给输入加背景人声消除，避免旁人说话变成一轮用户输入",
+    "summary": "LiveKit 发帖说 Expo 团队做了一个 iOS / Android 语音 AI 起步模板，clone 之后就能在手机上跟 agent 说话。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车里最有用的是那条输入侧的背景人声消除：副驾或收音机里的话，不应变成一轮对 Luna 的指令。Luna 是端上级联，不能直接搬这套云端 Realtime 模型，但应在 VAD / ASR 前加同等的“非司机语音不要进话轮”的门控，并在真车里用副驾说话做回归。模板本身适合对照 LiveKit 的会话、静音和转写 UI，不适合当 Luna 的默认推理后端。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "iOS",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "唤醒与声纹",
+      "开源发布"
+    ],
+    "source": {
+      "name": "@livekit LiveKit 官方，开源 Agents 框架 + Swift SDK",
+      "handle": "@livekit",
+      "identity": "@livekit LiveKit 官方，开源 Agents 框架 + Swift SDK。我同时读了他们链接的仓库 README 和 agent/agent.ts。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/livekit/status/2123879672169517256"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/expo/expo-livekit-template"
+      },
+      {
+        "label": "文档",
+        "url": "https://docs.livekit.io/transport/sdk-platforms/expo/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-21"
+  },
+  {
+    "id": "lumi-2026-11-21-livekit-agents-prs",
+    "date": "2026-11-21",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "LiveKit Agents：Gradium 用 VAD 预览转写约早 350 ms 开口；ElevenLabs 未提交的 partial 不再把回复挂死",
+    "summary": "我读了 PR 正文（未自己复测）。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "级联里也可以在 end-of-turn 定稿前，用“VAD 已触发、文本已较稳”的预览去预热意图 / 工具，终稿若只改了几个词就不必重跑；作者的 350 ms 是 Gradium 云端插件上的小数，不能当成车载数字。另一侧：流式 ASR 的 partial 若没有超时或 VAD 约束，会把 TTS 挂住，表现为司机说完了 Luna 却一直不答，需要给未提交的 partial 设上限。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "语音 Agent"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "livekit/agents",
+      "handle": "@livekit",
+      "identity": "livekit/agents 窗口内无新 release 标签；内容来自我读取的已合并 PR。@livekit 本日另有 Expo 模板帖，与这两条 PR 不是同一条。"
+    },
+    "links": [
+      {
+        "label": "PR #8638",
+        "url": "https://github.com/livekit/agents/pull/8638"
+      },
+      {
+        "label": "PR #8698",
+        "url": "https://github.com/livekit/agents/pull/8698"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-21-cekura-sts",
+    "date": "2026-11-21",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Cekura：15 个云端 speech-to-speech 模型在真实来电上比可靠性和话轮，Grok Voice 3.0 排第一，但 GPT-Live 组合的任务完成率更高",
+    "summary": "@tarush_agarwal_ 说比较了 15 个 speech-to-speech 模型的速度、可靠性和准确率，但推文本身没有给出数字。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这是电话云端模型的榜，1.6–3 秒的开口延迟不能当车载目标。值得抄的是指标拆法：把话轮、endpointing、任务完成、同一用户三次是否都稳定分开看，而不是只报一个延迟。GPT-Live 组合任务完成更高、话轮更弱，说明“像不像人接话”和“能不能把导航指令做对”要分开评。Luna 应自己做司机 + 车噪 + 中文短指令的同类拆分，而不是沿用这些云端名次。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "评测与榜单",
+      "打断与轮次"
+    ],
+    "types": [
+      "评测结果"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "话轮控制",
+      "前沿语音模型"
+    ],
+    "source": {
+      "name": "@tarush_agarwal_ Cekura CEO",
+      "handle": "@tarush_agarwal_",
+      "identity": "@tarush_agarwal_ Cekura CEO。帖中只有一张图、没有数字。下面的数字来自我读取的公开榜单页，页面写 Last updated Nov 19, 2026。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/tarush_agarwal_/status/2123809848139960569"
+      },
+      {
+        "label": "榜单",
+        "url": "https://benchmarks.cekura.ai/speech-to-speech/real-calls"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-21"
+  },
+  {
+    "id": "lumi-2026-11-21-gemini-tool-retrieval",
+    "date": "2026-11-21",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Gemini API 预览：动态工具检索，避免第一轮就塞进 200 个工具的完整 schema",
+    "summary": "文章写，Gemini API 预览了 Dynamic Tool Retrieval（Tool Search Tool）：agent 可以在后台挂着上百个工具，一开始只让模型看到短名称和一句话描述，需要时再加载完整参数 schema。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "导航 App 的 function tools 很容易超过小模型一轮能认真看完的数量。端上意图模型应只常驻高频工具（导航、限速、寻找停车、打电话），其余用短描述检索后再加载 schema，并明确本地 / 系统 / 云端分流。不要把云端“20 个工具以下不必检索”的经验直接当成 iPhone 上的预算，端上上下文更紧，阈值要自己测。"
+    },
+    "relevance": 4,
+    "domains": [
+      "工具与 MCP",
+      "Agent 架构",
+      "大模型"
+    ],
+    "types": [
+      "产品发布",
+      "技术解读"
+    ],
+    "tags": [
+      "端上小模型",
+      "agent 与界面",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "@_philschmid Philipp Schmid，Google DeepMind，负责 Agents 与 Gemini API",
+      "handle": "@_philschmid",
+      "identity": "@_philschmid Philipp Schmid，Google DeepMind，负责 Agents 与 Gemini API。我读的是 X 长文的全文（article.plain_text），没有打开官方文档站（短链跳到了登录页）。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/_philschmid/status/2123806623114440911"
+      },
+      {
+        "label": "文章",
+        "url": "https://x.com/i/article/2123804443527254016"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-21-transcript-island",
+    "date": "2026-11-21",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "Jon Taylor：用苹果 SpeechAnalyzer 在 Mac 灵动岛上做端上听写，约 2 秒停顿结束",
+    "summary": "他发了一段在灵动岛里做实时转写的演示，并问为什么 Apple 自己不提供。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "值得看的是 Apple 端上 `SpeechAnalyzer` 和按“新词或超底噪 + 短静音”收尾的写法，可以对照 Luna 在 iOS 上的流式 ASR 与 end-of-turn。2 秒对开车短指令可能偏长，8 秒的“什么都没说”超时倒可以借鉴，以免误唤醒后一直占着会话。不要指望把灵动岛 UI 搬进导航，司机需要的是听，不是盯一条转写。"
+    },
+    "relevance": 3,
+    "domains": [
+      "端侧",
+      "语音识别 ASR",
+      "苹果生态"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "话轮控制",
+      "开源发布"
+    ],
+    "source": {
+      "name": "@JonPTaylor Jon Taylor，Daily / Pipecat 语音 AI 工程师",
+      "handle": "@JonPTaylor",
+      "identity": "@JonPTaylor Jon Taylor，Daily / Pipecat 语音 AI 工程师。我读了原帖和仓库 README。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/JonPTaylor/status/2123718195651715450"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/jptaylor/transcript-island"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-21-sherpa-pockettts",
+    "date": "2026-11-21",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx：PocketTTS 权重说明改为 CC-BY-4.0；并开始把 w2v-BERT 2.0 CTC 导出为 ONNX",
+    "summary": "我读了两个 PR。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若在评估 Kyutai PocketTTS 做端上短回复，先按 CC-BY-4.0 重新确认许可，不要沿用仓库里旧包 README 的“非商用”字样，并核对自己下到的那份 tarball。w2v-BERT 的 ONNX 导出说明 sherpa-onnx 在为端侧 / TPU 铺路，但当前默认是加利西亚语，Luna 若要跟，需要自己的中文或英语 CTC 检查点，而不是直接用这个默认模型。"
+    },
+    "relevance": 3,
+    "domains": [
+      "端侧",
+      "开源",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "k2-fsa/sherpa-onnx",
+      "handle": "@csukuangfj",
+      "identity": "k2-fsa/sherpa-onnx 窗口内无新版本标签（仍为昨日的 v2.0.2）。@csukuangfj 窗口内没有原创帖。内容来自我读取的已合并 PR。"
+    },
+    "links": [
+      {
+        "label": "PR #4250",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4250"
+      },
+      {
+        "label": "PR #4248",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4248"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-21-kyutai-aura",
+    "date": "2026-11-21",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "Kyutai 开源 AURA：单卡实时的音频驱动说话头像，1.3B 在 H100 上 20.7 fps；权重为非商用许可",
+    "summary": "Kyutai 宣布 AURA，并把代码、权重和演示开源。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要在开车时把说话头像铺在导航屏上。有参考价值的是“按块、无未来音频、KV cache 恒定”的流式思路，以及演示里视觉模块挂在级联 Unmute 之外、而不是塞进语音模型。两套权重都是非商用许可，不能直接进产品。若以后要在停车态做数字人，也应按车机算力重测，不能沿用 H100 的 20.7 fps。"
+    },
+    "relevance": 3,
+    "domains": [
+      "开源",
+      "论文",
+      "多模态"
+    ],
+    "types": [
+      "开源",
+      "论文",
+      "模型发布"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "开源发布",
+      "论文"
+    ],
+    "source": {
+      "name": "@kyutai_labs Kyutai",
+      "handle": "@kyutai_labs",
+      "identity": "@kyutai_labs Kyutai。我读了他们的线程、arXiv 2611.26540 摘要、GitHub README 和 Hugging Face 模型说明。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/kyutai_labs/status/2123795191417156022"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.26540"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/kyutai-labs/aura"
+      },
+      {
+        "label": "演示",
+        "url": "https://aura.kyutai.org/"
+      },
+      {
+        "label": "权重 1.3B",
+        "url": "https://huggingface.co/kyutai/AURA-1.3B"
+      },
+      {
+        "label": "博客",
+        "url": "https://kyutai.org/blog/2026-11-20-aura/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-21/",
+    "posted_at": "2026-11-20"
+  },
+  {
     "id": "agent-app-2026-11-20-gpt-live-1-1",
     "date": "2026-11-20",
     "seq": 1,
