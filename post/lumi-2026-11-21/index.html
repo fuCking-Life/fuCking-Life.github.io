@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna 全双工语音日报（2026-11-21） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-20 08:47 – 2026-11-21 08:44（新加坡时间） 本期 9 条：土耳其语端点检测论文把文本分数加到静音超时上、能在同样打断率下压短平均回复延迟，Pipecat 把“用户无事可说”和“用户在等工具跑完”分开并支持等待时安抚或沉默，LiveKit × Expo 模板默认给输入加背景人声消除，LiveKit Agent">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/lumi-2026-11-21/">
+<meta property="og:title" content="Luna 全双工语音日报（2026-11-21）">
+<meta property="og:description" content="时间窗口：2026-11-20 08:47 – 2026-11-21 08:44（新加坡时间） 本期 9 条：土耳其语端点检测论文把文本分数加到静音超时上、能在同样打断率下压短平均回复延迟，Pipecat 把“用户无事可说”和“用户在等工具跑完”分开并支持等待时安抚或沉默，LiveKit × Expo 模板默认给输入加背景人声消除，LiveKit Agent">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/lumi-2026-11-21/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-21T08:00:00+08:00">2026-11-21</time></div><h1>Luna 全双工语音日报（2026-11-21）</h1><div class="post-meta"><span>约 15 分钟</span><a class="tag" href="/tags/lumi/">#lumi</a></div></header>
+<article class="prose" style="--col:var(--c-daily)">
+<p class="digest-meta">时间窗口：2026-11-20 08:47 – 2026-11-21 08:44（新加坡时间）</p>
+<p>本期 9 条：土耳其语端点检测论文把文本分数加到静音超时上、能在同样打断率下压短平均回复延迟，Pipecat 把“用户无事可说”和“用户在等工具跑完”分开并支持等待时安抚或沉默，LiveKit × Expo 模板默认给输入加背景人声消除，LiveKit Agents 用 VAD 预览转写约早 350 ms 开口并避免未提交 partial 把回复挂死，Cekura 在真实来电上比较 15 个云端 speech-to-speech 模型，Gemini API 预览动态工具检索以免第一轮塞进大量完整 schema，Jon Taylor 用苹果 SpeechAnalyzer 在 Mac 灵动岛上做端上听写，sherpa-onnx 将 PocketTTS 权重说明改为 CC-BY-4.0 并开始导出 w2v-BERT 2.0 CTC，以及 Kyutai 开源 AURA 音频驱动说话头像。</p>
+<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 9 条</div><ol><li><a href="#论文土耳其语端点检测文本分数加上静音超时能在同样打断率下把平均回复延迟压短">论文：土耳其语端点检测——文本分数加上静音超时，能在同样打断率下把平均回复延迟压短</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#pipecat把用户无事可说和用户在等工具跑完分开并让模型在等待时说一句安抚或保持沉默">Pipecat：把“用户无事可说”和“用户在等工具跑完”分开，并让模型在等待时说一句安抚或保持沉默</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#livekit--expoios--android-语音助手模板默认给输入加背景人声消除避免旁人说话变成一轮用户输入">LiveKit × Expo：iOS / Android 语音助手模板，默认给输入加背景人声消除，避免旁人说话变成一轮用户输入</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#livekit-agentsgradium-用-vad-预览转写约早-350-ms-开口elevenlabs-未提交的-partial-不再把回复挂死">LiveKit Agents：Gradium 用 VAD 预览转写约早 350 ms 开口；ElevenLabs 未提交的 partial 不再把回复挂死</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#cekura15-个云端-speech-to-speech-模型在真实来电上比可靠性和话轮grok-voice-30-排第一但-gpt-live-组合的任务完成率更高">Cekura：15 个云端 speech-to-speech 模型在真实来电上比可靠性和话轮，Grok Voice 3.0 排第一，但 GPT-Live 组合的任务完成率更高</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#gemini-api-预览动态工具检索避免第一轮就塞进-200-个工具的完整-schema">Gemini API 预览：动态工具检索，避免第一轮就塞进 200 个工具的完整 schema</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#jon-taylor用苹果-speechanalyzer-在-mac-灵动岛上做端上听写约-2-秒停顿结束">Jon Taylor：用苹果 SpeechAnalyzer 在 Mac 灵动岛上做端上听写，约 2 秒停顿结束</a><span class="toc-rel" title="相关度 3/5">3</span></li><li><a href="#sherpa-onnxpockettts-权重说明改为-cc-by-40并开始把-w2v-bert-20-ctc-导出为-onnx">sherpa-onnx：PocketTTS 权重说明改为 CC-BY-4.0；并开始把 w2v-BERT 2.0 CTC 导出为 ONNX</a><span class="toc-rel" title="相关度 3/5">3</span></li><li><a href="#kyutai-开源-aura单卡实时的音频驱动说话头像13b-在-h100-上-207-fps权重为非商用许可">Kyutai 开源 AURA：单卡实时的音频驱动说话头像，1.3B 在 H100 上 20.7 fps；权重为非商用许可</a><span class="toc-rel" title="相关度 3/5">3</span></li></ol></nav>
+<section class="item" id="论文土耳其语端点检测文本分数加上静音超时能在同样打断率下把平均回复延迟压短">
+<h3 class="it-title"><span class="it-no">1</span><span>论文：土耳其语端点检测——文本分数加上静音超时，能在同样打断率下把平均回复延迟压短</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">论文</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：arXiv 2611.25489  Ahmet Tuğrul Bayrak、Fatma Nur Korkmaz、Mustafa Sertaç Türkel、Nur Yağmur Tuncer。发帖日期：2026-11-19（新加坡时间；11-19 12:26 提交，昨日报告未收录）。</p>
+<p>我读了摘要和 arXiv 摘要页（未读全文 PDF）。作者指出：语音 agent 若只等一段固定静音再开口，要么会打断还在停顿的用户，要么对已经说完的人反应太晚。他们在 Real-TurnTurk（土耳其语双人视频通话）里取出话轮结束和话轮内部停顿，比较微调的土耳其语 TurnGPT、零样本土耳其语语言模型、一套已部署的多语种检测器，以及语音活动时序和面部特征，并做了按录音划分和按说话人划分的评估，以及成对 cluster bootstrap。在留出录音上，微调模型对“说完 / 只是停顿”的区分好于两个文本基线，校准也是三个文本模型里最好的。当前说话人的时序特征同样有用；用逻辑回归把它和微调文本分数合在一起，是他们时序方案里最好的。在延迟仿真中，把文本分数加到静音超时上，能在同样的打断率下缩短平均回复延迟。自动 Whisper 转写上，微调模型相对零样本的优势仍然在。这是土耳其语语料上的研究，我没有复现。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+Luna 不要只靠固定静音切话轮。车里司机常在报地名、门牌或等导航计算时中途停顿，应把端点文本分数（或小分类器）和 VAD 时序合在一起，并按“同样打断率下平均等多久”来调阈值。这项工作用的是土耳其语和当面视频通话，中文、车噪和只有音频、没有面部信号的条件要自己测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://arxiv.org/abs/2611.25489">论文</a></p>
+</section>
+<section class="item" id="pipecat把用户无事可说和用户在等工具跑完分开并让模型在等待时说一句安抚或保持沉默">
+<h3 class="it-title"><span class="it-no">2</span><span>Pipecat：把“用户无事可说”和“用户在等工具跑完”分开，并让模型在等待时说一句安抚或保持沉默</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span><span class="it-chip">端上小模型</span></div>
+<p class="it-src">来源：pipecat-ai/pipecat  开源实时语音 agent 框架。窗口内 @pipecat_ai 没有发帖，内容来自我读取的已合并 PR。发帖日期：2026-11-21（新加坡时间；PR 于 11-21 04:55–06:38 合并，尚无新版本号）。</p>
+<p>我读了 PR 正文（未自己跑代码）。#6587 指出：原来的用户空闲控制器只给机器人说完后的静音计时，并报 <code>on_user_turn_idle</code>，分不清用户无话可说，和用户在等一次异步函数调用或 <code>LLMWithBackend</code> 后台任务，结果空闲超时会在工具还在跑时触发。这次用 <code>BackgroundWorkStartedFrame</code> / <code>BackgroundWorkFinishedFrame</code> 标出不阻塞对话的后台工作；有后台工作时，静音改为“用户在等待”，到 <code>user_waiting_timeout</code> 后发出 <code>on_user_waiting</code>，空闲计时器此时不走。空闲和等待都同时变成事件和帧（<code>UserTurnIdleFrame</code>、<code>UserWaitingFrame</code>，带 <code>quiet_secs</code>）。#6588 加上 <code>WaitReassuranceLLMExtension</code>：在 <code>UserWaitingFrame</code> 上再跑一次 LLM，让模型用自己的声音说一句简短安抚，或用静默标记（默认 <code>∅</code>）选择不开口；静默回复不会进入下游、观察者或上下文，但会重开等待间隔，好在长等待里再次决定。PR 写明：级联和异步工具示例会挂上该扩展；speech-to-speech 示例不用，因为静默回复无法从音频里读出。同批还有 LLM 扩展抽象（#6585，话轮完成是第一个扩展）和异步工具扩展（#6590）。#6913 修了评测：用户开口时 <code>vad-user-started-speaking</code>、<code>user-started-speaking</code>、<code>bot-interrupted</code> 会连续到达，原先每条打断报告都会清空队列，脚本若还在等前两个事件就会超时；现在打断时保留队列，同时仍丢掉机器人没说完的回复。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+导航查路、改目的地或调用云端 LLM 时，不要把司机的沉默当成“可以继续催，或当作用户已离开”。先标出“工具在跑”，再决定是播一句很短的“我在查”还是保持安静；级联管线可以这样做，端到端语音模型则要另想信号。评测打断时，VAD 开始、用户开始说、机器人被打断这几条事件会挤在一起，不要用“后一条清空前一条”的队列，否则端点用例会误报超时。这些改动还没有进正式 release，合入后要再对一下版本。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/pipecat-ai/pipecat/pull/6587">PR #6587</a> · <a href="https://github.com/pipecat-ai/pipecat/pull/6588">PR #6588</a> · <a href="https://github.com/pipecat-ai/pipecat/pull/6913">PR #6913</a></p>
+</section>
+<section class="item" id="livekit--expoios--android-语音助手模板默认给输入加背景人声消除避免旁人说话变成一轮用户输入">
+<h3 class="it-title"><span class="it-no">3</span><span>LiveKit × Expo：iOS / Android 语音助手模板，默认给输入加背景人声消除，避免旁人说话变成一轮用户输入</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">语音 agent 工程</span><span class="it-chip">唤醒与声纹</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：@livekit  LiveKit 官方，开源 Agents 框架 &#43; Swift SDK。我同时读了他们链接的仓库 README 和 <code>agent/agent.ts</code>。发帖日期：2026-11-21（新加坡时间；原帖 11-21 04:42，仓库在窗口内有推送）。</p>
+<p>LiveKit 发帖说 Expo 团队做了一个 iOS / Android 语音 AI 起步模板，clone 之后就能在手机上跟 agent 说话。我读了 https://github.com/expo/expo-livekit-template 的 README 和 <code>agent/agent.ts</code>（仓库创建于 11-05，窗口内最近推送为 11-21 00:54 新加坡时间）。这是 Expo SDK 58、MIT 许可的最小模板：一个画面、一个 <code>use-voice-session.ts</code> hook、一个约 36 行的 agent。模型走 LiveKit Inference，README 写不需要另备 OpenAI key；我读到的默认实现是 <code>inference.RealtimeModel({ model: &#39;openai/gpt-realtime-2.1&#39;, voice: &#39;marin&#39; })</code>，并在 <code>inputOptions</code> 里打开 <code>BackgroundVoiceCancellation()</code>，注释写明：去掉背景人声和噪声，使旁边的说话不会作为用户话轮到达模型。Expo Go 不含 WebRTC，需要 development build。发 token 的 API 路由会对任何调用者签发，README 要求上线前自行加鉴权。这是云端 speech-to-speech 模板，不是端上模型。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+车里最有用的是那条输入侧的背景人声消除：副驾或收音机里的话，不应变成一轮对 Luna 的指令。Luna 是端上级联，不能直接搬这套云端 Realtime 模型，但应在 VAD / ASR 前加同等的“非司机语音不要进话轮”的门控，并在真车里用副驾说话做回归。模板本身适合对照 LiveKit 的会话、静音和转写 UI，不适合当 Luna 的默认推理后端。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/livekit/status/2123879672169517256">原帖</a> · <a href="https://github.com/expo/expo-livekit-template">代码</a> · <a href="https://docs.livekit.io/transport/sdk-platforms/expo/">文档</a></p>
+</section>
+<section class="item" id="livekit-agentsgradium-用-vad-预览转写约早-350-ms-开口elevenlabs-未提交的-partial-不再把回复挂死">
+<h3 class="it-title"><span class="it-no">4</span><span>LiveKit Agents：Gradium 用 VAD 预览转写约早 350 ms 开口；ElevenLabs 未提交的 partial 不再把回复挂死</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：livekit/agents  窗口内无新 release 标签；内容来自我读取的已合并 PR。@livekit 本日另有 Expo 模板帖，与这两条 PR 不是同一条。发帖日期：2026-11-20（新加坡时间）。</p>
+<p>我读了 PR 正文（未自己复测）。#8638 给 Gradium STT 插件加上 <code>PREFLIGHT_TRANSCRIPT</code>：服务器 VAD 第一次触发时，先把目前听到的词作为预览转发，LLM 用这份预览开请求，只有终稿和预览不同才再请求一次。作者写，按插件默认参数、对着真实 STT 模型的一次小基准，agent 开始说话大约早 350 ms，且没有多出额外的 LLM 调用；更激进的 VAD 可能带来多余请求，那时可以关掉抢跑生成。PR 还加了手动 flush。#8698 把 JS SDK 里修“幽灵 partial”的改动移植到 Python：Scribe v3 Live 的一条新 partial 若在本地 VAD 仍为静音时，会在配置的服务器静音阈值再加 0.5 秒后结束该话轮，避免一条一直不提交的 partial 无限期挡住 agent 回复。该保护只作用于“这条 partial 打开了一个新话轮”的情况；供应方提交、VAD 重新检测到语音、重连等会取消或重启它。#8633 则避免 error 帧直接丢掉上次 final 之后已缓存的词。这些都还没有打进新的 agents 版本号。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+级联里也可以在 end-of-turn 定稿前，用“VAD 已触发、文本已较稳”的预览去预热意图 / 工具，终稿若只改了几个词就不必重跑；作者的 350 ms 是 Gradium 云端插件上的小数，不能当成车载数字。另一侧：流式 ASR 的 partial 若没有超时或 VAD 约束，会把 TTS 挂住，表现为司机说完了 Luna 却一直不答，需要给未提交的 partial 设上限。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/livekit/agents/pull/8638">PR #8638</a> · <a href="https://github.com/livekit/agents/pull/8698">PR #8698</a></p>
+</section>
+<section class="item" id="cekura15-个云端-speech-to-speech-模型在真实来电上比可靠性和话轮grok-voice-30-排第一但-gpt-live-组合的任务完成率更高">
+<h3 class="it-title"><span class="it-no">5</span><span>Cekura：15 个云端 speech-to-speech 模型在真实来电上比可靠性和话轮，Grok Voice 3.0 排第一，但 GPT-Live 组合的任务完成率更高</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">语音 agent 工程</span><span class="it-chip">话轮控制</span><span class="it-chip">前沿语音模型</span></div>
+<p class="it-src">来源：@tarush_agarwal_  Cekura CEO。帖中只有一张图、没有数字。下面的数字来自我读取的公开榜单页，页面写 Last updated Nov 19, 2026。发帖日期：2026-11-21（新加坡时间；原帖 11-21 00:05。榜单页标注 11-19 更新，昨日报告未写该页）。</p>
+<p>@tarush_agarwal_ 说比较了 15 个 speech-to-speech 模型的速度、可靠性和准确率，但推文本身没有给出数字。我打开了 https://benchmarks.cekura.ai/speech-to-speech/real-calls：15 个模型，用录好的真实来电做直播通话；合计 70 通（英语 55、西班牙语 7、印地语 8），银行和医疗各 35 通。每个用户会对每个模型各跑三次，Pass³ 是三次都处理好的比例；ELO 来自两两对战（均分 1000）；回复延迟 P50 是用户说完到 agent 开始回答的等待。我看到的前几名：Grok Voice 3.0，ELO 1161，Pass³ 43%，P50 1.60 s，话轮 81，任务完成率 73.8%，设置为 grok-voice-3.0、reasoning high、Service turn detection；GPT-Live 1 &#43; GPT-6 Sol，ELO 1122，Pass³ 39%，P50 2.27 s，话轮只有 71（是它最弱的一项），任务完成率 79.0%；GPT Realtime 2.1，ELO 1091，Pass³ 26%，P50 2.16 s，endpointing 是明显短板；Gemini 3.1 Flash Live Preview 的 P50 是 3.06 s，设置写 Shared local turn detection；Azure Realtime 的 endpointing 只有 15 分（比平均低 46 分）。这些是云端 API、电话场景，我没有复跑。同一站点的 agent 表现榜更新于 11-3、turn-bench 更新于 10-13，不当作窗口内新结果。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+这是电话云端模型的榜，1.6–3 秒的开口延迟不能当车载目标。值得抄的是指标拆法：把话轮、endpointing、任务完成、同一用户三次是否都稳定分开看，而不是只报一个延迟。GPT-Live 组合任务完成更高、话轮更弱，说明“像不像人接话”和“能不能把导航指令做对”要分开评。Luna 应自己做司机 &#43; 车噪 &#43; 中文短指令的同类拆分，而不是沿用这些云端名次。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/tarush_agarwal_/status/2123809848139960569">原帖</a> · <a href="https://benchmarks.cekura.ai/speech-to-speech/real-calls">榜单</a></p>
+</section>
+<section class="item" id="gemini-api-预览动态工具检索避免第一轮就塞进-200-个工具的完整-schema">
+<h3 class="it-title"><span class="it-no">6</span><span>Gemini API 预览：动态工具检索，避免第一轮就塞进 200 个工具的完整 schema</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">端上小模型</span><span class="it-chip">agent 与界面</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@_philschmid  Philipp Schmid，Google DeepMind，负责 Agents 与 Gemini API。我读的是 X 长文的全文（<code>article.plain_text</code>），没有打开官方文档站（短链跳到了登录页）。发帖日期：2026-11-20（新加坡时间 23:52）。</p>
+<p>文章写，Gemini API 预览了 Dynamic Tool Retrieval（Tool Search Tool）：agent 可以在后台挂着上百个工具，一开始只让模型看到短名称和一句话描述，需要时再加载完整参数 schema。作者认为每一轮都把 100 多个完整 schema 打进上下文既耗 token，也损害工具选择。两种模式：服务端在 <code>tools</code> 里加 <code>{&#34;type&#34;:&#34;tool_search&#34;}</code>，并对函数或远程 MCP 设 <code>defer_loading: true</code>，模型先只看到约 26 个 token 的一行摘要（或更短的 <code>short_description</code>），检索和加载发生在同一次 API 请求内，前缀仍可缓存；客户端模式把 <code>execution</code> 设为 <code>client</code>，工具目录完全放在 <code>tools[]</code> 之外，可用向量检索或 Gemini Decision 1（<code>gemini-decision-1</code>，文中称零输出 token）打分后再把命中的 schema 塞回。建议把最常用的 3 到 5 个工具保持常驻、长尾再延迟加载；少于约 20 个工具时，静态加载仍然更简单。预览期初始化要带 <code>apiVersion: &#34;v1beta&#34;</code>；即使用 <code>previous_interaction_id</code>，每次仍要重发完整的 <code>tools</code> 数组。这是云端 Gemini 的能力，不是端上运行时。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+导航 App 的 function tools 很容易超过小模型一轮能认真看完的数量。端上意图模型应只常驻高频工具（导航、限速、寻找停车、打电话），其余用短描述检索后再加载 schema，并明确本地 / 系统 / 云端分流。不要把云端“20 个工具以下不必检索”的经验直接当成 iPhone 上的预算，端上上下文更紧，阈值要自己测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/_philschmid/status/2123806623114440911">原帖</a> · <a href="https://x.com/i/article/2123804443527254016">文章</a></p>
+</section>
+<section class="item" id="jon-taylor用苹果-speechanalyzer-在-mac-灵动岛上做端上听写约-2-秒停顿结束">
+<h3 class="it-title"><span class="it-no">7</span><span>Jon Taylor：用苹果 SpeechAnalyzer 在 Mac 灵动岛上做端上听写，约 2 秒停顿结束</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">话轮控制</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：@JonPTaylor  Jon Taylor，Daily / Pipecat 语音 AI 工程师。我读了原帖和仓库 README。发帖日期：2026-11-20（新加坡时间 18:00；仓库同日 17:15 创建）。</p>
+<p>他发了一段在灵动岛里做实时转写的演示，并问为什么 Apple 自己不提供。仓库 https://github.com/jptaylor/transcript-island 是 macOS 菜单栏应用：快捷键（默认 ⌥⇧Space）开始听写，字出现在岛/刘海长出的黑条里，结束后粘贴到刚才的输入框或剪贴板。README 写，语音识别完全在 Mac 上，使用 Apple 的 <code>SpeechAnalyzer</code>；需要 macOS 27 或更高、且支持端上语音识别的机器，以及 Xcode 27.2 才能编译。停约 2 秒会自己结束（Esc 立即结束）；<code>PauseDetector</code> 把识别器的新词、或明显高过环境底噪的电平当作有人在说，约 2 秒静音结束听写，若什么都没说则约 8 秒。这不是 iOS App，也不能直接用于车载免提。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+值得看的是 Apple 端上 <code>SpeechAnalyzer</code> 和按“新词或超底噪 &#43; 短静音”收尾的写法，可以对照 Luna 在 iOS 上的流式 ASR 与 end-of-turn。2 秒对开车短指令可能偏长，8 秒的“什么都没说”超时倒可以借鉴，以免误唤醒后一直占着会话。不要指望把灵动岛 UI 搬进导航，司机需要的是听，不是盯一条转写。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/JonPTaylor/status/2123718195651715450">原帖</a> · <a href="https://github.com/jptaylor/transcript-island">代码</a></p>
+</section>
+<section class="item" id="sherpa-onnxpockettts-权重说明改为-cc-by-40并开始把-w2v-bert-20-ctc-导出为-onnx">
+<h3 class="it-title"><span class="it-no">8</span><span>sherpa-onnx：PocketTTS 权重说明改为 CC-BY-4.0；并开始把 w2v-BERT 2.0 CTC 导出为 ONNX</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：k2-fsa/sherpa-onnx  窗口内无新版本标签（仍为昨日的 v2.0.2）。@csukuangfj 窗口内没有原创帖。内容来自我读取的已合并 PR。发帖日期：2026-11-20（新加坡时间）。</p>
+<p>我读了两个 PR。#4250 只改生成 README 里的一句：PocketTTS 权重已改为 CC-BY-4.0，不再写“仅限非商用”。作者核对过 <code>KevinAHM/pocket-tts-onnx</code> 的讨论与 <code>onnx/LICENSE</code>，以及 <code>kyutai/pocket-tts</code> 模型卡上的 <code>cc-by-4.0</code>；代码为 Apache-2.0。已发布的 <code>sherpa-onnx-pocket-tts-*</code> 包内 README 不会自动更新，除非重跑导出工作流或手工改 release。#4248 是 LiteRT / TPU 方案的第一项：把 transformers 的 <code>Wav2Vec2BertForCTC</code> 导出为 ONNX，默认是 Apache-2.0 的加利西亚语微调 <code>proxectonos/w2v-bert-2.0-gl</code>，并用只依赖 onnxruntime 的脚本解码。导出包含 fp32（权重大于 2 GB，用外部数据文件）和 MatMul 的 uint8 量化版；子采样因子为 4。这还不是中文或英语的现成端上包，也还没有新的 sherpa-onnx 发行版。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+若在评估 Kyutai PocketTTS 做端上短回复，先按 CC-BY-4.0 重新确认许可，不要沿用仓库里旧包 README 的“非商用”字样，并核对自己下到的那份 tarball。w2v-BERT 的 ONNX 导出说明 sherpa-onnx 在为端侧 / TPU 铺路，但当前默认是加利西亚语，Luna 若要跟，需要自己的中文或英语 CTC 检查点，而不是直接用这个默认模型。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/k2-fsa/sherpa-onnx/pull/4250">PR #4250</a> · <a href="https://github.com/k2-fsa/sherpa-onnx/pull/4248">PR #4248</a></p>
+</section>
+<section class="item" id="kyutai-开源-aura单卡实时的音频驱动说话头像13b-在-h100-上-207-fps权重为非商用许可">
+<h3 class="it-title"><span class="it-no">9</span><span>Kyutai 开源 AURA：单卡实时的音频驱动说话头像，1.3B 在 H100 上 20.7 fps；权重为非商用许可</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">前沿语音模型</span><span class="it-chip">开源发布</span><span class="it-chip">论文</span></div>
+<p class="it-src">来源：@kyutai_labs  Kyutai。我读了他们的线程、arXiv 2611.26540 摘要、GitHub README 和 Hugging Face 模型说明。博客页 https://kyutai.org/blog/2026-11-20-aura/ 可以打开，但正文是前端渲染的，我没有在浏览器里看到全文，技术细节以摘要和 README 为准。发帖日期：2026-11-20（新加坡时间 23:06；论文提交于 11-20 02:17，属 cs.CV，昨日语音检索未覆盖。网站 last-modified 为 11-20 22:57 新加坡时间，昨日记录仍为 10-30）。</p>
+<p>Kyutai 宣布 AURA，并把代码、权重和演示开源。论文与 README 写：模型按块生成说话头视频，每块只需要当前块的音频，不必向前看数秒；从 50 步双向 teacher 蒸馏成 4 步因果 student（先对齐 teacher 轨迹，再用 DMD），用滚动 KV cache 保持显存不随时长增长。AURA-1.3B 用 Mimi 作音频编码，输出 576p、16 fps，论文中在一块 H100 上端到端 20.7 fps（相对自己的 teacher 快 23 倍），许可 CC BY-NC 4.0；AURA-5B 输出 720p，论文中 9.7 fps（快 17 倍），许可是 Snap 非商用。仓库里的参考实现在加 <code>--compile</code> 后，同一块 H100 上大约是 1.3B 的 16 fps、5B 的 8 fps，和论文中的优化管线数字不同。演示把 AURA-1.3B 和他们的级联语音系统 Unmute 接在一起。还发布了 3 万条合成视频及 teacher 轨迹数据集。线程里对比的 Wan-S2V / Hallo3 等 fps 是作者给出的数字，我没有复测。这是单卡 GPU 上的视觉生成，不是端上语音模型。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不要在开车时把说话头像铺在导航屏上。有参考价值的是“按块、无未来音频、KV cache 恒定”的流式思路，以及演示里视觉模块挂在级联 Unmute 之外、而不是塞进语音模型。两套权重都是非商用许可，不能直接进产品。若以后要在停车态做数字人，也应按车机算力重测，不能沿用 H100 的 20.7 fps。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/kyutai_labs/status/2123795191417156022">原帖</a> · <a href="https://arxiv.org/abs/2611.26540">论文</a> · <a href="https://github.com/kyutai-labs/aura">代码</a> · <a href="https://aura.kyutai.org/">演示</a> · <a href="https://huggingface.co/kyutai/AURA-1.3B">权重 1.3B</a> · <a href="https://kyutai.org/blog/2026-11-20-aura/">博客</a></p>
+</section>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/lumi-2026-11-20/"><small>← 上一篇</small>Luna 全双工语音日报（2026-11-20）</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

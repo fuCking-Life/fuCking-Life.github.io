@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/categories/日报/</link>
     <description>日报 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 20 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 21 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/日报/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-21）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-21/</link>
+      <pubDate>Sat, 21 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-21/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-20 08:47 – 2026-11-21 08:44（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 9 条：土耳其语端点检测论文把文本分数加到静音超时上、能在同样打断率下压短平均回复延迟，Pipecat 把“用户无事可说”和“用户在等工具跑完”分开并支持等待时安抚或沉默，LiveKit × Expo 模板默认给输入加背景人声消除，LiveKit Agents 用 VAD 预览转写约早 350 ms 开口并避免未提交 partial 把回复挂死，Cekura 在真实来电上比较 15 个云端 speech-to-speech 模型，Gemini API 预览动态工具检索以免第一轮塞进大量完整 schema，Jon Taylor 用苹果 SpeechAnalyzer 在 Mac 灵动岛上做端上听写，sherpa-onnx 将 PocketTTS 权重说明改为 CC-BY-4.0 并开始导出 w2v-BERT 2.0 CTC，以及 Kyutai 开源 AURA 音频驱动说话头像。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Luna 全双工语音日报（2026-11-20）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-20/</link>
