@@ -1,5 +1,112 @@
 [
   {
+    "id": "lumi-2026-11-22-audiocpp-096",
+    "date": "2026-11-22",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "audio.cpp v0.9.6：用 ggml 原生跑起 Inworld Voice Isolator，实时隔离前景人声",
+    "summary": "@0xShug0 宣布 audio.cpp v0.9.6 接入 Inworld Voice Isolator（社区移植，PR #1343，作者 Etherll），用来从嘈杂音频里抽出前景人声，并附了一段演示视频；我没有复测视频里的效果。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以把实时隔离放在车载 VAD / 流式 ASR 前面，先压路噪、导航播报残留和车内嘈杂，再交给端点判断。它不会“只听司机”：副驾或后排说话仍可能被当成前景，定向唤醒和声纹还得另做。先在 Mac 上用实时 checkpoint 录导航加路噪，看误触发和 ASR WER，再决定是否用 C API 静态库往 iOS 迁；不要用演示视频代替车内实测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "开源",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布",
+      "唤醒与声纹"
+    ],
+    "source": {
+      "name": "@0xShug0 0xShugo。audio.cpp 作者，用 ggml 做本地音频推理",
+      "handle": "@0xShug0",
+      "identity": "@0xShug0 0xShugo。audio.cpp 作者，用 ggml 做本地音频推理。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/0xShug0/status/2124211122865602642"
+      },
+      {
+        "label": "发布说明",
+        "url": "https://github.com/0xShug0/audio.cpp/releases/tag/v0.9.6"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/0xShug0/audio.cpp"
+      },
+      {
+        "label": "移植 PR",
+        "url": "https://github.com/0xShug0/audio.cpp/pull/1343"
+      },
+      {
+        "label": "官方模型",
+        "url": "https://github.com/inworld-ai/voice-isolator"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-22/",
+    "posted_at": "2026-11-22"
+  },
+  {
+    "id": "lumi-2026-11-22-llamacpp-hibiki",
+    "date": "2026-11-22",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "llama.cpp 把 Kyutai Hibiki 接进服务端全双工实时通路（目前是法英同传，不是通用助手）",
+    "summary": "ngxson 向 llama.cpp 合并了 Kyutai Hibiki 的 mtmd 支持，目标权重是 Hugging Face 上的 hibiki-1b / hibiki-2b（PyTorch bf16）。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要把 Hibiki 直接接到司机助手：它是法英同传，不是导航里的对话和工具调用。值得看的是 llama.cpp 这条“固定帧率、听和说同时走、客户端不做话轮”的服务端协议，以及 1.7B 档曾被作者标成移动端。Luna 仍应坚持级联；若以后要在本地试 Moshi 类双工，先认清这次落地只在 server，车机和 iPhone 上的延迟、回声消除都要另测。"
+    },
+    "relevance": 4,
+    "domains": [
+      "全双工",
+      "开源",
+      "打断与轮次"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "开源发布",
+      "话轮控制"
+    ],
+    "source": {
+      "name": "GitHub ggml-org/llama.cpp PR #32491，作者 ngxson（Xuan-Son Nguyen，Hugging Face 工程师，llama.cpp 多模态主要贡献者）",
+      "handle": "",
+      "identity": "GitHub ggml-org/llama.cpp PR #32491，作者 ngxson（Xuan-Son Nguyen，Hugging Face 工程师，llama.cpp 多模态主要贡献者）"
+    },
+    "links": [
+      {
+        "label": "代码",
+        "url": "https://github.com/ggml-org/llama.cpp/pull/32491"
+      },
+      {
+        "label": "夜间版 b12619",
+        "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12619"
+      },
+      {
+        "label": "权重 1B",
+        "url": "https://huggingface.co/kyutai/hibiki-1b-pytorch-bf16"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2502.03382"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-22/",
+    "posted_at": "2026-11-21"
+  },
+  {
     "id": "lumi-2026-11-21-turk-eou-paper",
     "date": "2026-11-21",
     "seq": 1,

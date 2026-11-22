@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/</link>
     <description>做 Agent 和语音 AI，也研究 A 股短线。这里每天更新 AI 简报、交易资讯和学习笔记。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 21 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-22）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-22/</link>
+      <pubDate>Sun, 22 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-22/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-21 08:44 – 2026-11-22 08:44（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 2 条：audio.cpp v0.9.6 用 ggml 原生跑起 Inworld Voice Isolator，实时隔离前景人声；llama.cpp 把 Kyutai Hibiki 接进服务端全双工实时通路，目前是法英同传，不是通用助手。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日交易资讯（2026-11-21）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-21/</link>
