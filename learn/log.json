@@ -76,6 +76,17 @@
     "transfer": 0,
     "think": 1
    }
+  },
+  "2026-11-22": {
+   "done": [
+    "20261122-3"
+   ],
+   "summary": "在 Windows 上配好课程环境：同步仓库，跑通 s01 和带 trace 的 s01，配好看 trace 的本地服务",
+   "points": [
+    "Windows 上 s01 的命令走 cmd.exe（dir、type、find /c），读 trace 时和 Mac 的 bash 区分开",
+    "必须设 PYTHONUTF8=1，否则命令输出里的中文会让 print 报 GBK 编码错误"
+   ],
+   "note": ""
   }
  }
 }
