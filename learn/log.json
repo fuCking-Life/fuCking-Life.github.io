@@ -1,9 +1,9 @@
 {
  "review_due": {
   "date": "2026-11-23",
-  "recall": 16,
-  "transfer": 1,
-  "think": 1
+  "recall": 19,
+  "transfer": 2,
+  "think": 2
  },
  "days": {
   "2026-11-19": {
@@ -79,12 +79,16 @@
   },
   "2026-11-22": {
    "done": [
+    "20261122-2",
     "20261122-3"
    ],
-   "summary": "在 Windows 上配好课程环境：同步仓库，跑通 s01 和带 trace 的 s01，配好看 trace 的本地服务",
+   "summary": "配好 Windows 环境；复习；把 TradingAgents 的分析师循环和 s01 对照：底下是同一个 ReAct 循环，收尾做法和自己的方案一致",
    "points": [
     "Windows 上 s01 的命令走 cmd.exe（dir、type、find /c），读 trace 时和 Mac 的 bash 区分开",
-    "必须设 PYTHONUTF8=1，否则命令输出里的中文会让 print 报 GBK 编码错误"
+    "必须设 PYTHONUTF8=1，否则命令输出里的中文会让 print 报 GBK 编码错误",
+    "LangGraph 只是画控制流的工具，是 agent 还是 workflow，看条件边的判断函数读的是模型回复还是计数器",
+    "TradingAgents 到上限的收尾：调用时不挂工具、外加直接结束的边，从结构上禁止调工具；无人值守，用已有数据写报告并标明缺什么",
+    "分析师各用私有 messages，只交报告：信息密度高，但下游没有证据可查，报告里的错会一路传下去"
    ],
    "note": "",
    "review": {
