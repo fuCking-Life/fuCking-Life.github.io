@@ -1,8 +1,8 @@
 {
  "review_due": {
-  "date": "2026-11-22",
-  "recall": 9,
-  "transfer": 2,
+  "date": "2026-11-23",
+  "recall": 16,
+  "transfer": 1,
   "think": 1
  },
  "days": {
@@ -86,7 +86,15 @@
     "Windows 上 s01 的命令走 cmd.exe（dir、type、find /c），读 trace 时和 Mac 的 bash 区分开",
     "必须设 PYTHONUTF8=1，否则命令输出里的中文会让 print 报 GBK 编码错误"
    ],
-   "note": ""
+   "note": "",
+   "review": {
+    "recall": [
+     8,
+     1
+    ],
+    "transfer": 2,
+    "think": 1
+   }
   }
  }
 }
