@@ -1,6 +1,6 @@
 {
  "title": "Agent 学习冲刺",
- "subtitle": "跟着别人的项目和经验学 agent：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Codex → 一线团队经验 → 语音基础 → 端侧模型 → 小模型训练 → App agent 化",
+ "subtitle": "跟着别人的项目和经验学 agent：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Codex → 一线团队经验 → 评估 → 工具接口 → 安全与约束 → 可观测与状态 → 训练入门和框架对比",
  "hours": "每天约 3 小时；每周日是复盘 + 补课日",
  "start": "2026-11-23",
  "end": "2027-02-14",
@@ -1821,7 +1821,7 @@
   {
    "n": 8,
    "title": "第 8 周",
-   "theme": "扩展广度：记忆、协议、读懂自己的 demo、语音入门、评估",
+   "theme": "记忆、协议、评估入门",
    "days": [
     {
      "date": "2027-01-11",
@@ -1909,23 +1909,41 @@
     },
     {
      "date": "2027-01-13",
-     "label": "读懂自己的 demo",
-     "goal": "ASRDuplexDemo 架构总览：每一环是干什么的",
+     "label": "评估方法",
+     "goal": "agent 评估怎么设计：打分器、用例、pass^k",
      "tasks": [
       {
        "id": "20270113-1",
-       "text": "读 duplex-architecture.html 的总览部分，画出从麦克风到喇叭的整条链路",
-       "min": 60
+       "text": "精读 Anthropic《Demystifying evals for AI agents》：三类打分器（代码规则、模型、人工）各用在哪",
+       "min": 60,
+       "links": [
+        {
+         "label": "Anthropic 评估文章",
+         "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+       ]
       },
       {
        "id": "20270113-2",
-       "text": "让 Claude 带你过一遍 ASRDuplexDemo 的源码目录：每个文件管哪一环",
-       "min": 50
+       "text": "搞懂 pass@k 和 pass^k 的区别：为什么上线的 agent 更该看 pass^k",
+       "min": 30,
+       "links": [
+        {
+         "label": "Anthropic 评估文章",
+         "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+       ]
       },
       {
        "id": "20270113-3",
-       "text": "列出你最不懂的 5 个词，后面几周逐个搞懂",
-       "min": 20
+       "text": "给 learn-claude-code 写一份评估方案草稿：测什么、用哪类打分器、要多少条用例",
+       "min": 40,
+       "links": [
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
       },
       {
        "id": "20270113-4",
@@ -1936,29 +1954,41 @@
     },
     {
      "date": "2027-01-14",
-     "label": "语音 agent（一）",
-     "goal": "Pipecat：实时语音管线",
+     "label": "tau2-bench",
+     "goal": "看一个成熟的 agent 仿真评测怎么搭",
      "tasks": [
       {
        "id": "20270114-1",
-       "text": "读 Pipecat 的管线设计：ASR → LLM → TTS 怎么串起来",
-       "min": 60,
+       "text": "读 tau2-bench 的 README：模拟用户、工具、策略文档、数据库状态检查各是什么",
+       "min": 50,
        "links": [
         {
-         "label": "pipecat",
-         "url": "https://github.com/pipecat-ai/pipecat"
+         "label": "tau2-bench",
+         "url": "https://github.com/sierra-research/tau2-bench"
         }
        ]
       },
       {
        "id": "20270114-2",
-       "text": "看它怎么处理打断和话轮",
-       "min": 50
+       "text": "跑一个领域（比如 retail）的几条任务，读一条完整的对话轨迹",
+       "min": 60,
+       "links": [
+        {
+         "label": "tau2-bench",
+         "url": "https://github.com/sierra-research/tau2-bench"
+        }
+       ]
       },
       {
        "id": "20270114-3",
-       "text": "对照你 blog 的 lumi 日报，挑 2 条最近的进展理解透",
-       "min": 40
+       "text": "想一想：它为什么用“最终数据库状态”判对错，而不是看对话内容",
+       "min": 30,
+       "links": [
+        {
+         "label": "tau2-bench",
+         "url": "https://github.com/sierra-research/tau2-bench"
+        }
+       ]
       },
       {
        "id": "20270114-4",
@@ -1969,29 +1999,33 @@
     },
     {
      "date": "2027-01-15",
-     "label": "语音 agent（二）",
-     "goal": "LiveKit Agents：话轮检测与语音里的工具调用",
+     "label": "评判器靠得住吗",
+     "goal": "LLM 评判 vs 规则检查：评估器本身也会错",
      "tasks": [
       {
        "id": "20270115-1",
-       "text": "读 LiveKit Agents 的 turn detection 设计",
-       "min": 60,
+       "text": "读两篇：评测器和专家判定 18.5% 不一致；LLM 评判漏放违规写操作（看摘要和结论即可）",
+       "min": 50,
        "links": [
         {
-         "label": "agents",
-         "url": "https://github.com/livekit/agents"
+         "label": "评测器审计论文",
+         "url": "https://arxiv.org/abs/2607.02577"
+        },
+        {
+         "label": "LLM 评判漏放论文",
+         "url": "https://arxiv.org/abs/2611.14581"
         }
        ]
       },
       {
        "id": "20270115-2",
-       "text": "看语音场景下工具调用怎么不卡住对话",
-       "min": 50
+       "text": "做实验：拿前面跑过的 trace，同一批结果分别用 LLM 评判和代码规则检查打分，对比哪边判错",
+       "min": 70
       },
       {
        "id": "20270115-3",
-       "text": "和文本 agent 比：停止条件和主动性边界有什么不同",
-       "min": 30
+       "text": "写下你的判断标准：什么情况能用 LLM 评判，什么情况必须用规则",
+       "min": 20
       },
       {
        "id": "20270115-4",
@@ -2054,27 +2088,39 @@
   {
    "n": 9,
    "title": "第 9 周",
-   "theme": "语音基础：结合自己的 demo，把每一环搞懂",
+   "theme": "工具接口与结构化输出",
    "days": [
     {
      "date": "2027-01-18",
-     "label": "音频基础",
-     "goal": "采样率、帧、PCM、AVAudioEngine",
+     "label": "工具设计原则",
+     "goal": "工具的粒度、描述、返回值怎么设计",
      "tasks": [
       {
        "id": "20270118-1",
-       "text": "搞懂采样率、位深、单声道、帧长（demo 用 16 kHz、20 ms 一帧）",
-       "min": 50
+       "text": "精读 Anthropic《Writing effective tools for agents》，摘出 5 条可操作的原则",
+       "min": 60,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
+        }
+       ]
       },
       {
        "id": "20270118-2",
-       "text": "读 demo 的 AudioFrames.swift 和 AudioCoordinator.swift：声音怎么进来、怎么切帧",
-       "min": 60
+       "text": "拿 learn-claude-code 的工具对照这 5 条，挑一个工具让 AI 按原则重写",
+       "min": 50,
+       "links": [
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
       },
       {
        "id": "20270118-3",
-       "text": "用自己的话讲：为什么所有出声的东西要走同一个音频引擎",
-       "min": 30
+       "text": "用同样 3 个任务跑改之前和改之后，对比选错工具和多余调用的次数",
+       "min": 40
       },
       {
        "id": "20270118-4",
@@ -2085,22 +2131,32 @@
     },
     {
      "date": "2027-01-19",
-     "label": "回声消除",
-     "goal": "AEC 与 iOS Voice Processing",
+     "label": "工具调用怎么测",
+     "goal": "BFCL V4：工具调用有哪些典型失败",
      "tasks": [
       {
        "id": "20270119-1",
-       "text": "搞懂回声消除的原理：为什么要“播放参考信号”",
-       "min": 50
+       "text": "看 BFCL V4 排行榜和评测分类：多轮、缺函数、缺参数、无关性检测",
+       "min": 50,
+       "links": [
+        {
+         "label": "BFCL 排行榜",
+         "url": "https://gorilla.cs.berkeley.edu/leaderboard.html"
+        },
+        {
+         "label": "BFCL 代码和说明",
+         "url": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard"
+        }
+       ]
       },
       {
        "id": "20270119-2",
-       "text": "读 demo 里打开 Voice Processing 的代码和 TESTING.md 里的回声测试",
+       "text": "每一类各挑 1 个例子读懂：模型错在哪，正确行为是什么（比如该拒绝或该追问）",
        "min": 50
       },
       {
        "id": "20270119-3",
-       "text": "真机上开 / 关 Voice Processing 各跑一次，听助手会不会被自己打断",
+       "text": "给你的 10 条用例补 3 条：缺参数要追问、工具无关要拒绝、多轮里改主意",
        "min": 40
       },
       {
@@ -2112,29 +2168,29 @@
     },
     {
      "date": "2027-01-20",
-     "label": "VAD",
-     "goal": "人声检测：WebRTC VAD vs Silero",
+     "label": "结构化输出的代价",
+     "goal": "强约束格式会不会让小模型变笨",
      "tasks": [
       {
        "id": "20270120-1",
-       "text": "搞懂 VAD 输出的是什么、进入 / 退出阈值是什么意思",
-       "min": 40
-      },
-      {
-       "id": "20270120-2",
-       "text": "读 SileroVAD.swift：32 ms 一次概率，0.5 进入、0.35 退出",
-       "min": 50,
+       "text": "读“约束税”论文的摘要和结论：2B 以下模型用硬 schema 后准确率下降",
+       "min": 40,
        "links": [
         {
-         "label": "Silero VAD",
-         "url": "https://github.com/snakers4/silero-vad"
+         "label": "论文",
+         "url": "https://arxiv.org/abs/2605.26128"
         }
        ]
       },
       {
+       "id": "20270120-2",
+       "text": "做实验：同一批题，让便宜模型分别“直接输出 JSON”和“先自由推理、最后再输出 JSON”，对比准确率和格式合法率",
+       "min": 80
+      },
+      {
        "id": "20270120-3",
-       "text": "在设置里切换 WebRTC 和 Silero，各说 10 句，对比误触发",
-       "min": 50
+       "text": "写下结论：什么时候先推理再约束，什么时候直接约束",
+       "min": 20
       },
       {
        "id": "20270120-4",
@@ -2145,23 +2201,29 @@
     },
     {
      "date": "2027-01-21",
-     "label": "ASR",
-     "goal": "语音识别：流式、端侧 vs 云端",
+     "label": "schema 设计",
+     "goal": "改 schema 往往比修解析器更有效",
      "tasks": [
       {
        "id": "20270121-1",
-       "text": "搞懂流式识别的 partial 和 final、端侧识别和云端识别的区别",
-       "min": 50
+       "text": "读“一行 schema 改动胜过解析器修补”的海报（样本小，待核实）",
+       "min": 30,
+       "links": [
+        {
+         "label": "海报",
+         "url": "https://neurips.cc/virtual/2026/171301"
+        }
+       ]
       },
       {
        "id": "20270121-2",
-       "text": "读 Recognition.swift 和 RecognitionAssembly.swift",
-       "min": 50
+       "text": "做实验：给一个工具加必填参数、改字段顺序、把自由文本改成枚举，各看一次行为变化",
+       "min": 80
       },
       {
        "id": "20270121-3",
-       "text": "查一下 iOS 新的 SpeechAnalyzer 和 Android 端侧 ASR 现在的情况",
-       "min": 40
+       "text": "总结 schema 设计清单：字段顺序、枚举、必填、描述怎么写",
+       "min": 30
       },
       {
        "id": "20270121-4",
@@ -2172,23 +2234,33 @@
     },
     {
      "date": "2027-01-22",
-     "label": "TTS 与播放",
-     "goal": "合成、按句播放、首字时延",
+     "label": "自己写 MCP server",
+     "goal": "把能力做成标准接口给 agent 用",
      "tasks": [
       {
        "id": "20270122-1",
-       "text": "搞懂 TTS 的流程，以及为什么按句合成、按句播放",
-       "min": 40
+       "text": "读 MCP 官方“构建 server”教程",
+       "min": 40,
+       "links": [
+        {
+         "label": "教程",
+         "url": "https://modelcontextprotocol.io/docs/develop/build-server"
+        },
+        {
+         "label": "Python SDK",
+         "url": "https://github.com/modelcontextprotocol/python-sdk"
+        }
+       ]
       },
       {
        "id": "20270122-2",
-       "text": "读 SpeechOutput.swift：句子怎么排队、打断时怎么停",
-       "min": 50
+       "text": "让 AI 写一个 MCP server：暴露 2 个工具和 1 个 resource，接进 Claude Code",
+       "min": 60
       },
       {
        "id": "20270122-3",
-       "text": "看诊断日志里的 first_tts_did_start，算一次“说完到出声”的时延",
-       "min": 50
+       "text": "故意把一个工具描述写得和 Claude Code 自带工具相似，看它会选哪个",
+       "min": 40
       },
       {
        "id": "20270122-4",
@@ -2199,23 +2271,29 @@
     },
     {
      "date": "2027-01-23",
-     "label": "话轮与打断",
-     "goal": "什么时候算说完？什么时候算插话？",
+     "label": "模型路由与级联",
+     "goal": "小模型先上、不行再升级：怎么判断“不行”",
      "tasks": [
       {
        "id": "20270123-1",
-       "text": "搞懂话轮检测（Smart Turn）和插话检测（backchannel）分别判断什么",
-       "min": 50
+       "text": "先联网查 2026 年模型路由 / 级联的最新做法，记下 3 种判断方式（置信度、规则、学出来的路由器）",
+       "min": 50,
+       "links": [
+        {
+         "label": "RouteLLM",
+         "url": "https://github.com/lm-sys/RouteLLM"
+        }
+       ]
       },
       {
        "id": "20270123-2",
-       "text": "读 TurnEnd.swift 和 BargeIn.swift",
-       "min": 50
+       "text": "做实验：便宜模型先答，按你定的规则决定要不要升级到大模型，用你的用例集算升级率和准确率",
+       "min": 70
       },
       {
        "id": "20270123-3",
-       "text": "对照 lumi 日报里最近的话轮 / 打断进展，挑 2 条理解透",
-       "min": 40
+       "text": "写下：升级率和准确率怎么取舍，规则放在哪一层",
+       "min": 30
       },
       {
        "id": "20270123-4",
@@ -2227,22 +2305,33 @@
     {
      "date": "2027-01-24",
      "label": "第 9 周复盘",
-     "goal": "画出 demo 全链路 + 时延预算",
+     "goal": "复盘 + 补课日：没做完的任务在今天补上",
      "tasks": [
       {
        "id": "20270124-1",
        "text": "补完本周没做完的任务",
-       "min": 50
+       "min": 60
       },
       {
        "id": "20270124-2",
-       "text": "自己画一张 demo 全链路图，标出每一环的时延",
-       "min": 50
+       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
+       "min": 40
       },
       {
        "id": "20270124-3",
-       "text": "review 清单：语音场景下的停止条件和主动性边界",
-       "min": 30
+       "text": "review 清单：补本周见过的例子（旋钮 2 工具设计、8 评估、9 成本与延迟）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270124-4",
+       "text": "看一眼下周计划，有疑问就记下来",
+       "min": 10
       }
      ]
     }
@@ -2251,27 +2340,39 @@
   {
    "n": 10,
    "title": "第 10 周",
-   "theme": "端侧模型：芯片、推理框架、量化",
+   "theme": "安全与约束执行层",
    "days": [
     {
      "date": "2027-01-25",
-     "label": "端侧推理全景",
-     "goal": "CPU / GPU / NPU / ANE 各自擅长什么",
+     "label": "提示注入",
+     "goal": "不可信内容里的指令会不会被执行",
      "tasks": [
       {
        "id": "20270125-1",
-       "text": "搞懂为什么要在手机上跑模型：时延、隐私、成本",
-       "min": 30
+       "text": "读 Simon Willison 的“致命三要素”：私有数据 + 不可信内容 + 对外通信",
+       "min": 30,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"
+        }
+       ]
       },
       {
        "id": "20270125-2",
-       "text": "搞懂 CPU、GPU、NPU（苹果叫 ANE）的区别，以及 NPU 为什么不总是更快",
-       "min": 60
+       "text": "做实验：在测试目录放一个文件，里面写一条给 agent 的指令，让 learn-claude-code 去读，看它会不会照做",
+       "min": 70,
+       "links": [
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
       },
       {
        "id": "20270125-3",
-       "text": "列出 demo 里已经在端侧跑的模型：Silero、Smart Turn、插话检测",
-       "min": 30
+       "text": "换 3 种写法再试（藏在注释里、伪装成系统提示、编码过的），记录哪种最容易成功",
+       "min": 40
       },
       {
        "id": "20270125-4",
@@ -2282,29 +2383,29 @@
     },
     {
      "date": "2027-01-26",
-     "label": "ONNX Runtime",
-     "goal": "demo 里的模型是怎么跑起来的",
+     "label": "AgentDojo",
+     "goal": "用基准测量注入攻击的成功率",
      "tasks": [
       {
        "id": "20270126-1",
-       "text": "搞懂 ONNX 是什么：模型格式和运行时",
+       "text": "读 AgentDojo 的 README：用户任务、注入任务、攻击、防御怎么组合",
        "min": 40,
        "links": [
         {
-         "label": "ONNX Runtime",
-         "url": "https://onnxruntime.ai"
+         "label": "AgentDojo",
+         "url": "https://github.com/ethz-spylab/agentdojo"
         }
        ]
       },
       {
        "id": "20270126-2",
-       "text": "读 SileroONNXModel.swift：加载、输入、输出",
-       "min": 50
+       "text": "跑一个 suite（比如 workspace），看有防御和没防御时的攻击成功率和任务完成率",
+       "min": 80
       },
       {
        "id": "20270126-3",
-       "text": "改一处：给模型推理加耗时日志，真机上看每次推理多少毫秒",
-       "min": 60
+       "text": "想一想：防御让任务完成率掉了多少？值不值",
+       "min": 20
       },
       {
        "id": "20270126-4",
@@ -2315,21 +2416,36 @@
     },
     {
      "date": "2027-01-27",
-     "label": "Core ML 与 ANE",
-     "goal": "苹果自己的端侧推理栈",
+     "label": "CaMeL",
+     "goal": "把控制流和数据流分开",
      "tasks": [
       {
        "id": "20270127-1",
-       "text": "搞懂 Core ML、ANE，以及 Core ML / MLX / Foundation Models 三者的分工",
-       "min": 50
+       "text": "读 CaMeL 论文的第 1–4 节：特权模型、隔离模型、能力标签",
+       "min": 70,
+       "links": [
+        {
+         "label": "论文",
+         "url": "https://arxiv.org/abs/2503.18813"
+        },
+        {
+         "label": "代码",
+         "url": "https://github.com/google-research/camel-prompt-injection"
+        }
+       ]
       },
       {
        "id": "20270127-2",
-       "text": "把一个小模型转成 Core ML，在 Xcode 里看它跑在哪个计算单元上",
-       "min": 70
+       "text": "用自己的话讲：为什么只靠提示词防不住注入，CaMeL 换成了什么保证",
+       "min": 30
       },
       {
        "id": "20270127-3",
+       "text": "对照 learn-claude-code：要做成 CaMeL 那样，循环里要改哪几处（只写设计，不实现）",
+       "min": 40
+      },
+      {
+       "id": "20270127-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2337,21 +2453,32 @@
     },
     {
      "date": "2027-01-28",
-     "label": "量化",
-     "goal": "为什么 int8 能让模型小 4 倍",
+     "label": "执行层权限",
+     "goal": "权限不能交给模型自己判断",
      "tasks": [
       {
        "id": "20270128-1",
-       "text": "搞懂 fp32 / fp16 / int8 / int4 量化，以及精度和速度的取舍",
-       "min": 50
+       "text": "读 Anthropic 关于 Claude Code 沙箱的文章：文件系统和网络两层隔离",
+       "min": 40,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/claude-code-sandboxing"
+        }
+       ]
       },
       {
        "id": "20270128-2",
-       "text": "把一个模型分别导出成 fp16 和 int8，对比体积、速度、效果",
+       "text": "设计一层独立于模型的策略：工具白名单 + 参数校验 + 高风险动作要确认，让 AI 加进 learn-claude-code",
        "min": 70
       },
       {
        "id": "20270128-3",
+       "text": "用周一的注入文件再攻击一次，对比加策略前后",
+       "min": 30
+      },
+      {
+       "id": "20270128-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2359,29 +2486,23 @@
     },
     {
      "date": "2027-01-29",
-     "label": "Android 端侧",
-     "goal": "LiteRT、厂商 NPU、Gemini Nano",
+     "label": "约束准出",
+     "goal": "模型输出变成动作之前要过哪些检查",
      "tasks": [
       {
        "id": "20270129-1",
-       "text": "搞懂 LiteRT（原 TensorFlow Lite）和 LiteRT-LM",
-       "min": 50,
-       "links": [
-        {
-         "label": "LiteRT-LM",
-         "url": "https://ai.google.dev/edge/litert-lm/overview"
-        }
-       ]
+       "text": "设计一条校验链：格式校验 → 业务规则 → 可逆性和风险分级 → 确认，每一步写清楚拦什么",
+       "min": 60
       },
       {
        "id": "20270129-2",
-       "text": "搞懂 Android 上调用 NPU 的方式，以及 Gemini Nano 能做什么",
-       "min": 50
+       "text": "找一个“模型输出直接触发动作”的例子（比如删文件、发消息），让 AI 按校验链实现",
+       "min": 60
       },
       {
        "id": "20270129-3",
-       "text": "对比 iOS：同一个小模型，两边各怎么部署",
-       "min": 40
+       "text": "故意构造 3 个越界输出，看分别在哪一步被拦住",
+       "min": 30
       },
       {
        "id": "20270129-4",
@@ -2392,42 +2513,42 @@
     },
     {
      "date": "2027-01-30",
-     "label": "ExecuTorch 与 MLX",
-     "goal": "另外两条端侧路线",
+     "label": "安全总结",
+     "goal": "从提示注入到执行层，整理成一篇",
      "tasks": [
       {
        "id": "20270130-1",
-       "text": "搞懂 ExecuTorch（PyTorch 的端侧方案）适合什么场景",
-       "min": 50,
+       "text": "扫一眼 OWASP 的 GenAI / agent 安全风险列表，补上本周没碰到的风险",
+       "min": 30,
        "links": [
         {
-         "label": "executorch",
-         "url": "https://github.com/pytorch/executorch"
+         "label": "OWASP GenAI",
+         "url": "https://genai.owasp.org/"
         }
        ]
       },
       {
        "id": "20270130-2",
-       "text": "搞懂 MLX 在 Mac 上做实验的定位",
-       "min": 40,
-       "links": [
-        {
-         "label": "mlx",
-         "url": "https://github.com/ml-explore/mlx"
-        }
-       ]
+       "text": "写《agent 安全：从提示注入到执行层》：风险、实验结果、你会怎么设计",
+       "min": 90
       },
       {
        "id": "20270130-3",
-       "text": "整理一张端侧框架选型表：iOS / Android / 模型类型",
-       "min": 50
+       "text": "把本周结论补进 review 清单旋钮 7",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
       }
      ]
     },
     {
      "date": "2027-01-31",
      "label": "第 10 周复盘",
-     "goal": "复盘 + 补课",
+     "goal": "复盘 + 补课日：没做完的任务在今天补上",
      "tasks": [
       {
        "id": "20270131-1",
@@ -2436,8 +2557,24 @@
       },
       {
        "id": "20270131-2",
-       "text": "写《端侧模型怎么选、怎么部署》，发到 blog",
-       "min": 60
+       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
+       "min": 40
+      },
+      {
+       "id": "20270131-3",
+       "text": "review 清单：补本周见过的例子（旋钮 7 权限与安全边界、14 运行环境）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270131-4",
+       "text": "看一眼下周计划，有疑问就记下来",
+       "min": 10
       }
      ]
     }
@@ -2446,25 +2583,42 @@
   {
    "n": 11,
    "title": "第 11 周",
-   "theme": "小模型训练：分类器、蒸馏、LoRA",
+   "theme": "可观测、状态与 GUI agent",
    "days": [
     {
      "date": "2027-02-01",
-     "label": "训练最小闭环",
-     "goal": "数据 → 训练 → 评估",
+     "label": "接上 tracing",
+     "goal": "用标准格式记录 agent 每一步",
      "tasks": [
       {
        "id": "20270201-1",
-       "text": "搞懂训练集、验证集、测试集，以及过拟合",
-       "min": 50
+       "text": "读 OTel GenAI agent span 规范：invoke_agent、工具调用 span 记录哪些字段",
+       "min": 40,
+       "links": [
+        {
+         "label": "规范",
+         "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md"
+        }
+       ]
       },
       {
        "id": "20270201-2",
-       "text": "跟着教程训练一个最简单的文本分类器",
-       "min": 70
+       "text": "本地起 Phoenix，让 AI 给 learn-claude-code 接上 tracing",
+       "min": 70,
+       "links": [
+        {
+         "label": "Phoenix",
+         "url": "https://github.com/Arize-ai/phoenix"
+        }
+       ]
       },
       {
        "id": "20270201-3",
+       "text": "在 Phoenix 里看一次完整运行：哪一步最慢、哪一步 token 最多",
+       "min": 30
+      },
+      {
+       "id": "20270201-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2472,21 +2626,26 @@
     },
     {
      "date": "2027-02-02",
-     "label": "意图模型",
-     "goal": "小型文本编码器做意图分类 + 参数抽取",
+     "label": "方差",
+     "goal": "同一任务跑 10 次，结果稳不稳",
      "tasks": [
       {
        "id": "20270202-1",
-       "text": "搞懂文本编码器（BERT 一类）做分类的原理",
-       "min": 50
+       "text": "挑 3 条用例，每条跑 10 次，记录成功次数，算 pass^k",
+       "min": 70
       },
       {
        "id": "20270202-2",
-       "text": "用 demo 的 5 个意图造一个小数据集，微调一个小编码器",
-       "min": 80
+       "text": "在 tracing 里对比成功和失败的轨迹：从哪一步开始分叉",
+       "min": 50
       },
       {
        "id": "20270202-3",
+       "text": "写下：要让它更稳，该改提示、工具还是停止条件",
+       "min": 20
+      },
+      {
+       "id": "20270202-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2494,23 +2653,35 @@
     },
     {
      "date": "2027-02-03",
-     "label": "蒸馏",
-     "goal": "用 DeepSeek 的解析当参考答案",
+     "label": "状态与续跑",
+     "goal": "长任务中断后怎么接着做",
      "tasks": [
       {
        "id": "20270203-1",
-       "text": "搞懂蒸馏：大模型打标签，小模型学",
-       "min": 40
+       "text": "读 LangGraph 的持久化文档：checkpoint、thread、中断和恢复",
+       "min": 50,
+       "links": [
+        {
+         "label": "文档",
+         "url": "https://docs.langchain.com/oss/python/langgraph/persistence"
+        }
+       ]
       },
       {
        "id": "20270203-2",
-       "text": "设计 demo 的数据收集：真实说法 + DeepSeek 的解析",
-       "min": 50
+       "text": "对照 learn-claude-code s10 的任务系统：状态存在哪、哪些没存",
+       "min": 40,
+       "links": [
+        {
+         "label": "s10 说明",
+         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s10_task_system/README.zh.md"
+        }
+       ]
       },
       {
        "id": "20270203-3",
-       "text": "用大模型批量生成司机说法，扩充意图数据集",
-       "min": 50
+       "text": "设计：哪些状态要外置（存盘），哪些可以留在上下文里，写成一张表",
+       "min": 40
       },
       {
        "id": "20270203-4",
@@ -2521,43 +2692,81 @@
     },
     {
      "date": "2027-02-04",
-     "label": "拒识实验",
-     "goal": "纯文字 + 上下文分类器",
+     "label": "浏览器 agent",
+     "goal": "可访问性树 vs 截图",
      "tasks": [
       {
        "id": "20270204-1",
-       "text": "重读 demo 的 rejection-model-research.md 第五节",
-       "min": 30
+       "text": "读《Building Browser Agents》里可访问性树和截图的对比部分",
+       "min": 40,
+       "links": [
+        {
+         "label": "论文",
+         "url": "https://arxiv.org/html/2511.19477"
+        }
+       ]
       },
       {
        "id": "20270204-2",
-       "text": "按“第一批实验”的第 2 条：生成正反例，训练纯文字拒识分类器",
-       "min": 80
+       "text": "用 Playwright MCP 接进 Claude Code，做一个真实网页任务（只读，不提交表单），读它拿到的页面表示",
+       "min": 60,
+       "links": [
+        {
+         "label": "Playwright MCP",
+         "url": "https://github.com/microsoft/playwright-mcp"
+        },
+        {
+         "label": "browser-use",
+         "url": "https://github.com/browser-use/browser-use"
+        }
+       ]
       },
       {
        "id": "20270204-3",
-       "text": "对比有没有“助手上一句”这个输入时的效果",
-       "min": 40
+       "text": "记录：哪些地方可访问性树够用，哪些地方必须看截图",
+       "min": 30
+      },
+      {
+       "id": "20270204-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-02-05",
-     "label": "LoRA",
-     "goal": "原理 + 动手微调一个小模型",
+     "label": "手机 GUI agent",
+     "goal": "端侧小模型 + 云端大模型怎么分工",
      "tasks": [
       {
        "id": "20270205-1",
-       "text": "搞懂 LoRA：为什么只训练很少的参数就够",
-       "min": 50
+       "text": "读 OpenPhone 论文的架构部分：端侧 3B 模型做什么、什么时候交给云端",
+       "min": 60,
+       "links": [
+        {
+         "label": "OpenPhone",
+         "url": "https://arxiv.org/html/2510.22009v2"
+        }
+       ]
       },
       {
        "id": "20270205-2",
-       "text": "用 LoRA 微调一个小的开源模型，让它按固定格式解析司机指令",
-       "min": 80
+       "text": "看 MobileUse 的 README：它怎么拿到手机屏幕、怎么执行动作",
+       "min": 40,
+       "links": [
+        {
+         "label": "MobileUse",
+         "url": "https://github.com/MadeAgents/mobile-use"
+        }
+       ]
       },
       {
        "id": "20270205-3",
+       "text": "和周四的浏览器 agent 对比：页面表示、动作空间、出错恢复有什么不同",
+       "min": 30
+      },
+      {
+       "id": "20270205-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2565,30 +2774,36 @@
     },
     {
      "date": "2027-02-06",
-     "label": "评测集",
-     "goal": "误接受、误拒、等错误率",
+     "label": "整理成文",
+     "goal": "可观测、状态、GUI agent 三块收口",
      "tasks": [
       {
        "id": "20270206-1",
-       "text": "搞懂误接受率、误拒率、等错误率和阈值的取舍",
-       "min": 50
+       "text": "写《让 agent 可观测、可续跑》：tracing 怎么接、方差怎么看、状态怎么存",
+       "min": 80
       },
       {
        "id": "20270206-2",
-       "text": "为意图模型和拒识模型各建一个评测集",
-       "min": 60
+       "text": "把本周发现补进 review 清单旋钮 5、10、13",
+       "min": 30,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
       },
       {
        "id": "20270206-3",
-       "text": "跑评测，写下结论",
-       "min": 40
+       "text": "回看第 8 周的 10 条用例，现在会怎么改",
+       "min": 30
       }
      ]
     },
     {
      "date": "2027-02-07",
      "label": "第 11 周复盘",
-     "goal": "复盘 + 补课",
+     "goal": "复盘 + 补课日：没做完的任务在今天补上",
      "tasks": [
       {
        "id": "20270207-1",
@@ -2597,8 +2812,24 @@
       },
       {
        "id": "20270207-2",
-       "text": "写《第一次训练小模型》，发到 blog",
-       "min": 60
+       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
+       "min": 40
+      },
+      {
+       "id": "20270207-3",
+       "text": "review 清单：补本周见过的例子（旋钮 5 状态与记忆、10 可观测性、13 长任务接力）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270207-4",
+       "text": "看一眼下周计划，有疑问就记下来",
+       "min": 10
       }
      ]
     }
@@ -2607,31 +2838,36 @@
   {
    "n": 12,
    "title": "第 12 周",
-   "theme": "平台能力：把 App agent 化",
+   "theme": "训练入门、框架对比、收官",
    "days": [
     {
      "date": "2027-02-08",
-     "label": "iOS App Intents",
-     "goal": "让系统和 Siri 调用 App 的功能",
+     "label": "agentic RL 概念",
+     "goal": "agent 能力是怎么训练出来的",
      "tasks": [
       {
        "id": "20270208-1",
-       "text": "搞懂 App Intents：App 怎么把功能暴露给系统",
-       "min": 50,
+       "text": "读《A Practitioner's Guide to Multi-turn Agentic RL》的结论部分：先 SFT 后 RL、奖励要细",
+       "min": 60,
        "links": [
         {
-         "label": "App Intents 文档",
-         "url": "https://developer.apple.com/documentation/appintents"
+         "label": "论文",
+         "url": "https://arxiv.org/html/2510.01132v2"
         }
        ]
       },
       {
        "id": "20270208-2",
-       "text": "给一个最小 App 写一个 App Intent，用 Siri / 快捷指令调用",
-       "min": 70
+       "text": "搞懂几个词：SFT、RL、奖励函数、GRPO、LoRA，各用一句话讲清楚",
+       "min": 40
       },
       {
        "id": "20270208-3",
+       "text": "想一想：你写的评估用例，怎么变成训练用的奖励",
+       "min": 30
+      },
+      {
+       "id": "20270208-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2639,45 +2875,60 @@
     },
     {
      "date": "2027-02-09",
-     "label": "Foundation Models",
-     "goal": "苹果端侧大模型：会话、结构化输出、工具调用",
+     "label": "OpenPipe ART",
+     "goal": "看一个 agent 训练框架的完整链路",
      "tasks": [
       {
        "id": "20270209-1",
-       "text": "读 Foundation Models 框架的官方文档：会话、引导式生成、工具调用",
-       "min": 60,
+       "text": "读 ART 的 README：轨迹 → 奖励函数 → 训练 LoRA → 热加载",
+       "min": 40,
        "links": [
         {
-         "label": "Foundation Models 文档",
-         "url": "https://developer.apple.com/documentation/foundationmodels"
+         "label": "ART",
+         "url": "https://github.com/OpenPipe/ART"
         }
        ]
       },
       {
        "id": "20270209-2",
-       "text": "写一个最小例子：让本机模型调用一个查地点的工具",
-       "min": 60
+       "text": "跑一个官方示例 notebook（需要 GPU，用 Colab 或它支持的云端后端，先确认是否收费）",
+       "min": 70
       },
       {
        "id": "20270209-3",
-       "text": "对照 demo 的设计：哪些事交给它（受控 ReAct、措辞、压缩上下文）",
+       "text": "读训练前后同一任务的轨迹，看变化在哪",
        "min": 30
+      },
+      {
+       "id": "20270209-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-02-10",
-     "label": "Foundation Models 定制",
-     "goal": "adapter（LoRA）现在还能不能用",
+     "label": "框架对比（一）",
+     "goal": "OpenAI Agents SDK vs Claude Agent SDK",
      "tasks": [
       {
        "id": "20270210-1",
-       "text": "查清楚 adapter 训练工具在 iOS 27 的现状（有资料说已弃用，要以官方文档为准）",
-       "min": 50
+       "text": "用两个 SDK 各做同一个小 agent（2 个工具 + 1 次交接）",
+       "min": 80,
+       "links": [
+        {
+         "label": "OpenAI Agents SDK",
+         "url": "https://github.com/openai/openai-agents-python"
+        },
+        {
+         "label": "Claude Agent SDK",
+         "url": "https://github.com/anthropics/claude-agent-sdk-python"
+        }
+       ]
       },
       {
        "id": "20270210-2",
-       "text": "搞懂“用提示词 + 工具”和“训练 adapter”各自适合什么",
+       "text": "对比：循环、工具定义、交接、tracing、权限各是怎么做的",
        "min": 50
       },
       {
@@ -2689,67 +2940,91 @@
     },
     {
      "date": "2027-02-11",
-     "label": "Android：Gemini Nano",
-     "goal": "端侧大模型和 ML Kit GenAI",
+     "label": "框架对比（二）",
+     "goal": "Google ADK / LangGraph / Pydantic AI",
      "tasks": [
       {
        "id": "20270211-1",
-       "text": "搞懂 Gemini Nano 在哪些机型可用、能做什么",
-       "min": 50
+       "text": "学之前先查一次三个框架的最新版本和变化",
+       "min": 20,
+       "links": [
+        {
+         "label": "ADK",
+         "url": "https://github.com/google/adk-python"
+        },
+        {
+         "label": "LangGraph",
+         "url": "https://github.com/langchain-ai/langgraph"
+        },
+        {
+         "label": "Pydantic AI",
+         "url": "https://github.com/pydantic/pydantic-ai"
+        }
+       ]
       },
       {
        "id": "20270211-2",
-       "text": "跑一个 ML Kit GenAI 的示例",
+       "text": "读各自的核心概念：状态和控制流是怎么抽象的",
        "min": 60
       },
       {
        "id": "20270211-3",
-       "text": "和 Foundation Models 对比：能力、机型覆盖、接口",
-       "min": 30
+       "text": "把 5 个框架放进一张对比表，写下各自适合什么场景",
+       "min": 50
+      },
+      {
+       "id": "20270211-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-02-12",
-     "label": "Android：AppFunctions",
-     "goal": "App 变成端侧 MCP server",
+     "label": "review 清单 v2",
+     "goal": "把 12 周的经验收进清单",
      "tasks": [
       {
        "id": "20270212-1",
-       "text": "读 AppFunctions 官方文档：App 怎么把功能暴露给 agent",
+       "text": "逐个过 16 个旋钮，每个补上最有代表性的例子",
        "min": 60,
        "links": [
         {
-         "label": "Android 官方博客",
-         "url": "https://android-developers.googleblog.com/2026/05/android-ai-intelligence-system.html"
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
         }
        ]
       },
       {
        "id": "20270212-2",
-       "text": "写一个最小 AppFunction，用命令行工具调用测试",
-       "min": 60
+       "text": "补 JD 里反复出现、清单还没覆盖的点：能力接口、约束准出、上下文和状态",
+       "min": 40
       },
       {
        "id": "20270212-3",
-       "text": "和 iOS App Intents 对比",
+       "text": "删掉或合并你觉得不再需要的旋钮",
        "min": 30
+      },
+      {
+       "id": "20270212-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-02-13",
-     "label": "App agent 化方案",
-     "goal": "把 demo 的一个技能接到平台能力上",
+     "label": "完整设计 review",
+     "goal": "用清单 v2 审一个 agent",
      "tasks": [
       {
        "id": "20270213-1",
-       "text": "把 demo 的“找 truck stop”做成 App Intent",
-       "min": 70
+       "text": "挑一个开源 agent（前面读过的任意一个），用清单 v2 逐项过一遍",
+       "min": 80
       },
       {
        "id": "20270213-2",
-       "text": "画出 iOS / Android 两边的 App agent 化方案草图",
+       "text": "写 3 条设计层修改意见，每条写清楚：问题、证据、改法、怎么验证",
        "min": 50
       },
       {
@@ -2761,23 +3036,29 @@
     },
     {
      "date": "2027-02-14",
-     "label": "第 12 周复盘",
-     "goal": "复盘 + 选下一批要学的",
+     "label": "收官",
+     "goal": "回顾 12 周，排下一阶段",
      "tasks": [
       {
        "id": "20270214-1",
        "text": "补完本周没做完的任务",
-       "min": 50
+       "min": 60
       },
       {
        "id": "20270214-2",
        "text": "回顾 12 周的 review 清单，标出还想深挖的地方",
-       "min": 40
+       "min": 30,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
       },
       {
        "id": "20270214-3",
-       "text": "从前沿雷达和 blog 日报里挑下一批要学的，和 Claude 一起排进新的周",
-       "min": 50
+       "text": "和 Claude 一起排下一阶段：通用 agent 继续深挖，或开始阶段 5（语音、端侧、训练、平台能力）",
+       "min": 40
       }
      ]
     }
