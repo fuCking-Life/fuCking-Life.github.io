@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna 全双工语音日报（2026-11-23） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-22 08:44 – 2026-11-23 08:42（新加坡时间） 本期 5 条：Pipecat 1.17.0 把端点判断从 STT 收回流水线，并收紧打断后的播放余量；FluidAudio 修复短句在空白窗口后丢掉开头的问题；Sophon Realtime 1.6 让 say 不再切断尚未播完的回复，不可打断要护到播放结束；sh">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/lumi-2026-11-23/">
+<meta property="og:title" content="Luna 全双工语音日报（2026-11-23）">
+<meta property="og:description" content="时间窗口：2026-11-22 08:44 – 2026-11-23 08:42（新加坡时间） 本期 5 条：Pipecat 1.17.0 把端点判断从 STT 收回流水线，并收紧打断后的播放余量；FluidAudio 修复短句在空白窗口后丢掉开头的问题；Sophon Realtime 1.6 让 say 不再切断尚未播完的回复，不可打断要护到播放结束；sh">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/lumi-2026-11-23/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-23T08:00:00+08:00">2026-11-23</time></div><h1>Luna 全双工语音日报（2026-11-23）</h1><div class="post-meta"><span>约 9 分钟</span><a class="tag" href="/tags/lumi/">#lumi</a></div></header>
+<article class="prose" style="--col:var(--c-daily)">
+<p class="digest-meta">时间窗口：2026-11-22 08:44 – 2026-11-23 08:42（新加坡时间）</p>
+<p>本期 5 条：Pipecat 1.17.0 把端点判断从 STT 收回流水线，并收紧打断后的播放余量；FluidAudio 修复短句在空白窗口后丢掉开头的问题；Sophon Realtime 1.6 让 <code>say</code> 不再切断尚未播完的回复，不可打断要护到播放结束；sherpa-onnx v2.0.3 说话人聚类先丢掉过短的干净语音片段；wllama 4.0.0 在浏览器里接上全双工实时音频，Hibiki 仍是法英同传。</p>
+<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 5 条</div><ol><li><a href="#pipecat-1170把端点判断从-stt-收回流水线并收紧打断后的播放余量">Pipecat 1.17.0：把端点判断从 STT 收回流水线，并收紧打断后的播放余量</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#fluidaudio短句在空白窗口后会丢掉开头流式-asr-的最终窗要重新冷启动解码">FluidAudio：短句在空白窗口后会丢掉开头，流式 ASR 的最终窗要重新冷启动解码</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#sophon-realtime-16say-不再切断尚未播完的回复不可打断要护到播放结束">Sophon Realtime 1.6： say 不再切断尚未播完的回复，不可打断要护到播放结束</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#sherpa-onnx-v203说话人聚类先丢掉过短的干净语音片段并导出-w2v-bert-ctc-到-onnx">sherpa-onnx v2.0.3：说话人聚类先丢掉过短的干净语音片段，并导出 w2v-BERT CTC 到 ONNX</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#wllama-400浏览器里接上全双工实时音频hibiki-仍是法英同传80-ms-一帧">wllama 4.0.0：浏览器里接上全双工实时音频（Hibiki 仍是法英同传，80 ms 一帧）</a><span class="toc-rel" title="相关度 3/5">3</span></li></ol></nav>
+<section class="item" id="pipecat-1170把端点判断从-stt-收回流水线并收紧打断后的播放余量">
+<h3 class="it-title"><span class="it-no">1</span><span>Pipecat 1.17.0：把端点判断从 STT 收回流水线，并收紧打断后的播放余量</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub pipecat-ai/pipecat。开源实时语音 agent 框架（关注账号 @pipecat_ai 窗口内没有发帖）。发帖日期：2026-11-23（新加坡时间 07:54 发布）。</p>
+<p>Pipecat 正式发布 v1.17.0。对 Luna 最直接的是话轮控制：<code>DeepgramFluxSTTService</code> 新增 <code>vad_force_turn_endpoint</code>（默认 False，仍由 Flux 决定用户何时说完）；设为 True 后，端点交给流水线自己的 user turn strategies（smart-turn、LLM completion gate 等），本地 VAD 只通过 <code>ForceEndTurn</code> 让 Flux 把当前片段收尾，再配 <code>eot_threshold=1.0</code> 可阻止 Flux 按自己的置信度提前结束。服务还暴露 <code>force_end_turn()</code>，可接按键说话松开等信号。话轮完成逻辑改成 <code>LLMTurnCompletionLLMExtension</code>，以洋葱式 LLM 扩展挂在服务上。修复了 Deepgram / Gradium 在 VAD 停止后因 finalize 确认晚到或空文本，把用户轮拖到 STT 超时的问题，并引入无文本的 <code>TranscriptionFinalizedFrame</code>。MoQ 播放缓冲默认从 25000 ms 降到 2000 ms，说明里写这是为了限制取消或打断后、已在途音频还要继续播放多久。评测上，音频裁判的 <code>measure: latency</code> 改为在 bot 开始说话时结束；<code>pipecat eval</code> 要求用分段式 STT 转写机器人语音，才能把用户打断时说的话和回复本身分开。同版本还有大量 SIP 传输、Rime 语音到语音和等待安抚 / 异步工具等 LLM 扩展，SIP 部分与车机内的 Luna 关系不大。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不要把 end-of-turn 绑死在某一家云端 STT 的端点上：VAD 负责分段，语义端点（smart-turn / 小分类器 / LLM gate）单独做决定，并保留方向盘或按键这种强制收尾。导航播报被打断后，要单独限制已合成、已送出的音频还要播多久，不要用很大的播放缓冲把 barge-in 拖长。评测延迟应对齐“开始出声”，并用分段转写把打断语音和助手回复分开算。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/pipecat-ai/pipecat/releases/tag/v1.17.0">发布说明</a></p>
+</section>
+<section class="item" id="fluidaudio短句在空白窗口后会丢掉开头流式-asr-的最终窗要重新冷启动解码">
+<h3 class="it-title"><span class="it-no">2</span><span>FluidAudio：短句在空白窗口后会丢掉开头，流式 ASR 的最终窗要重新冷启动解码</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：GitHub FluidInference/FluidAudio。Swift &#43; Core ML 的端上 ASR / VAD / TTS SDK（关注账号 @Alex_tra_memory 窗口内没有发帖）。发帖日期：2026-11-23（新加坡时间 03:26 合并流式 ASR 修复；同日 02:47 合并 Pocket TTS 修复，03:31 合并重采样复用）。</p>
+<p>仓库尚未打新版本号（仍停留在 11-19 的 v0.18.4），但窗口内合进了三笔与端上流水线相关的修复。PR #1164 修的是流式 ASR：短句前面几个窗如果没有吐出 token，最终窗会带着已经被空白窗推进过的 decoder 状态再解码，<code>finish()</code> 就只剩下句尾。作者在一条 3 秒的公开西班牙语录音上复现，流式结果变成 &#34;como yo pienso.&#34;，批处理则是完整的十词句。修复后，若此前没有发射过 token，最终窗从第 0 帧、全新状态重解码。PR #1154 修 Pocket TTS：不到 5 个词的句子会被补 8 个前导空格，而 FluidAudio 当前加载的模型并没有打开上游 <code>pad_with_spaces_for_short_inputs</code>，短句容易把第一个词念两遍。PR #1165 让 <code>AudioConverter</code> 在相同格式之间复用 <code>AVAudioConverter</code>，48 kHz 单声道转到 16 kHz、480 帧、balanced 时单次从 34 µs 降到 21 µs；作者称在同时跑两路滑窗 ASR 和 diarizer 的 10 秒采样里，转换器构造栈消失了。我没有在真机上复测。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+如果 iOS 上流式 ASR 用滑窗且会把 decoder 状态跨窗传递，一定要单独测“前几窗空白、最后一窗才出字”的短指令（比如“去加油站”），不要只用批处理 WER。最终窗在尚未产出任何 token 时，应清空状态从头解，否则句首会被吃掉。若接入 FluidAudio 的 Pocket TTS，短确认语不要再自行补前导空格，并回归“请左转”这类短句是否重复首词。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/FluidInference/FluidAudio/pull/1164">流式 ASR 修复</a> · <a href="https://github.com/FluidInference/FluidAudio/pull/1154">Pocket TTS 修复</a> · <a href="https://github.com/FluidInference/FluidAudio/pull/1165">重采样复用</a></p>
+</section>
+<section class="item" id="sophon-realtime-16say-不再切断尚未播完的回复不可打断要护到播放结束">
+<h3 class="it-title"><span class="it-no">3</span><span>Sophon Realtime 1.6：<code>say</code> 不再切断尚未播完的回复，不可打断要护到播放结束</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span><span class="it-chip">前沿语音模型</span></div>
+<p class="it-src">来源：GitHub adventists-ai/sophon-realtime。开源的实时 speech-to-speech 引擎，带 OpenAI Realtime 兼容面以及 LiveKit / Pipecat 网关。发帖日期：2026-11-22（新加坡时间 13:07 发布 v1.6.0，14:12 发布 v1.6.1）。</p>
+<p>v1.6.0 在 OpenAI Realtime 兼容面上增加 <code>say</code>：用 <code>response.create</code> 带 <code>{&#34;response&#34;: {&#34;say&#34;: &#34;...&#34;}}</code> 按当前会话音色原样朗读这段文字，流式输出并写入对话历史，供录音提示、回读和确认；<code>&#34;interruptible&#34;: false</code> 会在这句话说完之前扣住用户音频。Agent 框架也可以经 <code>POST /bridge/&lt;key&gt;/say</code> 直接调用。同版本还修了首次出声之后 <code>session.update</code> 被静默拒绝、导致新指令和工具加不进去的问题。v1.6.1 接着修了两处时序：<code>say</code> 会等到上一句生成并播放完、且调用方安静，才开口，避免工具结果刚返回就切开还在播的回复（在生成更慢的 E2E 模型上尤其明显）；不可打断也不再只护到“合成结束”——服务端合成快于实时，如果在生成结束就放开麦克风，用户会在播放中途把这句话打断。作者在 Flash、Tag 和 E2E 上验证了上述行为。这是服务端 / GPU 上的 speech-to-speech（说明里提到在一块 H100 上用 Flash 32B 和 Tag 32B 测过），不是端上模型，权重也没有改。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+工具调用之后的播报（路线已规划、正在搜索）不要立刻插入，先等上一句生成并播放完。导航提示和安全相关短句应设成播放结束前不可打断；闲聊回复可以允许 barge-in。注意“合成完成”不等于“司机已经听完”：端上 TTS 若快于实时，过早放开麦克风会在播报中途被误打断。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.1">v1.6.1</a> · <a href="https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.0">v1.6.0</a> · <a href="https://github.com/adventists-ai/sophon-realtime">代码</a></p>
+</section>
+<section class="item" id="sherpa-onnx-v203说话人聚类先丢掉过短的干净语音片段并导出-w2v-bert-ctc-到-onnx">
+<h3 class="it-title"><span class="it-no">4</span><span>sherpa-onnx v2.0.3：说话人聚类先丢掉过短的干净语音片段，并导出 w2v-BERT CTC 到 ONNX</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">唤醒与声纹</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub k2-fsa/sherpa-onnx。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）。发帖日期：2026-11-22（新加坡时间 18:53 发布）。</p>
+<p>正式版 v2.0.3 合入了离线说话人日志的聚类修复（PR #4240）：原先每个至少 10 帧干净语音的 (chunk, speaker) 都会进 <code>FastClustering</code>，过短、很吵的 embedding 有时会独自成一类，在指定 <code>num_clusters</code> 时挤掉真正的说话人。作者在一段约 5 分钟、两人的西班牙语辩论里看到，指定 2 类时几乎所有语音被归到一个人，另一类全是不足 2 秒的片段。修复对齐 pyannote 的做法：只聚类干净语音不少于窗口 20%（2 秒）的 embedding，其余按余弦相似度挂到最近质心；若短片段不存在或长片段不够，则保持旧行为。在 4 场 AMI 会议、<code>num_clusters=4</code>、无 collar 且计重叠的 DER 上，<code>nemo_en_titanet_small</code> 合计 26.7%→23.1%，<code>wespeaker_en_voxceleb_resnet34_LM</code> 合计 33.4%→27.6%（单场有升有降）。同版本还加入 w2v-BERT 2.0 CTC 的 ONNX 导出（默认是 Apache-2.0 的加利西亚语微调，fp32 权重大于 2 GB，另有 int8），并更正 PocketTTS 模型说明为 CC-BY-4.0、并非非商用。另有把 Pali TTS 接到 Android 系统引擎的修复，和 Luna 关系不大。发布之后、窗口内又合并了 PR #4266：Supertonic TTS 现在会尊重生成回调返回 0，停止继续合成，Android TTS 示例里的 Stop 对它才会生效；这一笔尚未打进 v2.0.3 包。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+车内做司机定向或说话人日志时，不要把过短的路噪、咳嗽或含混片段送进聚类，否则指定说话人数时容易把副驾和司机并成一类。可以先设最短干净语音门限，再把短片段挂到最近的已有说话人。PocketTTS 若进入候选，许可按 CC-BY-4.0 理解。w2v-BERT 这次落地是加利西亚语、体积也偏大，先不必当作 iOS 上的中英 ASR 选项。若用流式 TTS，打断或点停止时要让合成回调真正停下来，不要把整段文本合成完。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/k2-fsa/sherpa-onnx/releases/tag/v2.0.3">发布说明</a> · <a href="https://github.com/k2-fsa/sherpa-onnx">代码</a> · <a href="https://github.com/k2-fsa/sherpa-onnx/pull/4240">聚类修复</a> · <a href="https://github.com/k2-fsa/sherpa-onnx/pull/4266">Supertonic 停止</a></p>
+</section>
+<section class="item" id="wllama-400浏览器里接上全双工实时音频hibiki-仍是法英同传80-ms-一帧">
+<h3 class="it-title"><span class="it-no">5</span><span>wllama 4.0.0：浏览器里接上全双工实时音频（Hibiki 仍是法英同传，80 ms 一帧）</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">前沿语音模型</span><span class="it-chip">开源发布</span><span class="it-chip">话轮控制</span></div>
+<p class="it-src">来源：@ngxson  Xuan-Son Nguyen。Hugging Face 工程师，llama.cpp 多模态主要贡献者，wllama（浏览器里的 llama.cpp）作者。发帖日期：2026-11-23（新加坡时间 03:10 发帖；GitHub 正式版 4.0.0 于 03:11 发布）。</p>
+<p>@ngxson 宣布 wllama v4.0.0。我读了发布说明和 <code>guides/intro-v4.md</code>。新增全双工实时音频：对声明 <code>has_audio_duplex</code> 的模型（文档举例仍是 Kyutai Hibiki，法语到英语同传），没有话轮，第一次 <code>input_audio_buffer.append</code> 就打开回复，之后每 80 ms 输入音频给出 80 ms 输出音频和译文；<code>response.cancel</code> 结束当前回复，下一段音频再开新的。会话事件对齐 OpenAI Realtime / llama-server 的 <code>/v1/realtime</code>。性能方面，wasm 改用 llama.cpp 的 SIMD / relaxed SIMD，主构建从 Memory64 改回 mem32；作者在 Chrome、CPU、6 线程、Apple M5 Max 上相对 v3.13.0 的数据是：LFM2.5 1.2B Q4_K_M 预处理 73→207 tok/s（2.8x）、生成 49→118 tok/s（2.4x），Qwen2.5-Omni 3B Q4_K_M 预处理 2.6x、生成 2.5x。Firefox 约 2.0x–2.3x，Safari 走 compat 构建，最高约 1.4x。大于 4 GB 的 GGUF 会在多个 wasm 实例间做 RPC 分片，并可混合 CPU &#43; WebGPU。这是浏览器（Chrome / Firefox / Safari）上的运行时，不是 iOS SDK。我没有跑在线演示。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不要把 wllama 或 Hibiki 直接接到司机助手：它跑在浏览器里，而 Hibiki 仍是法英同传，不是导航对话和工具调用。值得记下的是与昨日 llama.cpp server 相同的协议——固定 80 ms 帧、边听边说、客户端不做话轮。Luna 继续走级联；若以后要在本地试 Moshi 类双工，这是浏览器对照，车机和 iPhone 上的延迟、回声消除和电池都要另测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/ngxson/status/2124581211280404803">原帖</a> · <a href="https://github.com/ngxson/wllama/releases/tag/4.0.0">发布说明</a> · <a href="https://github.com/ngxson/wllama/blob/master/guides/intro-v4.md">介绍</a> · <a href="https://github.com/ngxson/wllama">代码</a></p>
+</section>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/agent-app-2026-11-23/"><small>← 上一篇</small>每日 AI 与移动端智能体简报（2026-11-23）</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

@@ -8,6 +8,14 @@
     <lastBuildDate>Mon, 23 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Luna 全双工语音日报（2026-11-23）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-23/</link>
+      <pubDate>Mon, 23 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-23/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-22 08:44 – 2026-11-23 08:42（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 5 条：Pipecat 1.17.0 把端点判断从 STT 收回流水线，并收紧打断后的播放余量；FluidAudio 修复短句在空白窗口后丢掉开头的问题；Sophon Realtime 1.6 让 &lt;code&gt;say&lt;/code&gt; 不再切断尚未播完的回复，不可打断要护到播放结束；sherpa-onnx v2.0.3 说话人聚类先丢掉过短的干净语音片段；wllama 4.0.0 在浏览器里接上全双工实时音频，Hibiki 仍是法英同传。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>每日 AI 与移动端智能体简报（2026-11-23）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-23/</link>
       <pubDate>Mon, 23 Nov 2026 08:00:00 +0800</pubDate>
