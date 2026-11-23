@@ -5,8 +5,24 @@
     <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
     <description>Agent 学习笔记 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 19 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/agent-学习笔记/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-23）：s02 加工具，改善的是接口</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-23/</link>
+      <pubDate>Mon, 23 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-23/</guid>
+      <description>&lt;p&gt;覆盖范围：learn-claude-code s02（Tool Use）。今天聊了三件事：bash 本来就能读写文件，s02 为什么还要加专用工具；&lt;code&gt;edit_file&lt;/code&gt; 比 &lt;code&gt;sed&lt;/code&gt; 好在哪；用带 trace 的 s02 跑两个小任务，看模型一圈圈在干什么。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;新工具没有给 agent 增加能力，改善的是接口&lt;/strong&gt;：模型不用再把意图翻译成 shell 语法，harness 也看得懂它要动哪个文件。读 trace 时我还看到，模型只知道 context 里有的东西，进一个陌生环境要先花好几圈去摸。我一开始只说出了&amp;#34;拆分工具让模型选得更准&amp;#34;这层表面，预测也漏了一大半工具调用；还有一道题没答完。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Agent 学习笔记（2026-11-22）：TradingAgents 的分析师循环，就是 s01</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-22/</link>
+      <pubDate>Sun, 22 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-22/</guid>
+      <description>&lt;p&gt;覆盖范围：复习（learn-claude-code 前两天的内容）&amp;#43; TradingAgents v0.7.1 的分析师循环，和 learn-claude-code s01 的最小 agent 循环对照。今天聊了四件事：复习时暴露的误解、模型能力怎么推动 prompt → context → harness 往外走、LangGraph 画出来的循环和 s01 有什么不同、多个 agent 之间怎么交接。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;去掉 LangGraph 这层外衣，TradingAgents 的分析师就是 s01 那个 ReAct 循环&lt;/strong&gt;，连到上限时的收尾做法，都和我前一天自己设计的方案基本一致。复习 8 道回忆题只对了 1 道，暴露出好几处没记牢的细节；对照题里有两处看漏：以为收尾只靠提示词禁止调工具，以为&amp;#34;没问用户&amp;#34;是没做。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Agent 学习笔记（2026-11-19）：什么才算 agent</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-19/</link>

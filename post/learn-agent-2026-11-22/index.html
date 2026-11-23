@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent 学习笔记（2026-11-22）：TradingAgents 的分析师循环，就是 s01 · Fucking Life</title>
+<meta name="description" content="覆盖范围：复习（learn-claude-code 前两天的内容）+ TradingAgents v0.7.1 的分析师循环，和 learn-claude-code s01 的最小 agent 循环对照。今天聊了四件事：复习时暴露的误解、模型能力怎么推动 prompt → context → harness 往外走、LangGraph 画出来的循环和 s01">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/learn-agent-2026-11-22/">
+<meta property="og:title" content="Agent 学习笔记（2026-11-22）：TradingAgents 的分析师循环，就是 s01">
+<meta property="og:description" content="覆盖范围：复习（learn-claude-code 前两天的内容）+ TradingAgents v0.7.1 的分析师循环，和 learn-claude-code s01 的最小 agent 循环对照。今天聊了四件事：复习时暴露的误解、模型能力怎么推动 prompt → context → harness 往外走、LangGraph 画出来的循环和 s01">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/learn-agent-2026-11-22/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a class="on" aria-current="page" href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/agent-学习笔记/" style="color:var(--c-learn)">Agent 学习笔记</a> · <time datetime="2026-11-22T08:00:00+08:00">2026-11-22</time></div><h1>TradingAgents 的分析师循环，就是 s01</h1><div class="post-meta"><span>约 8 分钟</span><a class="tag" href="/tags/tradingagents/">#TradingAgents</a><a class="tag" href="/tags/langgraph/">#LangGraph</a><a class="tag" href="/tags/learn-claude-code/">#learn-claude-code</a></div></header>
+<article class="prose" style="--col:var(--c-learn)">
+<p class="digest-meta">覆盖范围：复习（learn-claude-code 前两天的内容）&#43; TradingAgents v0.7.1 的分析师循环，和 learn-claude-code s01 的最小 agent 循环对照。今天聊了四件事：复习时暴露的误解、模型能力怎么推动 prompt → context → harness 往外走、LangGraph 画出来的循环和 s01 有什么不同、多个 agent 之间怎么交接。</p>
+<p>今天最大的收获是：<strong>去掉 LangGraph 这层外衣，TradingAgents 的分析师就是 s01 那个 ReAct 循环</strong>，连到上限时的收尾做法，都和我前一天自己设计的方案基本一致。复习 8 道回忆题只对了 1 道，暴露出好几处没记牢的细节；对照题里有两处看漏：以为收尾只靠提示词禁止调工具，以为&#34;没问用户&#34;是没做。</p>
+<h2 id="今天学了什么">今天学了什么</h2>
+<p><strong>1. 推动外层进步的是两股力量。</strong>复习时我追问：模型能力是怎么推着 prompt、context、harness 一层层往外走的？只是&#34;把能力内化进模型&#34;吗？</p>
+<ul><li><p><strong>内化</strong>：里层的技巧被训练进模型。&#34;请一步步思考&#34;变成了推理模型自带的思考，&#34;请按 JSON 输出&#34;变成了 function calling；</p></li><li><p><strong>任务变大</strong>：模型变强以后，人们敢交给它更长、要真动手的任务，于是撞上训练消除不了的结构性限制：上下文窗口有限、看不到没交给它的东西、权限要在工具层硬拦、评不好自己的活。</p></li></ul>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 模型变强不会造出 harness，它只是让任务跑得够远，撞上了 harness 这面墙。</p></blockquote>
+<p>所以&#34;请一步步思考&#34;最可能被模型吃掉；&#34;把 stderr 返回给模型&#34;&#34;禁止删除测试目录以外的文件&#34;会一直留在 harness 里。</p>
+<p><strong>2. 看一次真实的出错工具结果。</strong>让 Claude Code 跑了一条必定报错的 <code>ls</code>，从会话日志里摘出它送回模型的结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json">{&#34;type&#34;: &#34;tool_result&#34;,
+ &#34;content&#34;: &#34;Exit code 2\nls: cannot access &#39;/no-such-dir-for-review&#39;: No such file or directory&#34;,
+ &#34;is_error&#34;: true,
+ &#34;tool_use_id&#34;: &#34;toolu_...&#34;}</code></pre></div>
+<p>比 s01 的 <code>run_bash</code> 多了两样：content 开头的退出码，和 <code>is_error</code> 出错标记。<code>type</code> 和 <code>tool_use_id</code> 是 API 规定的，s01 也有。</p>
+<blockquote class="ln-key">
+<p><strong>要点：</strong> 好在哪不在&#34;信息更多&#34;，而在&#34;成功还是失败&#34;由 harness 直接告诉模型，不用模型读文字去猜。</p></blockquote>
+<p><strong>3. LangGraph 的节点和边，就是 s01 的 <code>while True</code>。</strong>节点是读写共享 state 的函数，条件边由一个判断函数读 state，决定下一个去哪。分析师的子图在 <code>tradingagents/graph/setup.py</code> 的 <code>_analyst_graph</code> 里：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python">def _tools_or_done(state):
+    return &#34;tools&#34; if state[&#34;messages&#34;][-1].tool_calls else END
+
+graph.add_conditional_edges(&#34;agent&#34;, _tools_or_done, [&#34;tools&#34;, END])
+graph.add_conditional_edges(&#34;tools&#34;, more_or_wrap_up, [&#34;agent&#34;, &#34;wrap_up&#34;])
+graph.add_edge(&#34;wrap_up&#34;, END)</code></pre></div>
+<p><code>agent → tools → agent</code> 连成一个圈，就是循环。LangGraph 本身既不是 agent 也不是 workflow，它只是画控制流的工具。</p>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 是 agent 还是 workflow，看条件边的判断函数读的是什么：读模型回复里有没有 <code>tool_calls</code>（<code>_tools_or_done</code>），这一层是 agent；读计数器（辩论的 <code>should_continue_debate</code>），这一层是 workflow。</p></blockquote>
+<p><strong>4. 用三个问题对照 s01。</strong></p>
+<table><thead><tr><th></th><th>s01</th><th>TradingAgents 分析师</th></tr></thead><tbody><tr><td>在哪转</td><td>Python 的 <code>while True</code></td><td>图里 <code>tools → agent</code> 那条边</td></tr><tr><td>谁喊停</td><td>模型不再调工具</td><td>同上，外加 <code>max_tool_rounds = 20</code> 的护栏</td></tr><tr><td>最坏多贵</td><td>没有上限</td><td>一个分析师最多 20 &#43; 1 = 21 次模型调用，一圈还可以同时调多个工具，而且有好几个分析师</td></tr></tbody></table>
+<p><strong>5. 到上限时的收尾。</strong><code>agents/analysts/turn.py</code> 里，用满 20 圈后会追加一条 <code>WRAP_UP</code> 消息，再调一次模型：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python">WRAP_UP = (&#34;You have used every tool round this report allows. Write your final report &#34;
+           &#34;now from the tool results above, and say which data you could not retrieve.&#34;)
+
+prompt = prompt.partial(tool_names=&#34;none; your tool rounds are spent&#34;)
+result = (prompt | llm).invoke(_as_text(messages))   # llm，不是 llm.bind_tools(tools)</code></pre></div>
+<p>和我前一天在 s01 上自己设计的收尾方案逐条对照：</p>
+<table><thead><tr><th>我的方案</th><th>TradingAgents</th></tr></thead><tbody><tr><td>harness 告诉模型为什么停</td><td><code>WRAP_UP</code> 第一句</td></tr><tr><td>再调一次，结构上禁止调工具</td><td>调用 <code>llm</code> 而不是 <code>llm.bind_tools(tools)</code>，请求里根本不挂工具；再加 <code>wrap_up → END</code> 这条边，双保险</td></tr><tr><td>说明做到哪、还差什么</td><td>&#34;say which data you could not retrieve&#34;</td></tr><tr><td>问用户要不要继续；无人值守时要有默认策略</td><td>无人值守：带着缺口写完报告，流程继续往下走</td></tr></tbody></table>
+<p>还有两个我没想到的工程细节：提示词里的工具名同步改成 <code>none</code>，让提示词和结构一致（不然模型可能还去调，有的服务商这时会返回空回答）；<code>_as_text</code> 把历史里的工具调用改写成普通文字，因为有的服务商见到历史里有工具调用、这次请求却没挂工具，会直接拒绝。</p>
+<blockquote class="ln-key">
+<p><strong>要点：</strong> 结构上禁止是对的，但要付兼容成本，而且提示词要和结构说同一件事。</p></blockquote>
+<p><strong>6. TradingAgents 不是&#34;主 agent 带 sub-agents&#34;。</strong>没有哪个模型决定&#34;派谁去干什么&#34;，先后顺序是 <code>add_edge</code> 写死的：四个分析师从 <code>START</code> 并行出发，跑完进入多空辩论。只有带工具的分析师是 agent，研究员、交易员都只调一次模型。角色之间读写同一个 <code>AgentState</code>，像一块公共黑板：分析师只往自己的格子（<code>market_report</code> 等）写一份报告，它那 20 圈的工具调用留在私有的 messages 里，跑完就丢。</p>
+<h2 id="我理解对的">我理解对的</h2>
+<ul><li><p><strong>底下是同一个 ReAct 循环</strong>，框架只是换了画法。</p></li><li><p><strong>谁喊停</strong>：平时是模型，20 圈是 harness 的护栏；护栏不改变主控制流的归属，分析师仍是 agent。</p></li><li><p><strong>哪些会被模型吃掉</strong>：三条判断都对。&#34;一步步思考&#34;会被吃掉，返回 stderr 是 Observation，禁止越界删除是 Permission。</p></li><li><p><strong>为什么收尾要用结构禁止</strong>：提示词只是请求，结构才是保证。</p></li><li><p><strong>共用 messages 会让信息密度极低</strong>，上游只该把结论交给下游。</p></li><li><p><strong>只交报告的代价</strong>：下游对报告存疑时，要么自己再调一遍去核实（浪费 token），要么将错就错。分析是对的，当时只是不知道 TradingAgents 的下游没有工具，只剩&#34;将错就错&#34;这一条。</p></li></ul>
+<h2 id="我理解错的不够准的">我理解错的、不够准的</h2>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我说 context 是&#34;让模型看得更多&#34;。其实是决定每一步给模型看什么，越精准越好，给太多反而把关键信息淹没。</p></blockquote>
+<p>&#34;上下文&#34;听起来像&#34;背景越多越好&#34;，但模型每一步的注意力是有限的。</p>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我以为 tools 放在 messages 里，assistant 消息里装的是&#34;执行工具的代码&#34;。其实一次请求里 <code>system</code>、<code>tools</code>、<code>messages</code> 三样并列；<code>tool_use</code> 只写工具名和参数，真正执行的是 harness，结果以 user 角色送回，靠 <code>tool_use_id</code> 配对。</p></blockquote>
+<p>在 API 层面，模型只负责&#34;开单子&#34;。</p>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我把到上限时的&#34;让模型写总结&#34;和&#34;<code>tool_choice: none</code>&#34;当成二选一。其实是同一个方案的两部分：结构只保证&#34;不能再调工具&#34;，总结仍由模型写，而且 harness 还得告诉模型为什么停，因为模型自己不知道有上限。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我说权限&#34;不可能内化到模型里&#34;。太绝对了：安全训练能让模型更谨慎，但倾向不等于保证，一次 prompt injection 就可能把它带偏。谨慎可以内化，保证只能放在工具层。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我觉得&#34;让模型自己申请延长上限&#34;没什么风险。其实风险不小：模型评不好自己的进度，总觉得快好了；用户被问多了会习惯性点同意；无人值守时没人可问；模型也看不到自己的 token 消耗，要 harness 交给它。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 读 TradingAgents 的收尾代码时，我以为它只是在提示词里写了&#34;别调工具&#34;。其实它调用的是没挂工具的 <code>llm</code>，从结构上就调不了，提示词那句是为了和结构保持一致。</p></blockquote>
+<p>关键就在 <code>llm</code> 和 <code>llm.bind_tools(tools)</code> 的区别，我没注意这一行。</p>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我以为它&#34;没问用户要不要继续&#34;是没做。其实我自己的方案里就写了&#34;无人值守时要有默认策略&#34;：TradingAgents 跑的时候没人在等，回测可能一口气跑几百个日期，停下来问一句，整条流水线就卡住了。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 复习 s01 的停止实验时，我说&#34;到第 3 圈停了，用户看到最后一条输出&#34;。其实用户拿到的是空回答：原版只打印最后一条消息里的 text，而最后一条是工具结果，里面没有 text。活其实干完了，模型却永远没看到结果。</p></blockquote>
+<h2 id="举一反三">举一反三</h2>
+<p><strong>1. 交接时只交结论，是多 agent 系统的通用做法，也有通用的代价。</strong></p>
+<table><thead><tr><th>系统</th><th>上游交给下游的</th><th>下游能核实吗</th></tr></thead><tbody><tr><td>TradingAgents</td><td><code>AgentState</code> 里的一段报告</td><td>不能，下游没有工具</td></tr><tr><td>编程助手派子 agent 查资料</td><td>子 agent 的最终回复</td><td>主 agent 有工具，可以回头查，但会重复花钱</td></tr><tr><td>客服系统的意图路由</td><td>一个意图标签</td><td>下游通常直接信</td></tr></tbody></table>
+<p>缓解的办法：报告里带关键数字和来源；原始工具结果存档（TradingAgents 有 <code>full_states_log</code>），留给人或独立评估者查；对关键数字做确定性检查。</p>
+<p><strong>2. 看 LangGraph、CrewAI 这类框架，先问&#34;判断函数读的是什么&#34;。</strong>框架画出来的图，有的边由模型决定（agent），有的边由代码决定（workflow），一个项目里往往两种都有。</p>
+<blockquote class="ln-ext">
+<p><strong>举一反三：</strong> 设计交接时先问：下游拿到的是结论还是证据？上游错了，下游有没有办法发现？没有证据时，下游往往连&#34;存疑&#34;都不会，一个看起来合理的错数会被直接当成事实。</p></blockquote>
+<h2 id="还没解决的问题">还没解决的问题</h2>
+<blockquote class="ln-ask">
+<p><strong>思考题：</strong> 上游 agent 把结果交给下游时，交接的数据该怎么设计：只交一段报告、报告里附证据（关键数字、来源），还是允许下游按需回查原始工具结果？各自的成本和风险是什么？提示：等学到多 agent 那几课时再展开。</p></blockquote>
+<h2 id="下一步">下一步</h2>
+<ul><li><p>当晚接着做了 learn-claude-code s02（加工具），写在下一篇。</p></li></ul>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/learn-agent-2026-11-19/"><small>← 上一篇</small>什么才算 agent</a><a class="next" href="/post/learn-agent-2026-11-23/"><small>下一篇 →</small>s02 加工具，改善的是接口</a></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>
