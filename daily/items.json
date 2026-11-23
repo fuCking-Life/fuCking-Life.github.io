@@ -56,6 +56,46 @@
     "posted_at": "2026-11-21"
   },
   {
+    "id": "lumi-2026-11-23-pipecat-1170",
+    "date": "2026-11-23",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Pipecat 1.17.0：把端点判断从 STT 收回流水线，并收紧打断后的播放余量",
+    "summary": "Pipecat v1.17.0 新增 vad_force_turn_endpoint，把端点判断从 STT 收回流水线；MoQ 播放缓冲默认从 25000 ms 降到 2000 ms。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要把 end-of-turn 绑死在某一家云端 STT 的端点上：VAD 负责分段，语义端点（smart-turn / 小分类器 / LLM gate）单独做决定，并保留方向盘或按键这种强制收尾。导航播报被打断后，要单独限制已合成、已送出的音频还要播多久，不要用很大的播放缓冲把 barge-in 拖长。评测延迟应对齐“开始出声”，并用分段转写把打断语音和助手回复分开算。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "开源",
+      "语音 Agent"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程",
+      "开源发布"
+    ],
+    "source": {
+      "name": "pipecat-ai/pipecat",
+      "handle": "",
+      "identity": "GitHub。开源实时语音 agent 框架（关注账号 @pipecat_ai 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/pipecat-ai/pipecat/releases/tag/v1.17.0"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-23/",
+    "posted_at": "2026-11-23"
+  },
+  {
     "id": "agent-app-2026-11-23-ios-dictation-keyboards",
     "date": "2026-11-23",
     "seq": 2,
@@ -106,6 +146,53 @@
     ],
     "archive_url": "/post/agent-app-2026-11-23/",
     "posted_at": "2026-11-20"
+  },
+  {
+    "id": "lumi-2026-11-23-fluidaudio-streaming-asr",
+    "date": "2026-11-23",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "FluidAudio：短句在空白窗口后会丢掉开头，流式 ASR 的最终窗要重新冷启动解码",
+    "summary": "FluidAudio 尚未打新版本号，但合入流式 ASR 修复：若前几窗没有吐出 token，最终窗从全新状态重解码，避免短句丢掉开头。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "如果 iOS 上流式 ASR 用滑窗且会把 decoder 状态跨窗传递，一定要单独测“前几窗空白、最后一窗才出字”的短指令（比如“去加油站”），不要只用批处理 WER。最终窗在尚未产出任何 token 时，应清空状态从头解，否则句首会被吃掉。若接入 FluidAudio 的 Pocket TTS，短确认语不要再自行补前导空格，并回归“请左转”这类短句是否重复首词。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "开源",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "FluidInference/FluidAudio",
+      "handle": "",
+      "identity": "GitHub。Swift + Core ML 的端上 ASR / VAD / TTS SDK（关注账号 @Alex_tra_memory 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "流式 ASR 修复",
+        "url": "https://github.com/FluidInference/FluidAudio/pull/1164"
+      },
+      {
+        "label": "Pocket TTS 修复",
+        "url": "https://github.com/FluidInference/FluidAudio/pull/1154"
+      },
+      {
+        "label": "重采样复用",
+        "url": "https://github.com/FluidInference/FluidAudio/pull/1165"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-23/",
+    "posted_at": "2026-11-23"
   },
   {
     "id": "agent-app-2026-11-23-dot-carplay",
@@ -160,6 +247,54 @@
     "posted_at": "2026-11-21"
   },
   {
+    "id": "lumi-2026-11-23-sophon-realtime-16",
+    "date": "2026-11-23",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "Sophon Realtime 1.6：`say` 不再切断尚未播完的回复，不可打断要护到播放结束",
+    "summary": "Sophon Realtime v1.6.0 增加 say；v1.6.1 让 say 等到上一句播放完再开口，不可打断也护到播放结束，而不只到合成结束。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "工具调用之后的播报（路线已规划、正在搜索）不要立刻插入，先等上一句生成并播放完。导航提示和安全相关短句应设成播放结束前不可打断；闲聊回复可以允许 barge-in。注意“合成完成”不等于“司机已经听完”：端上 TTS 若快于实时，过早放开麦克风会在播报中途被误打断。"
+    },
+    "relevance": 4,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程",
+      "前沿语音模型"
+    ],
+    "source": {
+      "name": "adventists-ai/sophon-realtime",
+      "handle": "",
+      "identity": "GitHub。开源的实时 speech-to-speech 引擎，带 OpenAI Realtime 兼容面以及 LiveKit / Pipecat 网关"
+    },
+    "links": [
+      {
+        "label": "v1.6.1",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.1"
+      },
+      {
+        "label": "v1.6.0",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.0"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/adventists-ai/sophon-realtime"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-23/",
+    "posted_at": "2026-11-22"
+  },
+  {
     "id": "agent-app-2026-11-23-inkling-2-mini",
     "date": "2026-11-23",
     "seq": 4,
@@ -209,6 +344,57 @@
     "posted_at": "2026-11-20"
   },
   {
+    "id": "lumi-2026-11-23-sherpa-onnx-203",
+    "date": "2026-11-23",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx v2.0.3：说话人聚类先丢掉过短的干净语音片段，并导出 w2v-BERT CTC 到 ONNX",
+    "summary": "sherpa-onnx v2.0.3 修复离线说话人聚类：只聚类干净语音不少于窗口 20% 的 embedding；并加入 w2v-BERT 2.0 CTC 的 ONNX 导出。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车内做司机定向或说话人日志时，不要把过短的路噪、咳嗽或含混片段送进聚类，否则指定说话人数时容易把副驾和司机并成一类。可以先设最短干净语音门限，再把短片段挂到最近的已有说话人。PocketTTS 若进入候选，许可按 CC-BY-4.0 理解。w2v-BERT 这次落地是加利西亚语、体积也偏大，先不必当作 iOS 上的中英 ASR 选项。若用流式 TTS，打断或点停止时要让合成回调真正停下来，不要把整段文本合成完。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "开源",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "唤醒与声纹",
+      "开源发布"
+    ],
+    "source": {
+      "name": "k2-fsa/sherpa-onnx",
+      "handle": "",
+      "identity": "GitHub。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/v2.0.3"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/k2-fsa/sherpa-onnx"
+      },
+      {
+        "label": "聚类修复",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4240"
+      },
+      {
+        "label": "Supertonic 停止",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4266"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-23/",
+    "posted_at": "2026-11-22"
+  },
+  {
     "id": "agent-app-2026-11-23-gurman-siri-agents",
     "date": "2026-11-23",
     "seq": 5,
@@ -248,6 +434,57 @@
     ],
     "archive_url": "/post/agent-app-2026-11-23/",
     "posted_at": "2026-11-22"
+  },
+  {
+    "id": "lumi-2026-11-23-wllama-400",
+    "date": "2026-11-23",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "wllama 4.0.0：浏览器里接上全双工实时音频（Hibiki 仍是法英同传，80 ms 一帧）",
+    "summary": "wllama v4.0.0 在浏览器里接上全双工实时音频：对 has_audio_duplex 模型每 80 ms 进出一帧；文档举例仍是 Kyutai Hibiki 法英同传。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要把 wllama 或 Hibiki 直接接到司机助手：它跑在浏览器里，而 Hibiki 仍是法英同传，不是导航对话和工具调用。值得记下的是与昨日 llama.cpp server 相同的协议——固定 80 ms 帧、边听边说、客户端不做话轮。Luna 继续走级联；若以后要在本地试 Moshi 类双工，这是浏览器对照，车机和 iPhone 上的延迟、回声消除和电池都要另测。"
+    },
+    "relevance": 3,
+    "domains": [
+      "全双工",
+      "开源",
+      "打断与轮次"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "开源发布",
+      "话轮控制"
+    ],
+    "source": {
+      "name": "Xuan-Son Nguyen",
+      "handle": "@ngxson",
+      "identity": "Hugging Face 工程师，llama.cpp 多模态主要贡献者，wllama（浏览器里的 llama.cpp）作者"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/ngxson/status/2124581211280404803"
+      },
+      {
+        "label": "发布说明",
+        "url": "https://github.com/ngxson/wllama/releases/tag/4.0.0"
+      },
+      {
+        "label": "介绍",
+        "url": "https://github.com/ngxson/wllama/blob/master/guides/intro-v4.md"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/ngxson/wllama"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-23/",
+    "posted_at": "2026-11-23"
   },
   {
     "id": "agent-app-2026-11-23-perplexity-intelligence",
