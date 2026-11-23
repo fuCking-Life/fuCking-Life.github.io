@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/</link>
     <description>做 Agent 和语音 AI，也研究 A 股短线。这里每天更新 AI 简报、交易资讯和学习笔记。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 22 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-23）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-23/</link>
+      <pubDate>Mon, 23 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-23/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-20 08:38 – 2026-11-23 08:40（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 6 条：Google 把 Gboard Rambler 同款语音编辑能力开放到 Gemini API；Wispr Flow 与 Hex 等 iOS 键盘可在当前输入框里直接听写；OpenAI 开发者体验负责人演示可在 Apple CarPlay 里呼叫 Dot；Thinking Machines 开源 26.4B 循环 Transformer Inkling 2 Mini，官方称约 20GB 即可在笔记本上跑；彭博 Gurman 称苹果更高级 Agent 或要到 2027 年底、Siri 对自家 App 的多步控制据称 12 月先上；OpenAI 首席科学家公开预训练 perplexity 进度，并提议用它作为行业共同安全上限。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日交易资讯（2026-11-22）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-22/</link>
