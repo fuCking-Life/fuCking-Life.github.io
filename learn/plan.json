@@ -1,9 +1,9 @@
 {
  "title": "Agent 学习冲刺",
- "subtitle": "跟着别人的项目和经验学 agent：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Codex → 一线团队经验 → 评估 → 工具接口 → 安全与约束 → 可观测与状态 → 训练入门和框架对比",
+ "subtitle": "跟着别人的项目和经验学 agent：learn-claude-code → TradingAgents → Claude Code → DeepSeek Harness / Hermes → Codex → 一线团队经验 → 评估 → 工具接口 → 安全与约束 → 可观测与状态 → 训练入门和框架对比",
  "hours": "每天约 3 小时；每周日是复盘 + 补课日",
  "start": "2026-11-23",
- "end": "2027-02-14",
+ "end": "2027-02-21",
  "note": "计划可以往后加周：在 weeks 末尾追加，页面会自动显示。",
  "weeks": [
   {
@@ -1315,22 +1315,44 @@
     {
      "date": "2026-12-25",
      "label": "写一个 MCP server",
-     "goal": "接入一个只读数据源",
+     "goal": "按 2026-07-28 新规范，用 Python SDK v2 接入一个只读数据源",
      "tasks": [
       {
        "id": "20261225-1",
-       "text": "设计工具：粒度、描述、返回多大",
-       "min": 40
+       "text": "先读 MCP 2026-07-28 规范的更新说明：无状态、input_required（MRTR）、哪些功能废弃了。网上 2025 年的教程大多过时",
+       "min": 30,
+       "links": [
+        {
+         "label": "规范更新说明",
+         "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/changelog.mdx"
+        }
+       ]
       },
       {
        "id": "20261225-2",
-       "text": "让 AI 实现，接进 Claude Code",
-       "min": 60
+       "text": "设计工具：粒度、描述、返回多大；让 AI 用 v2 SDK 写一个 server（2 个工具 + 1 个 resource），接进 Claude Code",
+       "min": 70,
+       "links": [
+        {
+         "label": "Python SDK",
+         "url": "https://github.com/modelcontextprotocol/python-sdk"
+        },
+        {
+         "label": "构建 server 教程",
+         "url": "https://modelcontextprotocol.io/docs/develop/build-server"
+        }
+       ]
       },
       {
        "id": "20261225-3",
-       "text": "用 3 个问题测试，看它会不会选错工具",
-       "min": 40
+       "text": "故意把一个工具描述写得和 Claude Code 自带工具相似，看它选哪个；用 Inspector 看原始 JSON 消息",
+       "min": 40,
+       "links": [
+        {
+         "label": "MCP Inspector",
+         "url": "https://github.com/modelcontextprotocol/inspector"
+        }
+       ]
       },
       {
        "id": "20261225-4",
@@ -1342,17 +1364,23 @@
     {
      "date": "2026-12-26",
      "label": "Agent SDK",
-     "goal": "用 SDK 做一个小 agent",
+     "goal": "把 Claude Code 的 harness 当库来用",
      "tasks": [
       {
        "id": "20261226-1",
-       "text": "用 Claude Agent SDK 做一个小 agent",
-       "min": 80
+       "text": "用 Claude Agent SDK 做 s01 的同一个任务（ANTHROPIC_BASE_URL 指向 DeepSeek），对比轮数和 token",
+       "min": 70,
+       "links": [
+        {
+         "label": "Claude Agent SDK",
+         "url": "https://github.com/anthropics/claude-agent-sdk-python"
+        }
+       ]
       },
       {
        "id": "20261226-2",
-       "text": "和 s01 的手写循环对比：SDK 帮你做了哪些事",
-       "min": 40
+       "text": "用 can_use_tool 拒绝一个工具，再用 PreToolUse hook 拦截一次，读会话记录里两种拒绝分别怎么呈现给模型",
+       "min": 50
       },
       {
        "id": "20261226-3",
@@ -1388,33 +1416,49 @@
   {
    "n": 6,
    "title": "第 6 周",
-   "theme": "harness 横向对比：DeepSeek Harness + Codex",
+   "theme": "DeepSeek Harness 与常驻 agent",
    "days": [
     {
      "date": "2026-12-28",
-     "label": "DeepSeek Harness",
-     "goal": "跑起来 + 读插件接口",
+     "label": "dsh：插件树",
+     "goal": "连 loop 都是插件：每个零件挂在哪",
      "tasks": [
       {
        "id": "20261228-1",
-       "text": "按 README 跑起来（npx 或源码）",
-       "min": 50,
+       "text": "用 npx @deepseek-ai/dsh web 跑起来，在设置里填 DeepSeek key；注意它还是预发布版本，会有破坏性变更",
+       "min": 40,
        "links": [
         {
-         "label": "deepseek-harness",
-         "url": "https://github.com/deepseek-ai/deepseek-harness"
+         "label": "模型配置说明",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/providers.zh.md"
         }
        ]
       },
       {
        "id": "20261228-2",
-       "text": "画出插件接口：模型适配器、工具注册表、loop",
-       "min": 60
+       "text": "读架构文档和 Cordis 入门：服务、inject、可撤销的注册",
+       "min": 50,
+       "links": [
+        {
+         "label": "架构",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.zh.md"
+        },
+        {
+         "label": "Cordis 入门",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/cordis-primer.zh.md"
+        }
+       ]
       },
       {
        "id": "20261228-3",
-       "text": "对照 learn-claude-code：哪些被做成了可替换的？",
-       "min": 30
+       "text": "用 --dump-config 看整棵插件树，用 headless --json 跑一个任务读事件流，画出 loop、工具、模型各挂在哪",
+       "min": 50,
+       "links": [
+        {
+         "label": "CLI 说明",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/cli-help.zh.md"
+        }
+       ]
       },
       {
        "id": "20261228-4",
@@ -1425,23 +1469,45 @@
     },
     {
      "date": "2026-12-29",
-     "label": "写一个 dsh 插件",
-     "goal": "加一个工具或换一个模型适配",
+     "label": "dsh：工具流水线与沙箱",
+     "goal": "一旦拒绝，后面谁也不能放行",
      "tasks": [
       {
        "id": "20261229-1",
-       "text": "选一个插件点",
-       "min": 20
+       "text": "读工具执行流水线：pre-execute → 单调 guard → execute → post-execute，对照 s03 权限、s04 hooks",
+       "min": 40,
+       "links": [
+        {
+         "label": "工具流水线",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/tool-execution-pipeline.zh.md"
+        }
+       ]
       },
       {
        "id": "20261229-2",
-       "text": "让 AI 实现插件",
-       "min": 70
+       "text": "照 cookbook 的权限门禁例子，让 AI 写一个拦截 rm 的插件，诱导模型删文件，读事件流",
+       "min": 60,
+       "links": [
+        {
+         "label": "扩展 cookbook",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/cookbook/extension-cookbook.zh.md"
+        }
+       ]
       },
       {
        "id": "20261229-3",
-       "text": "跑通并读一次 trace",
-       "min": 40
+       "text": "沙箱两档对比：workspace-write 下让它往工作区外写文件，再换 danger-full-access 跑同一个任务",
+       "min": 40,
+       "links": [
+        {
+         "label": "沙箱",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/sandbox.zh.md"
+        },
+        {
+         "label": "权限预设",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/permission-presets.zh.md"
+        }
+       ]
       },
       {
        "id": "20261229-4",
@@ -1452,27 +1518,46 @@
     },
     {
      "date": "2026-12-30",
-     "label": "Codex",
-     "goal": "跑起来 + 读 harness 结构",
+     "label": "dsh：PTC 与自我修改",
+     "goal": "模型写程序批量调工具；agent 能不能改自己",
      "tasks": [
       {
        "id": "20261230-1",
-       "text": "跑起 OpenAI Codex CLI",
-       "min": 40,
+       "text": "读 PTC：开启后模型只能调 run_code，在一段程序里批量调用工具",
+       "min": 30,
        "links": [
         {
-         "label": "codex",
-         "url": "https://github.com/openai/codex"
+         "label": "PTC",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/ptc-runtime.zh.md"
         }
        ]
       },
       {
        "id": "20261230-2",
-       "text": "读它的沙箱、审批和会话设计",
-       "min": 70
+       "text": "实验：同一个批量任务（比如统计 50 个文件），普通模式和 PTC 模式各跑一次，比步数和 token",
+       "min": 60
       },
       {
        "id": "20261230-3",
+       "text": "读“创造模式”：agent 自己写插件、热加载。写下你会给它设哪些安全边界；顺带扫一眼它的事故复盘",
+       "min": 50,
+       "links": [
+        {
+         "label": "扩展机制",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/extensions.zh.md"
+        },
+        {
+         "label": "SAFETY.md",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/SAFETY.md"
+        },
+        {
+         "label": "事故复盘",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/tree/master/docs/postmortem"
+        }
+       ]
+      },
+      {
+       "id": "20261230-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -1480,21 +1565,46 @@
     },
     {
      "date": "2026-12-31",
-     "label": "三方对比",
-     "goal": "Claude Code / Codex / DeepSeek Harness",
+     "label": "主动式 agent",
+     "goal": "dsh-superagent：授权写在代码里，不写在消息里",
      "tasks": [
       {
        "id": "20261231-1",
-       "text": "做对比表：权限、上下文压缩、沙箱、会话恢复、子 agent",
-       "min": 90
+       "text": "读 superagent 设计文档 000–003：注意力是成本、Trigger → Eval → Ticket + Mandate、accept mode 三档",
+       "min": 60,
+       "links": [
+        {
+         "label": "理念",
+         "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/000-philosophy.md"
+        },
+        {
+         "label": "授权",
+         "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/002-authorization.md"
+        },
+        {
+         "label": "执行",
+         "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/003-execution.md"
+        }
+       ]
       },
       {
        "id": "20261231-2",
-       "text": "每一行写出你更认同哪种做法，以及为什么",
-       "min": 40
+       "text": "纸上实验：把 admission.md 当 system prompt 喂给 DeepSeek，给它 10 条伪造消息（转述别人的指令、bot 消息、只回“好的”），读它怎么判。不要真部署",
+       "min": 60,
+       "links": [
+        {
+         "label": "admission.md",
+         "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/prompts/admission.md"
+        }
+       ]
       },
       {
        "id": "20261231-3",
+       "text": "改一条规则再跑一遍，看判定怎么变；写下 observe → auto 的切换条件",
+       "min": 30
+      },
+      {
+       "id": "20261231-4",
        "text": "写当天笔记",
        "min": 20
       }
@@ -1502,22 +1612,42 @@
     },
     {
      "date": "2027-01-01",
-     "label": "主动式 agent",
-     "goal": "dsh-superagent 原型",
+     "label": "Hermes：skill 的一生",
+     "goal": "做完任务自动生成 skill，空闲时整理",
      "tasks": [
       {
        "id": "20270101-1",
-       "text": "跑一下 dsh-superagent-prototype",
-       "min": 50
+       "text": "读 Hermes 的 skills 和 curator 文档，以及 curator.py 开头的说明",
+       "min": 50,
+       "links": [
+        {
+         "label": "Hermes Agent",
+         "url": "https://github.com/NousResearch/hermes-agent/"
+        },
+        {
+         "label": "功能文档",
+         "url": "https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/features"
+        },
+        {
+         "label": "curator.py",
+         "url": "https://github.com/NousResearch/hermes-agent/blob/main/agent/curator.py"
+        }
+       ]
       },
       {
        "id": "20270101-2",
-       "text": "看它怎么决定“主动做什么”，默认只记录的边界怎么设计",
-       "min": 50
+       "text": "用它的 DeepSeek 插件跑起来（Docker 后端），同一个非 coding 任务做两次：第一次有没有生成 skill，第二次有没有用上",
+       "min": 70,
+       "links": [
+        {
+         "label": "DeepSeek 插件",
+         "url": "https://github.com/NousResearch/hermes-agent/tree/main/plugins/model-providers/deepseek"
+        }
+       ]
       },
       {
        "id": "20270101-3",
-       "text": "你工作里有没有适合主动发现问题的场景？写下来",
+       "text": "手动触发 Curator，读它保留、合并、归档的理由",
        "min": 30
       },
       {
@@ -1529,18 +1659,34 @@
     },
     {
      "date": "2027-01-02",
-     "label": "托管 vs 自建",
-     "goal": "+ 阶段 3 产出",
+     "label": "Hermes：记忆与心跳",
+     "goal": "有上限的记忆、定时和心跳带来的主动性",
      "tasks": [
       {
        "id": "20270102-1",
-       "text": "比较 Managed Agents / OpenAI Agents API 和开源 harness：控制权、成本、数据、锁定",
-       "min": 50
+       "text": "读 memory 和 heartbeat 文档：两个有上限的记忆文件、写前查重、快满时合并",
+       "min": 40,
+       "links": [
+        {
+         "label": "功能文档",
+         "url": "https://github.com/NousResearch/hermes-agent/tree/main/website/docs/user-guide/features"
+        }
+       ]
       },
       {
        "id": "20270102-2",
-       "text": "写《三大 coding harness 设计对比》",
-       "min": 80
+       "text": "往记忆里塞一条错误的偏好，看它会不会被纠正；再看历史会话全文搜索怎么用",
+       "min": 60
+      },
+      {
+       "id": "20270102-3",
+       "text": "设一个心跳任务，对比 superagent 的 accept mode：两者把“主动做事”的边界放在哪",
+       "min": 40
+      },
+      {
+       "id": "20270102-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
@@ -1561,8 +1707,14 @@
       },
       {
        "id": "20270103-3",
-       "text": "review 清单：补本周见过的例子（旋钮 14 运行环境、15 主动性边界、16 可移植性与托管）",
-       "min": 20
+       "text": "review 清单：补本周见过的例子（旋钮 7 权限、12 跨会话记忆、15 主动性边界）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
       },
       {
        "id": "20270103-4",
@@ -1576,33 +1728,49 @@
   {
    "n": 7,
    "title": "第 7 周",
-   "theme": "向一线团队学经验：必读文章 + 开源 coding agent",
+   "theme": "Codex 深入：唯一能读源码的大厂生产级 harness",
    "days": [
     {
      "date": "2027-01-04",
-     "label": "OpenAI：harness engineering",
-     "goal": "精读 OpenAI《Harness engineering: leveraging Codex in an agent-first world》",
+     "label": "Codex：跑起来",
+     "goal": "接上 DeepSeek，读主循环",
      "tasks": [
       {
        "id": "20270104-1",
-       "text": "精读全文，摘出 5 条可以直接拿来用的经验",
-       "min": 70,
+       "text": "按 DeepSeek 官方接入页配好 Codex（走 Responses API），跑一个小任务",
+       "min": 40,
        "links": [
         {
-         "label": "OpenAI 原文",
-         "url": "https://openai.com/index/harness-engineering/"
+         "label": "DeepSeek 接入 Codex",
+         "url": "https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex/"
+        },
+        {
+         "label": "Codex",
+         "url": "https://github.com/openai/codex/"
         }
        ]
       },
       {
        "id": "20270104-2",
-       "text": "对照自己仓库的 CLAUDE.md：哪些做法已经有了，哪些没有",
-       "min": 40
+       "text": "精读 OpenAI《Unrolling the Codex agent loop》",
+       "min": 60,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://openai.com/index/unrolling-the-codex-agent-loop/"
+        }
+       ]
       },
       {
        "id": "20270104-3",
-       "text": "挑一条用到 CLAUDE.md 或 learn-claude-code 上",
-       "min": 40
+       "text": "用 codex exec --json 跑同一个任务，读事件流，画出它的主循环，和 s01 对照",
+       "min": 40,
+       "links": [
+        {
+         "label": "事件定义",
+         "url": "https://github.com/openai/codex/blob/main/codex-rs/exec/src/exec_events.rs"
+        }
+       ]
       },
       {
        "id": "20270104-4",
@@ -1613,35 +1781,39 @@
     },
     {
      "date": "2027-01-05",
-     "label": "Anthropic：长任务与上下文",
-     "goal": "精读 Anthropic 的 harness 设计和 context engineering 文章",
+     "label": "Codex：沙箱与 execpolicy",
+     "goal": "把“能不能做”交给操作系统和规则",
      "tasks": [
       {
        "id": "20270105-1",
-       "text": "读 Anthropic Engineering 上关于长时间运行应用的 harness 设计文章（规划者 / 执行者 / 评估者）",
-       "min": 60,
+       "text": "读沙箱设计：Seatbelt / bwrap、三种模式、默认断网、.git 只读；看 .sbpl 策略文件",
+       "min": 50,
        "links": [
         {
-         "label": "Anthropic Engineering",
-         "url": "https://www.anthropic.com/engineering"
+         "label": "官方文档",
+         "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        },
+        {
+         "label": "sandboxing 源码",
+         "url": "https://github.com/openai/codex/tree/main/codex-rs/sandboxing/src"
         }
        ]
       },
       {
        "id": "20270105-2",
-       "text": "读《Effective context engineering for AI agents》",
-       "min": 50,
-       "links": [
-        {
-         "label": "原文",
-         "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
-        }
-       ]
+       "text": "实验：codex sandbox macos --log-denials 跑 curl 和 touch ~/x，看哪些被拒",
+       "min": 40
       },
       {
        "id": "20270105-3",
-       "text": "和 learn-claude-code 的 s08、s17 对照：哪些想法课程里已经有了",
-       "min": 40
+       "text": "读 execpolicy，写一条 prefix_rule 禁掉 git push，再诱导模型去推",
+       "min": 50,
+       "links": [
+        {
+         "label": "execpolicy",
+         "url": "https://github.com/openai/codex/blob/main/codex-rs/execpolicy/README.md"
+        }
+       ]
       },
       {
        "id": "20270105-4",
@@ -1652,74 +1824,74 @@
     },
     {
      "date": "2027-01-06",
-     "label": "多 agent 之争",
-     "goal": "该不该拆成多个 agent？看三方观点",
+     "label": "Codex：审批与 guardian",
+     "goal": "需要审批的动作先交给独立的审查 agent",
      "tasks": [
       {
        "id": "20270106-1",
-       "text": "读 Anthropic《How we built our multi-agent research system》",
-       "min": 45,
+       "text": "读审批策略（on-request / never / granular）和 guardian 的实现：出错时一律拒绝",
+       "min": 50,
        "links": [
         {
-         "label": "原文",
-         "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+         "label": "guardian",
+         "url": "https://github.com/openai/codex/tree/main/codex-rs/core/src/guardian"
         }
        ]
       },
       {
        "id": "20270106-2",
-       "text": "读 Cognition《Don't Build Multi-Agents》",
-       "min": 35,
-       "links": [
-        {
-         "label": "原文",
-         "url": "https://cognition.ai/blog/dont-build-multi-agents"
-        }
-       ]
+       "text": "实验：打开 auto-review，故意让模型删文件、改测试目录外的文件，读审查 agent 的判断",
+       "min": 60
       },
       {
        "id": "20270106-3",
-       "text": "读 LangChain《Organizing Context in a Multi-Agent Harness》：子 agent 是 fork 还是隔离",
-       "min": 40,
-       "links": [
-        {
-         "label": "原文",
-         "url": "https://www.langchain.com/blog/organizing-context-in-a-multi-agent-harness"
-        }
-       ]
+       "text": "和 s17 的独立判断器、superagent 的 Mandate 对比：审查放在哪一层最合适",
+       "min": 30
       },
       {
        "id": "20270106-4",
-       "text": "写你的判断：什么情况拆、什么情况不拆",
-       "min": 30
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
     {
      "date": "2027-01-07",
-     "label": "mini-swe-agent",
-     "goal": "100 行的 agent 为什么能在 SWE-bench 上拿高分",
+     "label": "Codex：循环、缓存与压缩",
+     "goal": "为 prompt cache 设计的只追加历史",
      "tasks": [
       {
        "id": "20270107-1",
-       "text": "读完 mini-swe-agent 的全部核心代码",
-       "min": 60,
+       "text": "搞懂为什么历史只追加、不改写，改配置为什么是追加一条消息",
+       "min": 40,
        "links": [
         {
-         "label": "mini-swe-agent",
-         "url": "https://github.com/SWE-agent/mini-swe-agent"
+         "label": "原文（看 prompt caching 一节）",
+         "url": "https://openai.com/index/unrolling-the-codex-agent-loop/"
         }
        ]
       },
       {
        "id": "20270107-2",
-       "text": "跑一个小任务，读 trace",
-       "min": 40
+       "text": "读 apply_patch 的语法定义：为什么用语法约束的自由格式，而不是 JSON 参数",
+       "min": 40,
+       "links": [
+        {
+         "label": "apply_patch.lark",
+         "url": "https://github.com/openai/codex/blob/main/codex-rs/core/assets/tools/apply_patch.lark"
+        }
+       ]
       },
       {
        "id": "20270107-3",
-       "text": "和 s01 对比：它刻意不做什么？为什么极简反而有效",
-       "min": 50
+       "text": "把 auto_compact_limit 调小，跑一个长任务，对比压缩前后的 rollout 文件，和你在 s08 做的压缩比",
+       "min": 60,
+       "links": [
+        {
+         "label": "compact.rs",
+         "url": "https://github.com/openai/codex/blob/main/codex-rs/core/src/tasks/compact.rs"
+        }
+       ]
       },
       {
        "id": "20270107-4",
@@ -1730,29 +1902,41 @@
     },
     {
      "date": "2027-01-08",
-     "label": "OpenHands",
-     "goal": "一个完整的开源 coding agent 平台",
+     "label": "Codex：会话与协议",
+     "goal": "rollout、resume / fork、记忆流水线",
      "tasks": [
       {
        "id": "20270108-1",
-       "text": "读架构文档：事件流、agent 控制器、沙箱",
-       "min": 60,
+       "text": "读 ~/.codex/sessions 里的 rollout 文件，用 codex resume 接着做、用 fork 分叉一次",
+       "min": 50,
        "links": [
         {
-         "label": "OpenHands",
-         "url": "https://github.com/OpenHands/OpenHands"
+         "label": "rollout",
+         "url": "https://github.com/openai/codex/tree/main/codex-rs/rollout/src"
         }
        ]
       },
       {
        "id": "20270108-2",
-       "text": "跑起来做一个小任务，读事件日志",
-       "min": 50
+       "text": "读两阶段的后台记忆流水线：先抽取、再合并，和 Hermes 的记忆对比",
+       "min": 40,
+       "links": [
+        {
+         "label": "memories",
+         "url": "https://github.com/openai/codex/blob/main/codex-rs/memories/README.md"
+        }
+       ]
       },
       {
        "id": "20270108-3",
-       "text": "和 Claude Code 对比：沙箱和权限各怎么做",
-       "min": 40
+       "text": "读 OpenAI 讲 App Server 的文章：thread / turn / item 模型怎么给多个客户端复用",
+       "min": 50,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://openai.com/index/unlocking-the-codex-harness/"
+        }
+       ]
       },
       {
        "id": "20270108-4",
@@ -1763,56 +1947,56 @@
     },
     {
      "date": "2027-01-09",
-     "label": "opencode",
-     "goal": "最火的开源 coding agent 之一",
+     "label": "三方对比",
+     "goal": "Claude Code / DeepSeek Harness / Codex",
      "tasks": [
       {
        "id": "20270109-1",
-       "text": "跑起来，体验一次完整任务",
-       "min": 40,
-       "links": [
-        {
-         "label": "opencode",
-         "url": "https://github.com/anomalyco/opencode"
-        }
-       ]
+       "text": "做对比表：权限、沙箱、审批、上下文压缩、会话恢复、子 agent、扩展机制",
+       "min": 70
       },
       {
        "id": "20270109-2",
-       "text": "读它的工具定义和权限设计",
-       "min": 60
-      },
-      {
-       "id": "20270109-3",
-       "text": "和 Claude Code、Codex 放进第 6 周的对比表",
+       "text": "每一行写出你更认同哪种做法，以及为什么",
        "min": 40
       },
       {
-       "id": "20270109-4",
-       "text": "写当天笔记",
-       "min": 20
+       "id": "20270109-3",
+       "text": "比较托管（Managed Agents、OpenAI Agents API）和开源 harness：控制权、成本、数据、锁定",
+       "min": 40
       }
      ]
     },
     {
      "date": "2027-01-10",
      "label": "第 7 周复盘",
-     "goal": "复盘 + 补课",
+     "goal": "复盘 + 补课日：没做完的任务在今天补上",
      "tasks": [
       {
        "id": "20270110-1",
        "text": "补完本周没做完的任务",
-       "min": 50
-      },
-      {
-       "id": "20270110-2",
-       "text": "写《一线团队的 10 条 agent 经验》，发到 blog",
        "min": 60
       },
       {
+       "id": "20270110-2",
+       "text": "写《三大 coding harness 设计对比》，发到 blog",
+       "min": 40
+      },
+      {
        "id": "20270110-3",
-       "text": "review 清单：把新经验补进对应的旋钮",
-       "min": 30
+       "text": "review 清单：补本周见过的例子（旋钮 7 权限、14 运行环境、16 可移植性与托管）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270110-4",
+       "text": "看一眼下周计划，有疑问就记下来",
+       "min": 10
       }
      ]
     }
@@ -1821,45 +2005,33 @@
   {
    "n": 8,
    "title": "第 8 周",
-   "theme": "记忆、协议、评估入门",
+   "theme": "向一线团队学经验：必读文章 + 开源 agent",
    "days": [
     {
      "date": "2027-01-11",
-     "label": "记忆系统",
-     "goal": "Letta / mem0 / Anthropic 记忆分层",
+     "label": "OpenAI：harness engineering",
+     "goal": "精读 OpenAI《Harness engineering: leveraging Codex in an agent-first world》",
      "tasks": [
       {
        "id": "20270111-1",
-       "text": "读 Letta 的记忆设计（从 MemGPT 演化来的分层记忆）",
-       "min": 50,
+       "text": "精读全文，摘出 5 条可以直接拿来用的经验",
+       "min": 70,
        "links": [
         {
-         "label": "letta",
-         "url": "https://github.com/letta-ai/letta"
+         "label": "OpenAI 原文",
+         "url": "https://openai.com/index/harness-engineering/"
         }
        ]
       },
       {
        "id": "20270111-2",
-       "text": "读 mem0 的记忆层设计",
-       "min": 40,
-       "links": [
-        {
-         "label": "mem0",
-         "url": "https://github.com/mem0ai/mem0"
-        }
-       ]
+       "text": "对照自己仓库的 CLAUDE.md：哪些做法已经有了，哪些没有",
+       "min": 40
       },
       {
        "id": "20270111-3",
-       "text": "三方对照：存什么、什么时候写、怎么检索、怎么防过时",
-       "min": 50,
-       "links": [
-        {
-         "label": "Anthropic 记忆文章",
-         "url": "https://www.anthropic.com/research/components-of-agent-memory"
-        }
-       ]
+       "text": "挑一条用到 CLAUDE.md 或 learn-claude-code 上",
+       "min": 40
       },
       {
        "id": "20270111-4",
@@ -1870,35 +2042,35 @@
     },
     {
      "date": "2027-01-12",
-     "label": "协议：MCP + A2A",
-     "goal": "agent 接工具 vs agent 和 agent 对话",
+     "label": "Anthropic：长任务与上下文",
+     "goal": "精读 Anthropic 的 harness 设计和 context engineering 文章",
      "tasks": [
       {
        "id": "20270112-1",
-       "text": "读 MCP 最新规范的核心部分",
+       "text": "读 Anthropic Engineering 上关于长时间运行应用的 harness 设计文章（规划者 / 执行者 / 评估者）",
        "min": 60,
        "links": [
         {
-         "label": "MCP 官网",
-         "url": "https://modelcontextprotocol.io"
+         "label": "Anthropic Engineering",
+         "url": "https://www.anthropic.com/engineering"
         }
        ]
       },
       {
        "id": "20270112-2",
-       "text": "读 A2A 协议的核心概念",
+       "text": "读《Effective context engineering for AI agents》",
        "min": 50,
        "links": [
         {
-         "label": "A2A",
-         "url": "https://github.com/a2aproject/A2A"
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
        ]
       },
       {
        "id": "20270112-3",
-       "text": "写清楚：两者分别解决什么，什么时候用哪个",
-       "min": 30
+       "text": "和 learn-claude-code 的 s08、s17 对照：哪些想法课程里已经有了",
+       "min": 40
       },
       {
        "id": "20270112-4",
@@ -1909,86 +2081,78 @@
     },
     {
      "date": "2027-01-13",
-     "label": "评估方法",
-     "goal": "agent 评估怎么设计：打分器、用例、pass^k",
+     "label": "多 agent 之争",
+     "goal": "该不该拆成多个 agent？看三方观点",
      "tasks": [
       {
        "id": "20270113-1",
-       "text": "精读 Anthropic《Demystifying evals for AI agents》：三类打分器（代码规则、模型、人工）各用在哪",
-       "min": 60,
+       "text": "读 Anthropic《How we built our multi-agent research system》",
+       "min": 45,
        "links": [
         {
-         "label": "Anthropic 评估文章",
-         "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
         }
        ]
       },
       {
        "id": "20270113-2",
-       "text": "搞懂 pass@k 和 pass^k 的区别：为什么上线的 agent 更该看 pass^k",
-       "min": 30,
+       "text": "读 Cognition《Don't Build Multi-Agents》",
+       "min": 35,
        "links": [
         {
-         "label": "Anthropic 评估文章",
-         "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+         "label": "原文",
+         "url": "https://cognition.ai/blog/dont-build-multi-agents"
         }
        ]
       },
       {
        "id": "20270113-3",
-       "text": "给 learn-claude-code 写一份评估方案草稿：测什么、用哪类打分器、要多少条用例",
+       "text": "读 LangChain《Organizing Context in a Multi-Agent Harness》：子 agent 是 fork 还是隔离",
        "min": 40,
        "links": [
         {
-         "label": "learn-claude-code",
-         "url": "https://github.com/shareAI-lab/learn-claude-code"
+         "label": "原文",
+         "url": "https://www.langchain.com/blog/organizing-context-in-a-multi-agent-harness"
         }
        ]
       },
       {
        "id": "20270113-4",
-       "text": "写当天笔记",
-       "min": 20
+       "text": "写你的判断：什么情况拆、什么情况不拆",
+       "min": 30
       }
      ]
     },
     {
      "date": "2027-01-14",
-     "label": "tau2-bench",
-     "goal": "看一个成熟的 agent 仿真评测怎么搭",
+     "label": "mini-swe-agent",
+     "goal": "极简 agent 刻意不做什么",
      "tasks": [
       {
        "id": "20270114-1",
-       "text": "读 tau2-bench 的 README：模拟用户、工具、策略文档、数据库状态检查各是什么",
+       "text": "读 default.py（约 190 行）和 FAQ 里“为什么不保持 shell 会话”",
        "min": 50,
        "links": [
         {
-         "label": "tau2-bench",
-         "url": "https://github.com/sierra-research/tau2-bench"
+         "label": "default.py",
+         "url": "https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py"
+        },
+        {
+         "label": "FAQ",
+         "url": "https://github.com/SWE-agent/mini-swe-agent/blob/main/docs/faq.md"
         }
        ]
       },
       {
        "id": "20270114-2",
-       "text": "跑一个领域（比如 retail）的几条任务，读一条完整的对话轨迹",
-       "min": 60,
-       "links": [
-        {
-         "label": "tau2-bench",
-         "url": "https://github.com/sierra-research/tau2-bench"
-        }
-       ]
+       "text": "在沙盒里装好，用 DeepSeek 跑和 s01 一样的任务，读输出的轨迹 json",
+       "min": 40
       },
       {
        "id": "20270114-3",
-       "text": "想一想：它为什么用“最终数据库状态”判对错，而不是看对话内容",
-       "min": 30,
-       "links": [
-        {
-         "label": "tau2-bench",
-         "url": "https://github.com/sierra-research/tau2-bench"
-        }
-       ]
+       "text": "改坏它：timeout 改成 2 秒、删掉交卷指令、连续格式错误上限设成 0，各看一次",
+       "min": 50
       },
       {
        "id": "20270114-4",
@@ -1999,13 +2163,314 @@
     },
     {
      "date": "2027-01-15",
+     "label": "OpenHands SDK",
+     "goal": "事件溯源：压缩不删事件，只插一个标记",
+     "tasks": [
+      {
+       "id": "20270115-1",
+       "text": "读 condenser 的 README：Condensation 事件、View、软触发和硬触发",
+       "min": 50,
+       "links": [
+        {
+         "label": "condenser",
+         "url": "https://github.com/OpenHands/software-agent-sdk/blob/main/openhands-sdk/openhands/sdk/context/condenser/README.md"
+        },
+        {
+         "label": "software-agent-sdk",
+         "url": "https://github.com/OpenHands/software-agent-sdk/"
+        }
+       ]
+      },
+      {
+       "id": "20270115-2",
+       "text": "跑示例 10（持久化）：中途杀掉进程再恢复；跑示例 14（压缩）：把阈值调小，读事件 JSON",
+       "min": 60,
+       "links": [
+        {
+         "label": "示例目录",
+         "url": "https://github.com/OpenHands/software-agent-sdk/tree/main/examples/01_standalone_sdk"
+        }
+       ]
+      },
+      {
+       "id": "20270115-3",
+       "text": "跑示例 20（卡住检测），故意制造一个死循环，看它怎么发现",
+       "min": 30,
+       "links": [
+        {
+         "label": "stuck_detector.py",
+         "url": "https://github.com/OpenHands/software-agent-sdk/blob/main/openhands-sdk/openhands/sdk/conversation/stuck_detector.py"
+        }
+       ]
+      },
+      {
+       "id": "20270115-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-16",
+     "label": "opencode",
+     "goal": "没有系统沙箱的权限，和对小模型友好的工具层",
+     "tasks": [
+      {
+       "id": "20270116-1",
+       "text": "读权限文档：allow / ask / deny + 通配符，最后匹配的规则生效。和 Codex 的系统沙箱对比",
+       "min": 40,
+       "links": [
+        {
+         "label": "permissions",
+         "url": "https://opencode.ai/docs/permissions/"
+        }
+       ]
+      },
+      {
+       "id": "20270116-2",
+       "text": "实验：只配一条 shell: ask，诱导模型用 eval 绕过去；再撤销一次修改，看快照怎么恢复",
+       "min": 50,
+       "links": [
+        {
+         "label": "snapshot.ts",
+         "url": "https://github.com/anomalyco/opencode/blob/dev/packages/core/src/snapshot.ts"
+        }
+       ]
+      },
+      {
+       "id": "20270116-3",
+       "text": "读工具参数修复和按模型换工具：小模型填错参数时 harness 怎么兜底",
+       "min": 40,
+       "links": [
+        {
+         "label": "tool-input-repair.ts",
+         "url": "https://github.com/anomalyco/opencode/blob/dev/packages/core/src/plugin/tool-input-repair.ts"
+        },
+        {
+         "label": "model-policy.ts",
+         "url": "https://github.com/anomalyco/opencode/blob/dev/packages/core/src/tool/model-policy.ts"
+        }
+       ]
+      },
+      {
+       "id": "20270116-4",
+       "text": "把 OpenHands、opencode 补进上周的对比表",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-17",
+     "label": "第 8 周复盘",
+     "goal": "复盘 + 补课",
+     "tasks": [
+      {
+       "id": "20270117-1",
+       "text": "补完本周没做完的任务",
+       "min": 50
+      },
+      {
+       "id": "20270117-2",
+       "text": "写《一线团队的 10 条 agent 经验》，发到 blog",
+       "min": 60
+      },
+      {
+       "id": "20270117-3",
+       "text": "review 清单：把新经验补进对应的旋钮",
+       "min": 30
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "title": "第 9 周",
+   "theme": "记忆、协议、评估入门",
+   "days": [
+    {
+     "date": "2027-01-18",
+     "label": "记忆系统",
+     "goal": "Letta / mem0 / Anthropic 记忆分层",
+     "tasks": [
+      {
+       "id": "20270118-1",
+       "text": "读 Letta 的记忆设计（从 MemGPT 演化来的分层记忆）",
+       "min": 50,
+       "links": [
+        {
+         "label": "letta",
+         "url": "https://github.com/letta-ai/letta"
+        }
+       ]
+      },
+      {
+       "id": "20270118-2",
+       "text": "读 mem0 的记忆层设计",
+       "min": 40,
+       "links": [
+        {
+         "label": "mem0",
+         "url": "https://github.com/mem0ai/mem0"
+        }
+       ]
+      },
+      {
+       "id": "20270118-3",
+       "text": "四方对照（加上 Hermes 和 Codex 的记忆）：存什么、什么时候写、怎么检索、怎么防过时",
+       "min": 50,
+       "links": [
+        {
+         "label": "Anthropic 记忆文章",
+         "url": "https://www.anthropic.com/research/components-of-agent-memory"
+        }
+       ]
+      },
+      {
+       "id": "20270118-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-19",
+     "label": "协议：MCP + A2A",
+     "goal": "agent 接工具 vs agent 和 agent 对话",
+     "tasks": [
+      {
+       "id": "20270119-1",
+       "text": "读 MCP 2026-07-28 规范的核心部分，重点看无状态和 input_required",
+       "min": 50,
+       "links": [
+        {
+         "label": "规范更新说明",
+         "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/changelog.mdx"
+        }
+       ]
+      },
+      {
+       "id": "20270119-2",
+       "text": "读 A2A v1.0 的核心概念，跑 a2a-samples 里的两个 agent，看 Task 状态怎么流转",
+       "min": 60,
+       "links": [
+        {
+         "label": "A2A",
+         "url": "https://github.com/a2aproject/A2A"
+        },
+        {
+         "label": "a2a-samples",
+         "url": "https://github.com/a2aproject/a2a-samples"
+        }
+       ]
+      },
+      {
+       "id": "20270119-3",
+       "text": "写清楚：两者分别解决什么；同样是“需要更多输入”，A2A 的 input-required 和 MCP 的 MRTR 有什么不同",
+       "min": 30
+      },
+      {
+       "id": "20270119-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-20",
+     "label": "评估方法",
+     "goal": "agent 评估怎么设计：打分器、用例、pass^k",
+     "tasks": [
+      {
+       "id": "20270120-1",
+       "text": "精读 Anthropic《Demystifying evals for AI agents》：三类打分器（代码规则、模型、人工）各用在哪",
+       "min": 60,
+       "links": [
+        {
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+       ]
+      },
+      {
+       "id": "20270120-2",
+       "text": "搞懂 pass@k 和 pass^k 的区别：为什么上线的 agent 更该看 pass^k",
+       "min": 30
+      },
+      {
+       "id": "20270120-3",
+       "text": "给 learn-claude-code 写一份评估方案草稿：测什么、用哪类打分器、要多少条用例",
+       "min": 40,
+       "links": [
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
+      },
+      {
+       "id": "20270120-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-21",
+     "label": "tau2-bench",
+     "goal": "看一个成熟的 agent 仿真评测怎么搭",
+     "tasks": [
+      {
+       "id": "20270121-1",
+       "text": "读评估文档：标准答案的动作只用来回放出目标数据库状态，打分比的是最终状态",
+       "min": 40,
+       "links": [
+        {
+         "label": "tau2-bench",
+         "url": "https://github.com/sierra-research/tau2-bench"
+        },
+        {
+         "label": "评估文档",
+         "url": "https://github.com/sierra-research/tau2-bench/blob/main/docs/evaluation.md"
+        }
+       ]
+      },
+      {
+       "id": "20270121-2",
+       "text": "用 deepseek/deepseek-flash 跑 retail 的 5 条任务（关掉思考模式，晚上跑更便宜），读一条完整轨迹",
+       "min": 70,
+       "links": [
+        {
+         "label": "tau2 命令参考",
+         "url": "https://github.com/sierra-research/tau2-bench/blob/main/docs/cli-reference.md"
+        },
+        {
+         "label": "DeepSeek 思考模式说明",
+         "url": "https://api-docs.deepseek.com/guides/thinking_mode"
+        }
+       ]
+      },
+      {
+       "id": "20270121-3",
+       "text": "想一想：为什么用最终状态判对错，而不是看对话内容；试一下 --language zh",
+       "min": 30
+      },
+      {
+       "id": "20270121-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-01-22",
      "label": "评判器靠得住吗",
      "goal": "LLM 评判 vs 规则检查：评估器本身也会错",
      "tasks": [
       {
-       "id": "20270115-1",
+       "id": "20270122-1",
        "text": "读两篇：评测器和专家判定 18.5% 不一致；LLM 评判漏放违规写操作（看摘要和结论即可）",
-       "min": 50,
+       "min": 40,
        "links": [
         {
          "label": "评测器审计论文",
@@ -2018,249 +2483,20 @@
        ]
       },
       {
-       "id": "20270115-2",
-       "text": "做实验：拿前面跑过的 trace，同一批结果分别用 LLM 评判和代码规则检查打分，对比哪边判错",
-       "min": 70
-      },
-      {
-       "id": "20270115-3",
-       "text": "写下你的判断标准：什么情况能用 LLM 评判，什么情况必须用规则",
-       "min": 20
-      },
-      {
-       "id": "20270115-4",
-       "text": "写当天笔记",
-       "min": 20
-      }
-     ]
-    },
-    {
-     "date": "2027-01-16",
-     "label": "评估实战",
-     "goal": "给一个跑过的 agent 建轨迹评估",
-     "tasks": [
-      {
-       "id": "20270116-1",
-       "text": "挑一个前面跑过的 agent，写 10 条用例",
-       "min": 60
-      },
-      {
-       "id": "20270116-2",
-       "text": "每条写结果检查 + 轨迹检查（该调的工具有没有调）",
-       "min": 50
-      },
-      {
-       "id": "20270116-3",
-       "text": "跑一遍，分析失败案例",
-       "min": 40
-      }
-     ]
-    },
-    {
-     "date": "2027-01-17",
-     "label": "第 8 周复盘",
-     "goal": "复盘 + 补课日：没做完的任务在今天补上",
-     "tasks": [
-      {
-       "id": "20270117-1",
-       "text": "补完本周没做完的任务",
-       "min": 60
-      },
-      {
-       "id": "20270117-2",
-       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
-       "min": 40
-      },
-      {
-       "id": "20270117-3",
-       "text": "review 清单：补本周见过的例子（旋钮 3 上下文、8 评估、12 跨会话记忆、16 可移植性）",
-       "min": 20
-      },
-      {
-       "id": "20270117-4",
-       "text": "看一眼下周计划，有疑问就记下来",
-       "min": 10
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "n": 9,
-   "title": "第 9 周",
-   "theme": "工具接口与结构化输出",
-   "days": [
-    {
-     "date": "2027-01-18",
-     "label": "工具设计原则",
-     "goal": "工具的粒度、描述、返回值怎么设计",
-     "tasks": [
-      {
-       "id": "20270118-1",
-       "text": "精读 Anthropic《Writing effective tools for agents》，摘出 5 条可操作的原则",
-       "min": 60,
-       "links": [
-        {
-         "label": "原文",
-         "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
-        }
-       ]
-      },
-      {
-       "id": "20270118-2",
-       "text": "拿 learn-claude-code 的工具对照这 5 条，挑一个工具让 AI 按原则重写",
-       "min": 50,
-       "links": [
-        {
-         "label": "learn-claude-code",
-         "url": "https://github.com/shareAI-lab/learn-claude-code"
-        }
-       ]
-      },
-      {
-       "id": "20270118-3",
-       "text": "用同样 3 个任务跑改之前和改之后，对比选错工具和多余调用的次数",
-       "min": 40
-      },
-      {
-       "id": "20270118-4",
-       "text": "写当天笔记",
-       "min": 20
-      }
-     ]
-    },
-    {
-     "date": "2027-01-19",
-     "label": "工具调用怎么测",
-     "goal": "BFCL V4：工具调用有哪些典型失败",
-     "tasks": [
-      {
-       "id": "20270119-1",
-       "text": "看 BFCL V4 排行榜和评测分类：多轮、缺函数、缺参数、无关性检测",
-       "min": 50,
-       "links": [
-        {
-         "label": "BFCL 排行榜",
-         "url": "https://gorilla.cs.berkeley.edu/leaderboard.html"
-        },
-        {
-         "label": "BFCL 代码和说明",
-         "url": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard"
-        }
-       ]
-      },
-      {
-       "id": "20270119-2",
-       "text": "每一类各挑 1 个例子读懂：模型错在哪，正确行为是什么（比如该拒绝或该追问）",
-       "min": 50
-      },
-      {
-       "id": "20270119-3",
-       "text": "给你的 10 条用例补 3 条：缺参数要追问、工具无关要拒绝、多轮里改主意",
-       "min": 40
-      },
-      {
-       "id": "20270119-4",
-       "text": "写当天笔记",
-       "min": 20
-      }
-     ]
-    },
-    {
-     "date": "2027-01-20",
-     "label": "结构化输出的代价",
-     "goal": "强约束格式会不会让小模型变笨",
-     "tasks": [
-      {
-       "id": "20270120-1",
-       "text": "读“约束税”论文的摘要和结论：2B 以下模型用硬 schema 后准确率下降",
-       "min": 40,
-       "links": [
-        {
-         "label": "论文",
-         "url": "https://arxiv.org/abs/2605.26128"
-        }
-       ]
-      },
-      {
-       "id": "20270120-2",
-       "text": "做实验：同一批题，让便宜模型分别“直接输出 JSON”和“先自由推理、最后再输出 JSON”，对比准确率和格式合法率",
-       "min": 80
-      },
-      {
-       "id": "20270120-3",
-       "text": "写下结论：什么时候先推理再约束，什么时候直接约束",
-       "min": 20
-      },
-      {
-       "id": "20270120-4",
-       "text": "写当天笔记",
-       "min": 20
-      }
-     ]
-    },
-    {
-     "date": "2027-01-21",
-     "label": "schema 设计",
-     "goal": "改 schema 往往比修解析器更有效",
-     "tasks": [
-      {
-       "id": "20270121-1",
-       "text": "读“一行 schema 改动胜过解析器修补”的海报（样本小，待核实）",
-       "min": 30,
-       "links": [
-        {
-         "label": "海报",
-         "url": "https://neurips.cc/virtual/2026/171301"
-        }
-       ]
-      },
-      {
-       "id": "20270121-2",
-       "text": "做实验：给一个工具加必填参数、改字段顺序、把自由文本改成枚举，各看一次行为变化",
-       "min": 80
-      },
-      {
-       "id": "20270121-3",
-       "text": "总结 schema 设计清单：字段顺序、枚举、必填、描述怎么写",
-       "min": 30
-      },
-      {
-       "id": "20270121-4",
-       "text": "写当天笔记",
-       "min": 20
-      }
-     ]
-    },
-    {
-     "date": "2027-01-22",
-     "label": "自己写 MCP server",
-     "goal": "把能力做成标准接口给 agent 用",
-     "tasks": [
-      {
-       "id": "20270122-1",
-       "text": "读 MCP 官方“构建 server”教程",
-       "min": 40,
-       "links": [
-        {
-         "label": "教程",
-         "url": "https://modelcontextprotocol.io/docs/develop/build-server"
-        },
-        {
-         "label": "Python SDK",
-         "url": "https://github.com/modelcontextprotocol/python-sdk"
-        }
-       ]
-      },
-      {
        "id": "20270122-2",
-       "text": "让 AI 写一个 MCP server：暴露 2 个工具和 1 个 resource，接进 Claude Code",
-       "min": 60
+       "text": "对昨天的轨迹，用 tau2 evaluate-trajs 算规则分，用 tau2 review 做 LLM 评审，逐条对比哪边判错",
+       "min": 70,
+       "links": [
+        {
+         "label": "tau2 命令参考",
+         "url": "https://github.com/sierra-research/tau2-bench/blob/main/docs/cli-reference.md"
+        }
+       ]
       },
       {
        "id": "20270122-3",
-       "text": "故意把一个工具描述写得和 Claude Code 自带工具相似，看它会选哪个",
-       "min": 40
+       "text": "写下你的判断标准：什么情况能用 LLM 评判，什么情况必须用规则",
+       "min": 30
       },
       {
        "id": "20270122-4",
@@ -2271,34 +2507,23 @@
     },
     {
      "date": "2027-01-23",
-     "label": "模型路由与级联",
-     "goal": "小模型先上、不行再升级：怎么判断“不行”",
+     "label": "评估实战",
+     "goal": "给一个跑过的 agent 建轨迹评估",
      "tasks": [
       {
        "id": "20270123-1",
-       "text": "先联网查 2026 年模型路由 / 级联的最新做法，记下 3 种判断方式（置信度、规则、学出来的路由器）",
-       "min": 50,
-       "links": [
-        {
-         "label": "RouteLLM",
-         "url": "https://github.com/lm-sys/RouteLLM"
-        }
-       ]
+       "text": "挑一个前面跑过的 agent，写 10 条用例",
+       "min": 60
       },
       {
        "id": "20270123-2",
-       "text": "做实验：便宜模型先答，按你定的规则决定要不要升级到大模型，用你的用例集算升级率和准确率",
-       "min": 70
+       "text": "每条写结果检查 + 轨迹检查（该调的工具有没有调）",
+       "min": 50
       },
       {
        "id": "20270123-3",
-       "text": "写下：升级率和准确率怎么取舍，规则放在哪一层",
-       "min": 30
-      },
-      {
-       "id": "20270123-4",
-       "text": "写当天笔记",
-       "min": 20
+       "text": "跑一遍，分析失败案例",
+       "min": 40
       }
      ]
     },
@@ -2319,7 +2544,7 @@
       },
       {
        "id": "20270124-3",
-       "text": "review 清单：补本周见过的例子（旋钮 2 工具设计、8 评估、9 成本与延迟）",
+       "text": "review 清单：补本周见过的例子（旋钮 3 上下文、8 评估、12 跨会话记忆、16 可移植性）",
        "min": 20,
        "links": [
         {
@@ -2340,28 +2565,28 @@
   {
    "n": 10,
    "title": "第 10 周",
-   "theme": "安全与约束执行层",
+   "theme": "工具接口与结构化输出",
    "days": [
     {
      "date": "2027-01-25",
-     "label": "提示注入",
-     "goal": "不可信内容里的指令会不会被执行",
+     "label": "工具设计原则",
+     "goal": "工具的粒度、描述、返回值怎么设计",
      "tasks": [
       {
        "id": "20270125-1",
-       "text": "读 Simon Willison 的“致命三要素”：私有数据 + 不可信内容 + 对外通信",
-       "min": 30,
+       "text": "精读 Anthropic《Writing effective tools for agents》，摘出 5 条可操作的原则",
+       "min": 60,
        "links": [
         {
          "label": "原文",
-         "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"
+         "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
         }
        ]
       },
       {
        "id": "20270125-2",
-       "text": "做实验：在测试目录放一个文件，里面写一条给 agent 的指令，让 learn-claude-code 去读，看它会不会照做",
-       "min": 70,
+       "text": "拿 learn-claude-code 的工具对照这 5 条，挑一个工具让 AI 按原则重写",
+       "min": 50,
        "links": [
         {
          "label": "learn-claude-code",
@@ -2371,7 +2596,7 @@
       },
       {
        "id": "20270125-3",
-       "text": "换 3 种写法再试（藏在注释里、伪装成系统提示、编码过的），记录哪种最容易成功",
+       "text": "用同样 3 个任务跑改之前和改之后，对比选错工具和多余调用的次数",
        "min": 40
       },
       {
@@ -2383,29 +2608,39 @@
     },
     {
      "date": "2027-01-26",
-     "label": "AgentDojo",
-     "goal": "用基准测量注入攻击的成功率",
+     "label": "工具调用怎么测",
+     "goal": "BFCL V4：工具调用有哪些典型失败",
      "tasks": [
       {
        "id": "20270126-1",
-       "text": "读 AgentDojo 的 README：用户任务、注入任务、攻击、防御怎么组合",
+       "text": "看 BFCL V4 的评测分类：多轮、缺函数、缺参数、无关性检测；单轮比语法树，多轮比执行后的状态",
        "min": 40,
        "links": [
         {
-         "label": "AgentDojo",
-         "url": "https://github.com/ethz-spylab/agentdojo"
+         "label": "排行榜",
+         "url": "https://gorilla.cs.berkeley.edu/leaderboard.html"
+        },
+        {
+         "label": "代码和说明",
+         "url": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard"
         }
        ]
       },
       {
        "id": "20270126-2",
-       "text": "跑一个 suite（比如 workspace），看有防御和没防御时的攻击成功率和任务完成率",
-       "min": 80
+       "text": "用 --run-ids 只跑十几条（缺参数、无关性、多轮各几条），关掉思考模式；读 DeepSeek 错在哪",
+       "min": 60,
+       "links": [
+        {
+         "label": "DeepSeek 思考模式说明",
+         "url": "https://api-docs.deepseek.com/guides/thinking_mode"
+        }
+       ]
       },
       {
        "id": "20270126-3",
-       "text": "想一想：防御让任务完成率掉了多少？值不值",
-       "min": 20
+       "text": "给你的 10 条用例补 3 条：缺参数要追问、工具无关要拒绝、多轮里改主意",
+       "min": 40
       },
       {
        "id": "20270126-4",
@@ -2416,33 +2651,29 @@
     },
     {
      "date": "2027-01-27",
-     "label": "CaMeL",
-     "goal": "把控制流和数据流分开",
+     "label": "结构化输出的代价",
+     "goal": "强约束格式会不会让小模型变笨",
      "tasks": [
       {
        "id": "20270127-1",
-       "text": "读 CaMeL 论文的第 1–4 节：特权模型、隔离模型、能力标签",
-       "min": 70,
+       "text": "读“约束税”论文的摘要和结论：2B 以下模型用硬 schema 后准确率下降",
+       "min": 40,
        "links": [
         {
          "label": "论文",
-         "url": "https://arxiv.org/abs/2503.18813"
-        },
-        {
-         "label": "代码",
-         "url": "https://github.com/google-research/camel-prompt-injection"
+         "url": "https://arxiv.org/abs/2605.26128"
         }
        ]
       },
       {
        "id": "20270127-2",
-       "text": "用自己的话讲：为什么只靠提示词防不住注入，CaMeL 换成了什么保证",
-       "min": 30
+       "text": "做实验：同一批题，让便宜模型分别“直接输出 JSON”和“先自由推理、最后再输出 JSON”，对比准确率和格式合法率",
+       "min": 80
       },
       {
        "id": "20270127-3",
-       "text": "对照 learn-claude-code：要做成 CaMeL 那样，循环里要改哪几处（只写设计，不实现）",
-       "min": 40
+       "text": "写下结论：什么时候先推理再约束，什么时候直接约束",
+       "min": 20
       },
       {
        "id": "20270127-4",
@@ -2453,28 +2684,32 @@
     },
     {
      "date": "2027-01-28",
-     "label": "执行层权限",
-     "goal": "权限不能交给模型自己判断",
+     "label": "schema 设计",
+     "goal": "改 schema 往往比修解析器更有效",
      "tasks": [
       {
        "id": "20270128-1",
-       "text": "读 Anthropic 关于 Claude Code 沙箱的文章：文件系统和网络两层隔离",
-       "min": 40,
+       "text": "读“一行 schema 改动胜过解析器修补”的海报（样本小，待核实）；对照 opencode 的工具参数修复",
+       "min": 30,
        "links": [
         {
-         "label": "原文",
-         "url": "https://www.anthropic.com/engineering/claude-code-sandboxing"
+         "label": "海报",
+         "url": "https://neurips.cc/virtual/2026/171301"
+        },
+        {
+         "label": "tool-input-repair.ts",
+         "url": "https://github.com/anomalyco/opencode/blob/dev/packages/core/src/plugin/tool-input-repair.ts"
         }
        ]
       },
       {
        "id": "20270128-2",
-       "text": "设计一层独立于模型的策略：工具白名单 + 参数校验 + 高风险动作要确认，让 AI 加进 learn-claude-code",
-       "min": 70
+       "text": "做实验：给一个工具加必填参数、改字段顺序、把自由文本改成枚举，各看一次行为变化",
+       "min": 80
       },
       {
        "id": "20270128-3",
-       "text": "用周一的注入文件再攻击一次，对比加策略前后",
+       "text": "总结 schema 设计清单：字段顺序、枚举、必填、描述怎么写",
        "min": 30
       },
       {
@@ -2486,23 +2721,29 @@
     },
     {
      "date": "2027-01-29",
-     "label": "约束准出",
-     "goal": "模型输出变成动作之前要过哪些检查",
+     "label": "能力怎么暴露",
+     "goal": "同一个能力：MCP 工具 / Skill / 代码调用",
      "tasks": [
       {
        "id": "20270129-1",
-       "text": "设计一条校验链：格式校验 → 业务规则 → 可逆性和风险分级 → 确认，每一步写清楚拦什么",
-       "min": 60
+       "text": "回顾三种暴露方式：MCP 工具（12-25 写过）、Skill（12-24 写过）、程序化调用（dsh 的 PTC）",
+       "min": 30,
+       "links": [
+        {
+         "label": "PTC",
+         "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/ptc-runtime.zh.md"
+        }
+       ]
       },
       {
        "id": "20270129-2",
-       "text": "找一个“模型输出直接触发动作”的例子（比如删文件、发消息），让 AI 按校验链实现",
-       "min": 60
+       "text": "挑一个能力（比如“查一批文件的统计信息”），让 AI 分别做成三种形式，用同样 3 个任务跑",
+       "min": 80
       },
       {
        "id": "20270129-3",
-       "text": "故意构造 3 个越界输出，看分别在哪一步被拦住",
-       "min": 30
+       "text": "对比 token、步数、出错率，写下各自适合什么场景",
+       "min": 40
       },
       {
        "id": "20270129-4",
@@ -2513,35 +2754,38 @@
     },
     {
      "date": "2027-01-30",
-     "label": "安全总结",
-     "goal": "从提示注入到执行层，整理成一篇",
+     "label": "模型路由与级联",
+     "goal": "便宜模型先上、不行再升级：怎么判断“不行”",
      "tasks": [
       {
        "id": "20270130-1",
-       "text": "扫一眼 OWASP 的 GenAI / agent 安全风险列表，补上本周没碰到的风险",
-       "min": 30,
+       "text": "先联网查最新的路由做法，读 RouterArena 和 LLMRouterBench 的结论（二手说法待核实）",
+       "min": 50,
        "links": [
         {
-         "label": "OWASP GenAI",
-         "url": "https://genai.owasp.org/"
+         "label": "RouterArena",
+         "url": "https://arxiv.org/abs/2510.00202"
+        },
+        {
+         "label": "LLMRouterBench",
+         "url": "https://arxiv.org/abs/2601.07206"
         }
        ]
       },
       {
        "id": "20270130-2",
-       "text": "写《agent 安全：从提示注入到执行层》：风险、实验结果、你会怎么设计",
-       "min": 90
+       "text": "做实验：deepseek-flash 关思考 → 开思考 → v4-pro 三档，按你定的规则决定要不要升级，用你的用例集算升级率和准确率",
+       "min": 70
       },
       {
        "id": "20270130-3",
-       "text": "把本周结论补进 review 清单旋钮 7",
-       "min": 20,
-       "links": [
-        {
-         "label": "review 清单",
-         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
-        }
-       ]
+       "text": "写下：升级率和准确率怎么取舍，规则放在哪一层",
+       "min": 30
+      },
+      {
+       "id": "20270130-4",
+       "text": "写当天笔记",
+       "min": 20
       }
      ]
     },
@@ -2562,7 +2806,7 @@
       },
       {
        "id": "20270131-3",
-       "text": "review 清单：补本周见过的例子（旋钮 7 权限与安全边界、14 运行环境）",
+       "text": "review 清单：补本周见过的例子（旋钮 2 工具设计、8 评估、9 成本与延迟）",
        "min": 20,
        "links": [
         {
@@ -2583,39 +2827,39 @@
   {
    "n": 11,
    "title": "第 11 周",
-   "theme": "可观测、状态与 GUI agent",
+   "theme": "安全与约束执行层",
    "days": [
     {
      "date": "2027-02-01",
-     "label": "接上 tracing",
-     "goal": "用标准格式记录 agent 每一步",
+     "label": "提示注入",
+     "goal": "不可信内容里的指令会不会被执行",
      "tasks": [
       {
        "id": "20270201-1",
-       "text": "读 OTel GenAI agent span 规范：invoke_agent、工具调用 span 记录哪些字段",
-       "min": 40,
+       "text": "读 Simon Willison 的“致命三要素”：私有数据 + 不可信内容 + 对外通信",
+       "min": 30,
        "links": [
         {
-         "label": "规范",
-         "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md"
+         "label": "原文",
+         "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"
         }
        ]
       },
       {
        "id": "20270201-2",
-       "text": "本地起 Phoenix，让 AI 给 learn-claude-code 接上 tracing",
+       "text": "在沙盒目录放一个文件，里面写一条给 agent 的指令（只写无害的金丝雀动作，比如创建 PWNED.txt），让 learn-claude-code 去读",
        "min": 70,
        "links": [
         {
-         "label": "Phoenix",
-         "url": "https://github.com/Arize-ai/phoenix"
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
         }
        ]
       },
       {
        "id": "20270201-3",
-       "text": "在 Phoenix 里看一次完整运行：哪一步最慢、哪一步 token 最多",
-       "min": 30
+       "text": "换 3 种写法再试（藏在注释里、伪装成系统提示、编码过的），记录哪种最容易成功",
+       "min": 40
       },
       {
        "id": "20270201-4",
@@ -2626,22 +2870,28 @@
     },
     {
      "date": "2027-02-02",
-     "label": "方差",
-     "goal": "同一任务跑 10 次，结果稳不稳",
+     "label": "AgentDojo",
+     "goal": "用基准测量注入攻击的成功率",
      "tasks": [
       {
        "id": "20270202-1",
-       "text": "挑 3 条用例，每条跑 10 次，记录成功次数，算 pass^k",
-       "min": 70
+       "text": "读 README：用户任务 × 注入任务 × 攻击模板怎么组合，对错都由代码检查环境状态",
+       "min": 40,
+       "links": [
+        {
+         "label": "AgentDojo",
+         "url": "https://github.com/ethz-spylab/agentdojo"
+        }
+       ]
       },
       {
        "id": "20270202-2",
-       "text": "在 tracing 里对比成功和失败的轨迹：从哪一步开始分叉",
-       "min": 50
+       "text": "从源码安装（PyPI 版还不支持 OpenAI 兼容接口），workspace 套件只挑 5 条用户任务 × 3 条注入任务，有防御和没防御各跑一次",
+       "min": 80
       },
       {
        "id": "20270202-3",
-       "text": "写下：要让它更稳，该改提示、工具还是停止条件",
+       "text": "想一想：防御让任务完成率掉了多少？值不值",
        "min": 20
       },
       {
@@ -2653,34 +2903,34 @@
     },
     {
      "date": "2027-02-03",
-     "label": "状态与续跑",
-     "goal": "长任务中断后怎么接着做",
+     "label": "CaMeL",
+     "goal": "把控制流和数据流分开",
      "tasks": [
       {
        "id": "20270203-1",
-       "text": "读 LangGraph 的持久化文档：checkpoint、thread、中断和恢复",
-       "min": 50,
+       "text": "读 CaMeL 论文第 1–4 节：特权模型、隔离模型、能力标签（只读论文，代码是研究原型，不跑）",
+       "min": 70,
        "links": [
         {
-         "label": "文档",
-         "url": "https://docs.langchain.com/oss/python/langgraph/persistence"
+         "label": "论文",
+         "url": "https://arxiv.org/abs/2503.18813"
         }
        ]
       },
       {
        "id": "20270203-2",
-       "text": "对照 learn-claude-code s10 的任务系统：状态存在哪、哪些没存",
-       "min": 40,
+       "text": "对比 superagent 的“授权写在代码里”：两者都不让消息内容改权限，做法有什么不同",
+       "min": 30,
        "links": [
         {
-         "label": "s10 说明",
-         "url": "https://github.com/shareAI-lab/learn-claude-code/blob/main/s10_task_system/README.zh.md"
+         "label": "授权",
+         "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/002-authorization.md"
         }
        ]
       },
       {
        "id": "20270203-3",
-       "text": "设计：哪些状态要外置（存盘），哪些可以留在上下文里，写成一张表",
+       "text": "对照 learn-claude-code：要做成 CaMeL 那样，循环里要改哪几处（只写设计，不实现）",
        "min": 40
       },
       {
@@ -2692,38 +2942,28 @@
     },
     {
      "date": "2027-02-04",
-     "label": "浏览器 agent",
-     "goal": "可访问性树 vs 截图",
+     "label": "执行层权限",
+     "goal": "权限不能交给模型自己判断",
      "tasks": [
       {
        "id": "20270204-1",
-       "text": "读《Building Browser Agents》里可访问性树和截图的对比部分",
-       "min": 40,
+       "text": "读 Anthropic 关于 Claude Code 沙箱的文章；把 Claude Code、Codex、dsh、opencode 四家的权限做法排成一张表",
+       "min": 50,
        "links": [
         {
-         "label": "论文",
-         "url": "https://arxiv.org/html/2511.19477"
+         "label": "原文",
+         "url": "https://www.anthropic.com/engineering/claude-code-sandboxing"
         }
        ]
       },
       {
        "id": "20270204-2",
-       "text": "用 Playwright MCP 接进 Claude Code，做一个真实网页任务（只读，不提交表单），读它拿到的页面表示",
-       "min": 60,
-       "links": [
-        {
-         "label": "Playwright MCP",
-         "url": "https://github.com/microsoft/playwright-mcp"
-        },
-        {
-         "label": "browser-use",
-         "url": "https://github.com/browser-use/browser-use"
-        }
-       ]
+       "text": "设计一层独立于模型的策略：工具白名单 + 参数校验 + 高风险动作要确认，让 AI 加进 learn-claude-code",
+       "min": 60
       },
       {
        "id": "20270204-3",
-       "text": "记录：哪些地方可访问性树够用，哪些地方必须看截图",
+       "text": "用周一的注入文件再攻击一次，对比加策略前后",
        "min": 30
       },
       {
@@ -2735,34 +2975,32 @@
     },
     {
      "date": "2027-02-05",
-     "label": "手机 GUI agent",
-     "goal": "端侧小模型 + 云端大模型怎么分工",
+     "label": "约束准出",
+     "goal": "模型输出变成动作之前要过哪些检查",
      "tasks": [
       {
        "id": "20270205-1",
-       "text": "读 OpenPhone 论文的架构部分：端侧 3B 模型做什么、什么时候交给云端",
-       "min": 60,
+       "text": "读两种做法：OpenHands 让模型给动作标风险等级再按策略确认；Codex 的 guardian 让独立 agent 审查",
+       "min": 40,
        "links": [
         {
-         "label": "OpenPhone",
-         "url": "https://arxiv.org/html/2510.22009v2"
+         "label": "OpenHands security",
+         "url": "https://github.com/OpenHands/software-agent-sdk/tree/main/openhands-sdk/openhands/sdk/security"
+        },
+        {
+         "label": "Codex guardian",
+         "url": "https://github.com/openai/codex/tree/main/codex-rs/core/src/guardian"
         }
        ]
       },
       {
        "id": "20270205-2",
-       "text": "看 MobileUse 的 README：它怎么拿到手机屏幕、怎么执行动作",
-       "min": 40,
-       "links": [
-        {
-         "label": "MobileUse",
-         "url": "https://github.com/MadeAgents/mobile-use"
-        }
-       ]
+       "text": "设计一条校验链：格式校验 → 业务规则 → 可逆性和风险分级 → 确认，让 AI 实现在一个会触发动作的工具上",
+       "min": 70
       },
       {
        "id": "20270205-3",
-       "text": "和周四的浏览器 agent 对比：页面表示、动作空间、出错恢复有什么不同",
+       "text": "故意构造 3 个越界输出，看分别在哪一步被拦住",
        "min": 30
       },
       {
@@ -2774,29 +3012,39 @@
     },
     {
      "date": "2027-02-06",
-     "label": "整理成文",
-     "goal": "可观测、状态、GUI agent 三块收口",
+     "label": "skill 供应链与安全总结",
+     "goal": "skill 本身也可能是攻击入口",
      "tasks": [
       {
        "id": "20270206-1",
-       "text": "写《让 agent 可观测、可续跑》：tracing 怎么接、方差怎么看、状态怎么存",
-       "min": 80
+       "text": "读 ClawHub 恶意 skill 事件：指令藏在 SKILL.md 里。对照 Hermes 自动生成 skill 的风险",
+       "min": 40,
+       "links": [
+        {
+         "label": "Snyk 分析",
+         "url": "https://snyk.io/articles/clawdhub-malicious-campaign-ai-agent-skills/"
+        },
+        {
+         "label": "Unit 42 分析",
+         "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/"
+        }
+       ]
       },
       {
        "id": "20270206-2",
-       "text": "把本周发现补进 review 清单旋钮 5、10、13",
-       "min": 30,
+       "text": "扫一眼 OWASP 的 GenAI 安全风险列表，补上本周没碰到的风险",
+       "min": 20,
        "links": [
         {
-         "label": "review 清单",
-         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+         "label": "OWASP GenAI",
+         "url": "https://genai.owasp.org/"
         }
        ]
       },
       {
        "id": "20270206-3",
-       "text": "回看第 8 周的 10 条用例，现在会怎么改",
-       "min": 30
+       "text": "写《agent 安全：从提示注入到执行层》：风险、实验结果、你会怎么设计",
+       "min": 80
       }
      ]
     },
@@ -2817,7 +3065,7 @@
       },
       {
        "id": "20270207-3",
-       "text": "review 清单：补本周见过的例子（旋钮 5 状态与记忆、10 可观测性、13 长任务接力）",
+       "text": "review 清单：补本周见过的例子（旋钮 7 权限与安全边界、14 运行环境）",
        "min": 20,
        "links": [
         {
@@ -2838,32 +3086,38 @@
   {
    "n": 12,
    "title": "第 12 周",
-   "theme": "训练入门、框架对比、收官",
+   "theme": "可观测、状态与 GUI agent",
    "days": [
     {
      "date": "2027-02-08",
-     "label": "agentic RL 概念",
-     "goal": "agent 能力是怎么训练出来的",
+     "label": "接上 tracing",
+     "goal": "用标准格式记录 agent 每一步",
      "tasks": [
       {
        "id": "20270208-1",
-       "text": "读《A Practitioner's Guide to Multi-turn Agentic RL》的结论部分：先 SFT 后 RL、奖励要细",
-       "min": 60,
+       "text": "读 OTel GenAI agent span 规范：invoke_agent 和 invoke_workflow 的区别，工具调用 span 记录哪些字段",
+       "min": 40,
        "links": [
         {
-         "label": "论文",
-         "url": "https://arxiv.org/html/2510.01132v2"
+         "label": "规范",
+         "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md"
         }
        ]
       },
       {
        "id": "20270208-2",
-       "text": "搞懂几个词：SFT、RL、奖励函数、GRPO、LoRA，各用一句话讲清楚",
-       "min": 40
+       "text": "用 uvx arize-phoenix serve 本地起 Phoenix，让 AI 给 learn-claude-code 按规范手写 invoke_agent、chat、execute_tool 三种 span（自动埋点看不到 agent 和工具这两层）",
+       "min": 70,
+       "links": [
+        {
+         "label": "Phoenix",
+         "url": "https://github.com/Arize-ai/phoenix"
+        }
+       ]
       },
       {
        "id": "20270208-3",
-       "text": "想一想：你写的评估用例，怎么变成训练用的奖励",
+       "text": "在 Phoenix 里看一次完整运行：哪一步最慢、哪一步 token 最多",
        "min": 30
       },
       {
@@ -2875,29 +3129,29 @@
     },
     {
      "date": "2027-02-09",
-     "label": "OpenPipe ART",
-     "goal": "看一个 agent 训练框架的完整链路",
+     "label": "方差",
+     "goal": "同一任务跑多次，结果稳不稳",
      "tasks": [
       {
        "id": "20270209-1",
-       "text": "读 ART 的 README：轨迹 → 奖励函数 → 训练 LoRA → 热加载",
-       "min": 40,
+       "text": "用 tau2 run-pass3 算 pass^3；再挑 3 条自己的用例，每条跑 10 次",
+       "min": 70,
        "links": [
         {
-         "label": "ART",
-         "url": "https://github.com/OpenPipe/ART"
+         "label": "tau2 命令参考",
+         "url": "https://github.com/sierra-research/tau2-bench/blob/main/docs/cli-reference.md"
         }
        ]
       },
       {
        "id": "20270209-2",
-       "text": "跑一个官方示例 notebook（需要 GPU，用 Colab 或它支持的云端后端，先确认是否收费）",
-       "min": 70
+       "text": "在 tracing 里对比成功和失败的轨迹：从哪一步开始分叉",
+       "min": 50
       },
       {
        "id": "20270209-3",
-       "text": "读训练前后同一任务的轨迹，看变化在哪",
-       "min": 30
+       "text": "写下：要让它更稳，该改提示、工具还是停止条件",
+       "min": 20
       },
       {
        "id": "20270209-4",
@@ -2908,13 +3162,284 @@
     },
     {
      "date": "2027-02-10",
-     "label": "框架对比（一）",
-     "goal": "OpenAI Agents SDK vs Claude Agent SDK",
+     "label": "状态与续跑",
+     "goal": "长任务中断后怎么接着做",
      "tasks": [
       {
        "id": "20270210-1",
-       "text": "用两个 SDK 各做同一个小 agent（2 个工具 + 1 次交接）",
+       "text": "读 LangGraph 的持久化文档：checkpoint、thread、interrupt",
+       "min": 30,
+       "links": [
+        {
+         "label": "文档",
+         "url": "https://docs.langchain.com/oss/python/langgraph/persistence"
+        }
+       ]
+      },
+      {
+       "id": "20270210-2",
+       "text": "实验：3 个节点 + SqliteSaver + interrupt() 做审批；跑到一半杀掉进程，用 thread_id 续跑，再从历史 checkpoint 分叉一次",
+       "min": 70,
+       "links": [
+        {
+         "label": "LangGraph",
+         "url": "https://github.com/langchain-ai/langgraph"
+        }
+       ]
+      },
+      {
+       "id": "20270210-3",
+       "text": "对照 s10 的任务系统、Codex 的 rollout、OpenHands 的事件日志：状态存哪、哪些没存，写成一张表",
+       "min": 40
+      },
+      {
+       "id": "20270210-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-02-11",
+     "label": "浏览器 agent",
+     "goal": "可访问性树、截图、写代码操作，三条路线",
+     "tasks": [
+      {
+       "id": "20270211-1",
+       "text": "读《Building Browser Agents》里可访问性树和截图的对比部分",
+       "min": 30,
+       "links": [
+        {
+         "label": "论文",
+         "url": "https://arxiv.org/html/2511.19477"
+        }
+       ]
+      },
+      {
+       "id": "20270211-2",
+       "text": "同一个只读网页任务（不提交表单），分别用 Playwright MCP、Playwright CLI + skills、browser-use（模型写 Python 操作浏览器）做一遍",
        "min": 80,
+       "links": [
+        {
+         "label": "Playwright MCP",
+         "url": "https://github.com/microsoft/playwright-mcp"
+        },
+        {
+         "label": "Playwright CLI",
+         "url": "https://github.com/microsoft/playwright-cli"
+        },
+        {
+         "label": "browser-use",
+         "url": "https://github.com/browser-use/browser-use"
+        }
+       ]
+      },
+      {
+       "id": "20270211-3",
+       "text": "对比 token 和成功率，记录哪些地方必须看截图",
+       "min": 30
+      },
+      {
+       "id": "20270211-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-02-12",
+     "label": "手机 GUI agent",
+     "goal": "约束准出的真实实现，和端云分工",
+     "tasks": [
+      {
+       "id": "20270212-1",
+       "text": "读 Open-AutoGLM：截屏 → do(action) → ADB 执行；重点看“请人接管”、敏感操作确认回调、黑屏时自动请求接管（只读，真跑要视觉模型）",
+       "min": 60,
+       "links": [
+        {
+         "label": "Open-AutoGLM",
+         "url": "https://github.com/zai-org/Open-AutoGLM"
+        }
+       ]
+      },
+      {
+       "id": "20270212-2",
+       "text": "读 OpenPhone 的架构部分：端侧 3B 模型做什么、什么时候交给云端",
+       "min": 50,
+       "links": [
+        {
+         "label": "OpenPhone",
+         "url": "https://arxiv.org/html/2510.22009v2"
+        }
+       ]
+      },
+      {
+       "id": "20270212-3",
+       "text": "和昨天的浏览器 agent、上周的约束准出对比：手机上哪些动作必须人来确认",
+       "min": 30
+      },
+      {
+       "id": "20270212-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-02-13",
+     "label": "整理成文",
+     "goal": "可观测、状态、GUI agent 三块收口",
+     "tasks": [
+      {
+       "id": "20270213-1",
+       "text": "写《让 agent 可观测、可续跑》：tracing 怎么接、方差怎么看、状态怎么存",
+       "min": 80
+      },
+      {
+       "id": "20270213-2",
+       "text": "把本周发现补进 review 清单旋钮 5、10、13",
+       "min": 30,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270213-3",
+       "text": "回看第 9 周的 10 条用例，现在会怎么改",
+       "min": 30
+      }
+     ]
+    },
+    {
+     "date": "2027-02-14",
+     "label": "第 12 周复盘",
+     "goal": "复盘 + 补课日：没做完的任务在今天补上",
+     "tasks": [
+      {
+       "id": "20270214-1",
+       "text": "补完本周没做完的任务",
+       "min": 60
+      },
+      {
+       "id": "20270214-2",
+       "text": "把本周笔记汇总成一篇周记，挑一篇整理发到 blog",
+       "min": 40
+      },
+      {
+       "id": "20270214-3",
+       "text": "review 清单：补本周见过的例子（旋钮 5 状态与记忆、10 可观测性、13 长任务接力）",
+       "min": 20,
+       "links": [
+        {
+         "label": "review 清单",
+         "url": "https://github.com/fuCking-Life/agent-learning/blob/main/checklist/agent-design-review.md"
+        }
+       ]
+      },
+      {
+       "id": "20270214-4",
+       "text": "看一眼下周计划，有疑问就记下来",
+       "min": 10
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "title": "第 13 周",
+   "theme": "训练入门、框架对比、收官",
+   "days": [
+    {
+     "date": "2027-02-15",
+     "label": "agentic RL 概念",
+     "goal": "agent 能力是怎么训练出来的",
+     "tasks": [
+      {
+       "id": "20270215-1",
+       "text": "读《A Practitioner's Guide to Multi-turn Agentic RL》的结论部分：先 SFT 后 RL、奖励要细",
+       "min": 60,
+       "links": [
+        {
+         "label": "论文",
+         "url": "https://arxiv.org/html/2510.01132v2"
+        }
+       ]
+      },
+      {
+       "id": "20270215-2",
+       "text": "搞懂几个词：SFT、RL、奖励函数、GRPO、LoRA，各用一句话讲清楚",
+       "min": 40
+      },
+      {
+       "id": "20270215-3",
+       "text": "想一想：你写的评估用例，怎么变成训练用的奖励",
+       "min": 30
+      },
+      {
+       "id": "20270215-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-02-16",
+     "label": "OpenPipe ART 与 RULER",
+     "goal": "不用 GPU，先看奖励怎么打",
+     "tasks": [
+      {
+       "id": "20270216-1",
+       "text": "读 ART 的 README：轨迹 → 奖励函数 → 训练 LoRA → 热加载（本地训练要 NVIDIA GPU，今天不训练）",
+       "min": 40,
+       "links": [
+        {
+         "label": "ART",
+         "url": "https://github.com/OpenPipe/ART"
+        }
+       ]
+      },
+      {
+       "id": "20270216-2",
+       "text": "用它的 RULER，judge 设成 deepseek-flash，给同一任务的 4 条 tau2 轨迹打相对分，读它的理由",
+       "min": 70,
+       "links": [
+        {
+         "label": "ruler.py",
+         "url": "https://github.com/OpenPipe/ART/blob/main/src/art/rewards/ruler.py"
+        }
+       ]
+      },
+      {
+       "id": "20270216-3",
+       "text": "对比 RULER 的相对打分和 tau2 的规则分：哪个更适合当训练奖励（可选：用 mlx-lm-lora 在 Mac 上试一个很小的 GRPO）",
+       "min": 30,
+       "links": [
+        {
+         "label": "mlx-lm-lora",
+         "url": "https://github.com/Goekdeniz-Guelmez/mlx-lm-lora"
+        }
+       ]
+      },
+      {
+       "id": "20270216-4",
+       "text": "写当天笔记",
+       "min": 20
+      }
+     ]
+    },
+    {
+     "date": "2027-02-17",
+     "label": "框架对比（一）",
+     "goal": "OpenAI 的 handoff vs Claude 的 subagent",
+     "tasks": [
+      {
+       "id": "20270217-1",
+       "text": "用两个 SDK 各做同一个小 agent（2 个工具 + 1 次交给第二个 agent），关掉 OpenAI SDK 默认上传的 tracing",
+       "min": 70,
        "links": [
         {
          "label": "OpenAI Agents SDK",
@@ -2927,34 +3452,36 @@
        ]
       },
       {
-       "id": "20270210-2",
-       "text": "对比：循环、工具定义、交接、tracing、权限各是怎么做的",
-       "min": 50
+       "id": "20270217-2",
+       "text": "打印第二个 agent 实际看到的上下文：handoff 带着原对话历史，subagent 只拿到任务",
+       "min": 40
       },
       {
-       "id": "20270210-3",
-       "text": "写当天笔记",
-       "min": 20
+       "id": "20270217-3",
+       "text": "同一条规则分别做成 guardrail 和 hook，对比触发时机；顺带看 OpenAI 新的 SandboxAgent",
+       "min": 30,
+       "links": [
+        {
+         "label": "SandboxAgent",
+         "url": "https://github.com/openai/openai-agents-python/blob/main/docs/sandbox/guide.md"
+        }
+       ]
       }
      ]
     },
     {
-     "date": "2027-02-11",
+     "date": "2027-02-18",
      "label": "框架对比（二）",
-     "goal": "Google ADK / LangGraph / Pydantic AI",
+     "goal": "Google ADK / Pydantic AI + 五框架对比表",
      "tasks": [
       {
-       "id": "20270211-1",
-       "text": "学之前先查一次三个框架的最新版本和变化",
+       "id": "20270218-1",
+       "text": "学之前先查一次最新版本和变化",
        "min": 20,
        "links": [
         {
          "label": "ADK",
          "url": "https://github.com/google/adk-python"
-        },
-        {
-         "label": "LangGraph",
-         "url": "https://github.com/langchain-ai/langgraph"
         },
         {
          "label": "Pydantic AI",
@@ -2963,29 +3490,29 @@
        ]
       },
       {
-       "id": "20270211-2",
-       "text": "读各自的核心概念：状态和控制流是怎么抽象的",
-       "min": 60
-      },
-      {
-       "id": "20270211-3",
-       "text": "把 5 个框架放进一张对比表，写下各自适合什么场景",
+       "id": "20270218-2",
+       "text": "ADK 通过 LiteLlm 接 DeepSeek，对比 SequentialAgent（代码定流程）和 LLM 自己决定转交",
        "min": 50
       },
       {
-       "id": "20270211-4",
-       "text": "写当天笔记",
-       "min": 20
+       "id": "20270218-3",
+       "text": "Pydantic AI：故意让结构化输出校验失败，在 trace 里看自动重试",
+       "min": 30
+      },
+      {
+       "id": "20270218-4",
+       "text": "把 5 个框架放进一张对比表：谁掌控流程、多 agent 怎么协作、状态存哪",
+       "min": 40
       }
      ]
     },
     {
-     "date": "2027-02-12",
+     "date": "2027-02-19",
      "label": "review 清单 v2",
-     "goal": "把 12 周的经验收进清单",
+     "goal": "把 13 周的经验收进清单",
      "tasks": [
       {
-       "id": "20270212-1",
+       "id": "20270219-1",
        "text": "逐个过 16 个旋钮，每个补上最有代表性的例子",
        "min": 60,
        "links": [
@@ -2996,57 +3523,57 @@
        ]
       },
       {
-       "id": "20270212-2",
+       "id": "20270219-2",
        "text": "补 JD 里反复出现、清单还没覆盖的点：能力接口、约束准出、上下文和状态",
        "min": 40
       },
       {
-       "id": "20270212-3",
+       "id": "20270219-3",
        "text": "删掉或合并你觉得不再需要的旋钮",
        "min": 30
       },
       {
-       "id": "20270212-4",
+       "id": "20270219-4",
        "text": "写当天笔记",
        "min": 20
       }
      ]
     },
     {
-     "date": "2027-02-13",
+     "date": "2027-02-20",
      "label": "完整设计 review",
      "goal": "用清单 v2 审一个 agent",
      "tasks": [
       {
-       "id": "20270213-1",
+       "id": "20270220-1",
        "text": "挑一个开源 agent（前面读过的任意一个），用清单 v2 逐项过一遍",
        "min": 80
       },
       {
-       "id": "20270213-2",
+       "id": "20270220-2",
        "text": "写 3 条设计层修改意见，每条写清楚：问题、证据、改法、怎么验证",
        "min": 50
       },
       {
-       "id": "20270213-3",
+       "id": "20270220-3",
        "text": "写当天笔记",
        "min": 20
       }
      ]
     },
     {
-     "date": "2027-02-14",
+     "date": "2027-02-21",
      "label": "收官",
-     "goal": "回顾 12 周，排下一阶段",
+     "goal": "回顾 13 周，排下一阶段",
      "tasks": [
       {
-       "id": "20270214-1",
+       "id": "20270221-1",
        "text": "补完本周没做完的任务",
        "min": 60
       },
       {
-       "id": "20270214-2",
-       "text": "回顾 12 周的 review 清单，标出还想深挖的地方",
+       "id": "20270221-2",
+       "text": "回顾 review 清单，标出还想深挖的地方",
        "min": 30,
        "links": [
         {
@@ -3056,8 +3583,8 @@
        ]
       },
       {
-       "id": "20270214-3",
-       "text": "和 Claude 一起排下一阶段：通用 agent 继续深挖，或开始阶段 5（语音、端侧、训练、平台能力）",
+       "id": "20270221-3",
+       "text": "和 Claude 一起排下一阶段：先做卡车司机助手的 agent 项目，再接语音、搬到端侧（阶段 5）",
        "min": 40
       }
      ]
