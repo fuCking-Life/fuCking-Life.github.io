@@ -1,5 +1,303 @@
 [
   {
+    "id": "agent-app-2026-11-23-gemini-voice-editing",
+    "date": "2026-11-23",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "Google 把 Gboard Rambler 同款语音编辑能力开放到 Gemini API，可用口语修改已有文本",
+    "summary": "Gemini 3.5 Transcribe 的语音编辑能力开放到 Gemini API，与 Gboard Rambler 同套技术；可用 source_text 提供最多 64 KiB 已有文本，由语音指令修改。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "语音助手里最常见的，往往不是从零听写，而是改已经写好的短信、邮件或待办。把「已有文本 + 口语修改」做成可调用的 API，说明这是一项可以单独接进输入框的能力，而不必整段重录。iOS 端侧语音助手可以先在本地做端点检测和草稿展示，再把修改指令和 `source_text` 交给云端转写模型；如果以后有端上小模型，也可以先本地处理明显的插入和删除，只把不确定的改写送出去。注意文档给的是 API 能力，不是现成的 iOS SDK，还要自己处理麦克风、中间结果，以及 64 KiB 的文本上限。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "语音 Agent",
+      "大模型"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "语音助手",
+      "语音编辑",
+      "Gemini API",
+      "移动输入"
+    ],
+    "source": {
+      "name": "Google",
+      "handle": "@Google",
+      "identity": "Google 官方账号；Gemini API 模型页与转写指南；Gemini API 更新说明"
+    },
+    "links": [
+      {
+        "label": "官方帖 @Google",
+        "url": "https://x.com/Google/status/2123827048808370477"
+      },
+      {
+        "label": "公开预览说明 @Google",
+        "url": "https://x.com/Google/status/2123827050968764511"
+      },
+      {
+        "label": "Gemini 3.5 Transcribe 模型页",
+        "url": "https://aistudio.google.com/docs/models/gemini-3.5-transcribe"
+      },
+      {
+        "label": "Audio transcription 指南",
+        "url": "https://aistudio.google.com/docs/transcribe"
+      },
+      {
+        "label": "Gemini API 更新说明",
+        "url": "https://aistudio.google.com/docs/changelog"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-21"
+  },
+  {
+    "id": "agent-app-2026-11-23-ios-dictation-keyboards",
+    "date": "2026-11-23",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "Wispr Flow 与 Hex 等 iOS 键盘宣布可在当前输入框里直接听写，不必再跳进自己的 App",
+    "summary": "Wispr Flow 与 Hex 等 iOS 键盘宣布可在当前输入框里直接听写，不必再跳进自己的 App；Hex 称 100% 免费且完全在端上处理。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对 iOS 语音助手来说，输入法扩展仍然是摩擦最低的入口：用户不用离开当前 App。但系统键盘扩展长期在麦克风权限上受限，如果产品还把「听写必须先打开自己的 App」留在主路径里，体感会明显落后。Hex 把「免费、完全端上、不打断音乐」写成卖点，也说明隐私和功耗仍是差异化点。自己做端侧语音输入时，应优先把会话保持在当前文本框，并给系统策略变化留退路；不要把尚未被官方写明的绕过方式，当成可长期依赖的 API。"
+    },
+    "relevance": 5,
+    "domains": [
+      "iOS",
+      "端侧",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "iOS",
+      "语音输入",
+      "键盘",
+      "端侧语音"
+    ],
+    "source": {
+      "name": "WisprFlow",
+      "handle": "@WisprFlow",
+      "identity": "Wispr Flow 官方账号；@ryanvogel（Hex iOS 应用发布者，简介写明 @anomalyco）；Raycast iOS 更新说明"
+    },
+    "links": [
+      {
+        "label": "官方帖 @WisprFlow",
+        "url": "https://x.com/WisprFlow/status/2123844976895472013"
+      },
+      {
+        "label": "Hex TestFlight 宣布 @ryanvogel",
+        "url": "https://x.com/ryanvogel/status/2123742418021335345"
+      },
+      {
+        "label": "Hex TestFlight",
+        "url": "https://testflight.apple.com/join/zkay9UgX"
+      },
+      {
+        "label": "Raycast iOS 1.5.5 更新说明",
+        "url": "https://www.raycast.com/changelog/ios/1-5-5"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "agent-app-2026-11-23-dot-carplay",
+    "date": "2026-11-23",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "OpenAI 开发者体验负责人演示：可在 Apple CarPlay 里呼叫自己的 Dot 智能体",
+    "summary": "OpenAI 开发者体验负责人演示可在 Apple CarPlay 里呼叫 Dot；帮助文档写的是 CarPlay 中的 ChatGPT 语音对话，并未写明呼叫 Dot。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "车机是语音助手很自然的场景，但真正有用的不是再开一个聊天窗口，而是把已经在推进的常驻智能体接进免提通话，让通勤时间用来做决策和确认。对 iOS 端侧语音助手的启发是：先把同一条任务状态在手机和车机之间同步，车机上只保留语音确认和关键打断，具体执行仍可在云端或手机后台继续。在官方文档补齐之前，不要把 CarPlay 入口写成稳定能力；也要记住车机音频质量因车而异，而且系统不允许助手去控车或改其他 App，这类权限边界要写进产品，而不是等出事后再挡。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "个人 Agent",
+      "智能座舱"
+    ],
+    "types": [
+      "观点讨论"
+    ],
+    "tags": [
+      "语音助手",
+      "CarPlay",
+      "Dot",
+      "移动 App"
+    ],
+    "source": {
+      "name": "Romain Huet",
+      "handle": "@romainhuet",
+      "identity": "OpenAI 开发者体验负责人，X 简介写明负责 Codex 与 API；@gdb（Greg Brockman，OpenAI 总裁）"
+    },
+    "links": [
+      {
+        "label": "演示帖 @romainhuet",
+        "url": "https://x.com/romainhuet/status/2123924316110966824"
+      },
+      {
+        "label": "转述帖 @gdb",
+        "url": "https://x.com/gdb/status/2123939543200219210"
+      },
+      {
+        "label": "ChatGPT CarPlay 帮助文档",
+        "url": "https://help.openai.com/en/articles/20001153-using-chatgpt-in-carplay"
+      },
+      {
+        "label": "Dot 介绍",
+        "url": "https://learn.chatgpt.com/docs/dots"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-21"
+  },
+  {
+    "id": "agent-app-2026-11-23-inkling-2-mini",
+    "date": "2026-11-23",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "Thinking Machines 开源 26.4B 循环 Transformer「Inkling 2 Mini」，官方称约 20GB 即可在笔记本电脑上跑",
+    "summary": "Thinking Machines 开源循环 Transformer Inkling 2 Mini：总参数 26.4B、激活 3.4B，官方称约 20GB 即可在笔记本上跑。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "循环架构把更多推理留在模型内部、少往外写思维链，对本地智能体很有吸引力：同样的激活规模可以得到更长的「思考时间」，也更省解码带宽。但官方自己也指出，内部计算变多会让「只读思维链」的监控变难，这和端侧助手要可解释、可打断是同一类问题。眼下 20GB 仍然对手机不现实，更适合作为 Mac 上的本地编程或工具调用模型来看；若要把类似思路搬到 iOS，需要的是更小的循环深度、更低的常驻内存，以及明确的「内部循环多少步就停下来问用户」的上限。"
+    },
+    "relevance": 4,
+    "domains": [
+      "开源",
+      "大模型",
+      "端侧"
+    ],
+    "types": [
+      "开源",
+      "模型发布"
+    ],
+    "tags": [
+      "小模型",
+      "本地推理",
+      "开源",
+      "Agent 编程"
+    ],
+    "source": {
+      "name": "Thinking Machines Lab",
+      "handle": "@thinkymachines",
+      "identity": "Thinking Machines Lab 官方账号；官方博客与 Hugging Face 模型卡"
+    },
+    "links": [
+      {
+        "label": "官方博客",
+        "url": "https://thinkingmachines.ai/news/inkling-2-mini/"
+      },
+      {
+        "label": "官方帖 @thinkymachines",
+        "url": "https://x.com/thinkymachines/status/2123871643797995872"
+      },
+      {
+        "label": "Hugging Face 模型卡",
+        "url": "https://huggingface.co/thinkingmachines/Inkling-2-Mini"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-20"
+  },
+  {
+    "id": "agent-app-2026-11-23-gurman-siri-agents",
+    "date": "2026-11-23",
+    "seq": 5,
+    "source_brief": "agent-app",
+    "title": "彭博 Gurman：苹果更高级的 Agent 或要到 2027 年底，Siri 对自家 App 的多步控制据称 12 月先上",
+    "summary": "Gurman 预计苹果更高级 Agent 或要到 2027 年底；Siri 对自家 App 的多步控制据称 12 月先上，第三方要到 2027 年。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "如果 12 月先开放的是 Siri 对苹果自有 App 的多步控制，第三方要到 2027 年，那么近几个月更值得做的是：把核心操作收成稳定、可被系统调用的 App Intents，并先在 Shortcuts / 系统助理里跑通确认和撤销，而不是等待一个通用电脑操控智能体。Gurman 对发布节奏的批评也提醒：系统级助手很难按周迭代，第三方端侧语音助手反而可以在输入、确认和垂直技能上先补上 Siri 仍然偏慢的部分；但涉及跨 App 写操作时，仍应按「先自家、后第三方」来设计权限和默认开关。"
+    },
+    "relevance": 4,
+    "domains": [
+      "苹果生态",
+      "个人 Agent",
+      "Agent 架构"
+    ],
+    "types": [
+      "观点讨论",
+      "行业数据"
+    ],
+    "tags": [
+      "苹果",
+      "Siri",
+      "智能体",
+      "发布时间"
+    ],
+    "source": {
+      "name": "MacRumors",
+      "handle": "",
+      "identity": "Hartley Charlton 撰文，转述 Bloomberg Mark Gurman《Power On》通讯（原文付费，未能全文阅读）"
+    },
+    "links": [
+      {
+        "label": "MacRumors 转述",
+        "url": "https://www.macrumors.com/2026/11/22/siri-layoffs-spared-newer-ai-systems/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-22"
+  },
+  {
+    "id": "agent-app-2026-11-23-perplexity-intelligence",
+    "date": "2026-11-23",
+    "seq": 6,
+    "source_brief": "agent-app",
+    "title": "OpenAI 首席科学家公开预训练 perplexity 进度，并提议用它作为行业共同安全上限",
+    "summary": "OpenAI 首席科学家公开内部预训练 log-perplexity 进度，并提议在具备明确监控能力之前，用它作为行业共同安全上限。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这篇文章讨论的是前沿预训练的节奏，不是端侧部署。对做手机助手的人来说，更可迁移的是它的监控逻辑：当模型更多依赖内部计算、少把推理写出来时，只靠阅读思维链会越来越不够。端侧产品应提前准备可观测的工具调用日志、可回放的操作轨迹，以及不依赖模型自述的拦截条件。跨实验室难比齐的问题，也提醒不要把单一内部指标当成选端上模型的唯一依据，仍要看延迟、功耗和真实任务成功率。"
+    },
+    "relevance": 4,
+    "domains": [
+      "大模型",
+      "评测与榜单"
+    ],
+    "types": [
+      "观点讨论",
+      "技术解读"
+    ],
+    "tags": [
+      "大模型",
+      "安全",
+      "评测",
+      "OpenAI"
+    ],
+    "source": {
+      "name": "Jakub Pachocki",
+      "handle": "",
+      "identity": "OpenAI 首席科学家，官方博文作者；@sama（Sam Altman，OpenAI CEO）；@gdb（Greg Brockman，OpenAI 总裁）"
+    },
+    "links": [
+      {
+        "label": "OpenAI 官方博客",
+        "url": "https://openai.com/index/perplexity-and-intelligence/"
+      },
+      {
+        "label": "作者帖 @merettm",
+        "url": "https://x.com/merettm/status/2124549218995949967"
+      },
+      {
+        "label": "转发帖 @sama",
+        "url": "https://x.com/sama/status/2124551594691932405"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-23/",
+    "posted_at": "2026-11-22"
+  },
+  {
     "id": "lumi-2026-11-22-audiocpp-096",
     "date": "2026-11-22",
     "seq": 1,
