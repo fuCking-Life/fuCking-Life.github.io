@@ -193,7 +193,7 @@ Ticks made on the page stay in that browser (localStorage) and are labelled æœ¬æ
 python3 _publisher/test_publish.py
 ```
 
-The tests build throwaway copies of the site and do not touch this checkout. One of them fails when the committed pages differ from a fresh build of the records; run `--rebuild` and commit to fix it.
+The tests build throwaway copies of the site and do not touch this checkout. Those copies start from the frozen records in `_publisher/test_fixtures/posts` (the 11 posts as of 2026-11-20), not from the live `_publisher/posts`, so publishing new posts never breaks a test. Write new tests against the fixtures; add a fixture record when a test needs one. One test does read the live records on purpose: it fails when the committed pages differ from a fresh build of them; run `--rebuild` and commit to fix it.
 
 ## Files that change
 

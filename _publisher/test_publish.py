@@ -105,8 +105,15 @@ class MarkdownTests(unittest.TestCase):
         self.assertIn("<p>", rendered)
 
 
+# The post records the tests are written against: a frozen copy of the site's records as of
+# 2026-11-20 (11 posts). The throwaway sites below start from these, not from the live
+# `_publisher/posts`, so publishing a new real post never breaks a test. Only
+# test_checked_in_site_matches_a_fresh_build reads the live records, on purpose.
+FIXTURE_POSTS = HERE / "test_fixtures" / "posts"
+
+
 def make_site(tmp: Path, with_records: bool = True) -> None:
-    """A throwaway site root: the hand-written assets plus (optionally) the real records."""
+    """A throwaway site root: the hand-written assets plus (optionally) the fixture records."""
     for folder in ("css", "js", "images", "favicons"):
         shutil.copytree(SITE / folder, tmp / folder)
     daily = tmp / "daily"
@@ -115,7 +122,7 @@ def make_site(tmp: Path, with_records: bool = True) -> None:
         shutil.copy2(SITE / "daily" / name, daily / name)
     posts = tmp / "_publisher" / "posts"
     if with_records:
-        shutil.copytree(SITE / "_publisher" / "posts", posts)
+        shutil.copytree(FIXTURE_POSTS, posts)
     else:
         posts.mkdir(parents=True)
 
