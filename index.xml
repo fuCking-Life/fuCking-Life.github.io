@@ -8,6 +8,14 @@
     <lastBuildDate>Tue, 24 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Luna 全双工语音日报（2026-11-24）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-24/</link>
+      <pubDate>Tue, 24 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-24/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-23 08:42 – 2026-11-24 08:43（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 11 条：Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0；Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%；Cekura：Phonic-1.1 在 Turn Bench 第一，backchannel 时继续说的比例 86% 对中位 6%；sherpa-onnx：流式 NeMo CTC 把子采样写死成 4，1.2 s 端点实际要约 2.4 s，还会吃掉下一句首词；Sophon Realtime 1.6.2：&lt;code&gt;say&lt;/code&gt; 不再因 token 余量不够念到一半，通话开始、对方未开口也能播；Hugging Face speech-to-speech：把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做；LiveKit Agents：未完成的 function call 不要修补后执行，半截 JSON 会被当成成功；mlx-audio v0.6.8：Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种且中文块不再插空格；MaAI-Synth：用 LLM 脚本 &amp;#43; TTS &amp;#43; 独立时序模型合成带话轮、重叠和 backchannel 的双轨对话（稍早于本窗口）；Cekura：GPT-Live 1.1 在真人电话榜上到第一，人名、数字和日期抓取 83%；CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0，由本机组件目录渲染。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Agent 学习笔记（2026-11-24）：工具说不清、命令被拦，活都流回 bash</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-24/</link>
       <pubDate>Tue, 24 Nov 2026 08:00:00 +0800</pubDate>
