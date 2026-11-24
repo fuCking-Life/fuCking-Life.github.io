@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna 全双工语音日报（2026-11-24） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-23 08:42 – 2026-11-24 08:43（新加坡时间） 本期 11 条：Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0；Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%；Cekura：Phonic-1.1 在 Turn Bench 第一，">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/lumi-2026-11-24/">
+<meta property="og:title" content="Luna 全双工语音日报（2026-11-24）">
+<meta property="og:description" content="时间窗口：2026-11-23 08:42 – 2026-11-24 08:43（新加坡时间） 本期 11 条：Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0；Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%；Cekura：Phonic-1.1 在 Turn Bench 第一，">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/lumi-2026-11-24/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-24T08:00:00+08:00">2026-11-24</time></div><h1>Luna 全双工语音日报（2026-11-24）</h1><div class="post-meta"><span>约 16 分钟</span><a class="tag" href="/tags/lumi/">#lumi</a></div></header>
+<article class="prose" style="--col:var(--c-daily)">
+<p class="digest-meta">时间窗口：2026-11-23 08:42 – 2026-11-24 08:43（新加坡时间）</p>
+<p>本期 11 条：Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0；Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%；Cekura：Phonic-1.1 在 Turn Bench 第一，backchannel 时继续说的比例 86% 对中位 6%；sherpa-onnx：流式 NeMo CTC 把子采样写死成 4，1.2 s 端点实际要约 2.4 s，还会吃掉下一句首词；Sophon Realtime 1.6.2：<code>say</code> 不再因 token 余量不够念到一半，通话开始、对方未开口也能播；Hugging Face speech-to-speech：把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做；LiveKit Agents：未完成的 function call 不要修补后执行，半截 JSON 会被当成成功；mlx-audio v0.6.8：Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种且中文块不再插空格；MaAI-Synth：用 LLM 脚本 &#43; TTS &#43; 独立时序模型合成带话轮、重叠和 backchannel 的双轨对话（稍早于本窗口）；Cekura：GPT-Live 1.1 在真人电话榜上到第一，人名、数字和日期抓取 83%；CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0，由本机组件目录渲染。</p>
+<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 11 条</div><ol><li><a href="#silero-vad-v63短停顿和短语音更好检端点中位延迟从-64-ms-降到接近-0">Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#duopra全双工模型边说边静默调工具任务成功率从-47-提到-447">Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#cekuraphonic-11-在-turn-bench-第一backchannel-时继续说的比例-86-对中位-6">Cekura：Phonic-1.1 在 Turn Bench 第一，backchannel 时继续说的比例 86% 对中位 6%</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#sherpa-onnx流式-nemo-ctc-把子采样写死成-412-s-端点实际要约-24-s还会吃掉下一句首词">sherpa-onnx：流式 NeMo CTC 把子采样写死成 4，1.2 s 端点实际要约 2.4 s，还会吃掉下一句首词</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#sophon-realtime-162say-不再因-token-余量不够念到一半通话开始对方未开口也能播">Sophon Realtime 1.6.2： say 不再因 token 余量不够念到一半，通话开始、对方未开口也能播</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#hugging-face-speech-to-speech把确认语和工具调用拆成两条-assistant-消息后后续轮次会只说不做">Hugging Face speech-to-speech：把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#livekit-agents未完成的-function-call-不要修补后执行半截-json-会被当成成功">LiveKit Agents：未完成的 function call 不要修补后执行，半截 JSON 会被当成成功</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#mlx-audio-v068qwen3-tts-跨步复用-kv-cacheqwen3-asr-按-iso-语种且中文块不再插空格">mlx-audio v0.6.8：Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种且中文块不再插空格</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#maai-synth用-llm-脚本--tts--独立时序模型合成带话轮重叠和-backchannel-的双轨对话稍早于本窗口">MaAI-Synth：用 LLM 脚本 + TTS + 独立时序模型合成带话轮、重叠和 backchannel 的双轨对话（稍早于本窗口）</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#cekuragpt-live-11-在真人电话榜上到第一人名数字和日期抓取-83">Cekura：GPT-Live 1.1 在真人电话榜上到第一，人名、数字和日期抓取 83%</a><span class="toc-rel" title="相关度 3/5">3</span></li><li><a href="#copilotkit-上线-a2ui-playground智能体写出-a2ui-10由本机组件目录渲染">CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0，由本机组件目录渲染</a><span class="toc-rel" title="相关度 3/5">3</span></li></ol></nav>
+<section class="item" id="silero-vad-v63短停顿和短语音更好检端点中位延迟从-64-ms-降到接近-0">
+<h3 class="it-title"><span class="it-no">1</span><span>Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub snakers4/silero-vad。被广泛使用的端上 VAD（关注账号窗口内没有相关发帖）。。发帖日期：2026-11-23（新加坡时间 17:19 发布）。</p>
+<p>Silero 正式发布 v6.3，提供新的 16 kHz 和 8 kHz 模型，文件名、输入输出和 API 不变，可直接替换。发布说明写：160–256 ms 的句内停顿检出率从 82% 提到 91%，96–128 ms 从 38% 提到 62%；长音频上的上下文保持更好；语音结束检测的中位延迟从 64 ms 降到接近 0；在同等虚警率下，非语音误触发更少、语音召回不变。同一阈值下 v6.3 比 v6.2 略严，若沿用旧阈值需要重测。<code>silero_vad.onnx</code> 重导出后图更简单（<code>If</code> 节点 25→1，总节点 689→163），opset 16 不变，可直接被 OpenVINO 加载；<code>silero_vad_16k_op15.onnx</code> 已没有 <code>If</code>。顺带修了 <code>max_speech_duration_s</code> 强制切分时后续语音被丢掉（#813），以及 <code>speech_pad_ms</code> 较大时 <code>VADIterator</code> 片段重叠（#818）。我没有在车载或 iPhone 上复测这些数字。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+把现有 Silero 换成 v6.3 同名 ONNX 后，先不要沿用 v6.2 的阈值。重点回归车里 100–250 ms 的换气会不会被切成两句，以及“停”“出口”这类短指令会不会漏检。端点尾巴更短，有利于压 barge-in 和 end-of-turn；同时看路噪下误触发是否变化。图更简单，Core ML / ONNX Runtime 的加载和实时性也要一起测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/snakers4/silero-vad/releases/tag/v6.3">发布说明</a> · <a href="https://github.com/snakers4/silero-vad">代码</a></p>
+</section>
+<section class="item" id="duopra全双工模型边说边静默调工具任务成功率从-47-提到-447">
+<h3 class="it-title"><span class="it-no">2</span><span>Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">前沿语音模型</span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@zhangzhuosheng  Zhuosheng Zhang。上海交通大学，Duopra 通讯作者（论文合作方还包括腾讯、上海大学）。。发帖日期：2026-11-23（新加坡时间 11:03 发帖；论文于 11-19 17:09 挂到 arXiv，只标注 cs.AI，日常检索未覆盖，昨日报告未写）。</p>
+<p>作者线程宣布 Duopra：一个全双工语音模型，在说话的同时决定是否行动。工具调用走不发声的私有通道，可以把后端 agent 当作 <code>query(task)</code> 这一类工具来委派，也能在用户改口时用更新后的参数直接调域工具。他们把问题分成会话代理和任务代理：Realtime-Venus-Audio &#43; Harness 在流式流水线、Full-Duplex-Bench v3 上只有 11% 的会话把请求交到后端，Pass@1 仅 4.7%；其余 89% 里后端根本没接到任务，其中不少已经开口却从未发起工具。换成 Duopra、后端仍是 Qwen3-8B 时，Pass@1 升到 44.7%；自己直接调工具为 47.7%（SFT 后 26.0%，全双工 RL 后再升到此值），接 DeepSeek 后端为 49.3%（各 300 个会话）。在 Full-Duplex-Bench v1.0 上，句中停顿误插入从基模 18.1% 降到 5.4%，用户打断后的响应从 79.5% 升到 91.3%。训练分三步：在 12,800 段合成对话上做协议 SFT、用及时且完整的执行做全双工 RL，再只调 speech projector。这是 GPU 上的 speech-to-speech，不是端上小模型。我读了摘要、项目页和作者线程，没有跑演示，也没有逐节核对正文实验设定。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不必把级联换成双工基座，但应单独测“任务有没有真正发出去”，不要只看助手有没有开口。司机中途改目的地或数量时，只把最终参数交给导航工具，不要先按旧值下单。函数名不要读出来，调用走静默通道。评测可对照 Full-Duplex-Bench v3，端上的延迟、回声和电池要另测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/zhangzhuosheng/status/2124700339630927923">原帖</a> · <a href="https://arxiv.org/abs/2611.25773">论文</a> · <a href="https://cychen2003.github.io/duopra/">项目页</a> · <a href="https://github.com/cyChen2003/duopra">代码</a> · <a href="https://huggingface.co/Chechen123/Duopra">权重</a></p>
+</section>
+<section class="item" id="cekuraphonic-11-在-turn-bench-第一backchannel-时继续说的比例-86-对中位-6">
+<h3 class="it-title"><span class="it-no">3</span><span>Cekura：Phonic-1.1 在 Turn Bench 第一，backchannel 时继续说的比例 86% 对中位 6%</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">前沿语音模型</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@tarush_agarwal_  Tarush Agarwal。Cekura（语音 agent 评测）CEO。引用的是 @phonic_co 今日发布的 Phonic-1.1。。发帖日期：2026-11-24（新加坡时间 01:24；Phonic-1.1 于 00:30 由官方宣布）。</p>
+<p>Tarush 给出 Cekura 的 Speech Performance 和 Turn Bench 结果：Phonic-1.1 在 19 个模型里总榜第 4、1114 ELO（Phonic-1 为 1089，三周内升两位），Turn Bench 第 1。中位延迟从 1.99 s 降到 1.68 s，是 19 个里第三快。Turn Bench 上它在对方 backchannel 时仍能继续把话说完的比例是 86%，中位模型只有 6%。Phonic 官方称 1.1 仍定位为面向 agent 任务的 speech-to-speech。这是云端模型的第三方评测，我没有复跑，也没有完整转写配图里的其余分项。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+把“对方还在附和时，助手会不会把话说完、会不会把未说完的指令切掉”单列为评测项，不要只看总 ELO 或中位延迟。Luna 的“好的”“在找”可以在司机换气时插入，但必须让短指令说完。这些是云端 S2S 的数字，端上级联要在车噪下自己复测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/tarush_agarwal_/status/2124917123575349396">原帖</a> · <a href="https://x.com/phonic_co/status/2124903301120680342">Phonic 发布</a></p>
+</section>
+<section class="item" id="sherpa-onnx流式-nemo-ctc-把子采样写死成-412-s-端点实际要约-24-s还会吃掉下一句首词">
+<h3 class="it-title"><span class="it-no">4</span><span>sherpa-onnx：流式 NeMo CTC 把子采样写死成 4，1.2 s 端点实际要约 2.4 s，还会吃掉下一句首词</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">话轮控制</span><span class="it-chip">端上语音</span></div>
+<p class="it-src">来源：GitHub k2-fsa/sherpa-onnx。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）。。发帖日期：2026-11-23（新加坡时间 11:35 合并 PR #4282；尚未打进正式版，当前标签仍是昨日的 v2.0.3）。</p>
+<p>PR #4282 修的是流式 CTC 的端点与时间戳。<code>OnlineRecognizerCtcImpl</code> 对除 T-one 外的流式 CTC 都按子采样因子 4 来算 <code>IsEndpoint()</code> 和 <code>GetResult()</code>，而流式 NeMo FastConformer CTC 的元数据是 8，运行时其实已经读到了这个值。于是尾静音被算成一半长：规则 2（1.2 s）大约要 2.4 s 才触发，复位后又常丢掉下一句第一个词；token 时间戳也被折半（作者在 6.6 s 的 <code>0.wav</code> 上看到末词 3.2 s，同款 NeMo transducer 则是 6.4 s）。修复后改为读取模型的 <code>SubsamplingFactor()</code>，其他 CTC 默认仍为 4。作者用 <code>sherpa-onnx-nemo-streaming-fast-conformer-ctc-en-80ms-int8</code>、40 路流、5 条 LibriSpeech、间隔 1.0–2.5 s 的 −65 dBFS 噪声、默认端点规则、0.1 s 块做了回归：test-clean WER 4.80%→3.22%，端点后首词错误 29.6%→4.4%，test-other WER 9.75%→8.84%。我没有在 iOS 上复测。同日还合并了说话人日志里按流设置 <code>min_duration_on / min_duration_off / window_shift_ratio</code>（#4255），是昨日聚类修复的后续。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+若流式 ASR 使用 NeMo CTC 或任何子采样不是 4 的模型，端点和时间戳必须用模型元数据里的因子，不要写死。否则看起来是 1.2 s 的 end-of-turn，实际会拖到约 2.4 s，下一句开头还可能被吃掉。换模型家族后，要用“短句 &#43; 1–2 s 间隔 &#43; 噪声”专门看首词错误率，不要只看整段 WER。这笔修复还没进正式发布包。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/k2-fsa/sherpa-onnx/pull/4282">端点修复</a> · <a href="https://github.com/k2-fsa/sherpa-onnx">代码</a></p>
+</section>
+<section class="item" id="sophon-realtime-162say-不再因-token-余量不够念到一半通话开始对方未开口也能播">
+<h3 class="it-title"><span class="it-no">5</span><span>Sophon Realtime 1.6.2：<code>say</code> 不再因 token 余量不够念到一半，通话开始、对方未开口也能播</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span><span class="it-chip">前沿语音模型</span></div>
+<p class="it-src">来源：GitHub adventists-ai/sophon-realtime。开源实时 speech-to-speech 引擎，带 OpenAI Realtime 兼容面以及 LiveKit / Pipecat 网关。。发帖日期：2026-11-23（新加坡时间 20:54 发布）。</p>
+<p>这是昨日 v1.6.0 / 1.6.1 的后续。v1.6.2 修了两处 <code>say</code> 行为。一是句子可能在结束前被截断：原先 token 上限是“常规分词长度 &#43; 16”，约束解码会把同样的字拆成更多短 token，4B 上长回读会在上限处停住；现在改为“UTF-8 字节数 &#43; 8”（每个 token 至少对应一个字节，句子总能放下）。若 <code>say</code> 被呼叫方打断或因其他原因提前停，历史和日志只保留实际播出的字，并记下停止原因。二是在对方还没开口时发送的 <code>say</code> 原先无效（例如通话一开始的录音提示），因为工具桥的 key 要等到第一轮回复才建立；现在引擎启动就打开桥，尚未注册的会话会排队，并被要求注册（一次一次性的 turn question）。作者在 Flash 4B、经 Live 网关验证：8 段长回读（姓名、数字、地址，含一句中文）× 3 轮都念完，且每段会话的第一句 <code>say</code> 都在任何语音之前发出。插件版本升到 1.6.2，Live 网关本身没有改。这仍是服务端 / GPU 上的模型，不是端上权重更新。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+导航回读、录音提示这类“按原文朗读”不要用“token 数 &#43; 固定余量”当停止条件，量化或约束解码可能把同一句话拆得更碎，会念到一半被切断。被打断时，对话历史只留实际播出的字。安全声明或录音提示必须在司机开口前就能播，不要等第一轮用户语音才打开通道。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.2">发布说明</a> · <a href="https://github.com/adventists-ai/sophon-realtime">代码</a></p>
+</section>
+<section class="item" id="hugging-face-speech-to-speech把确认语和工具调用拆成两条-assistant-消息后后续轮次会只说不做">
+<h3 class="it-title"><span class="it-no">6</span><span>Hugging Face speech-to-speech：把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">语音 agent 工程</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub huggingface/speech-to-speech。可替换模块的级联语音管线（关注账号 @andimarafioti 窗口内没有相关技术帖）。。发帖日期：2026-11-23（新加坡时间 23:15 合并 PR #664；同日 23:24 合并配套评测 #868）。</p>
+<p>PR #664 修的是历史写法。一句“我来帮你设 20 分钟米饭计时”再说 <code>set_timer</code>，在 Realtime 缓冲里是一条 assistant 文本加一条 <code>function_call</code>；转成 Chat Completions / transformers 模板后变成两条 assistant 消息，模板会在第一句末尾就关闭回合。模型学会这个形状后，后续请求往往只说引导语、不再发出调用。作者在 Qwen3-VL-30B-A3B-Instruct-FP8、vLLM、与线上相同的语音系统提示和工具下，用一轮“先说再调”的历史接 6 类后续工具请求、各 16 次：拆成两条时 0/96 调对工具，合并成一条同时带 <code>content</code> 和 <code>tool_calls</code> 后 96/96。同日 #868 加了 <code>tool_conversations</code> 评测，用脚本化多轮对话经 Realtime 服务器跑通，用来固定测量历史、提示词和后端的改动。这是服务端级联管线的修复，不是新模型。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+确认语和这次工具调用必须写在同一条助手消息里。若先存“我来帮你查加油站”、再另开一条只放函数调用，后面几轮很容易只开口、不再调工具。加一条回归：第一轮工具成功之后，紧接着再下一轮指令，工具仍要发出。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/huggingface/speech-to-speech/pull/664">历史修复</a> · <a href="https://github.com/huggingface/speech-to-speech/pull/868">工具对话评测</a> · <a href="https://github.com/huggingface/speech-to-speech">代码</a></p>
+</section>
+<section class="item" id="livekit-agents未完成的-function-call-不要修补后执行半截-json-会被当成成功">
+<h3 class="it-title"><span class="it-no">7</span><span>LiveKit Agents：未完成的 function call 不要修补后执行，半截 JSON 会被当成成功</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：GitHub livekit/agents。开源语音 agent 框架（关注账号 @livekit 窗口内没有发帖）。。发帖日期：2026-11-23（新加坡时间 11:18 合并 PR #8703）。</p>
+<p>PR #8703 修的是 OpenAI Responses 流。当模型还在写工具参数就撞上 <code>max_output_tokens</code> 时，服务端会以 <code>status: &#34;incomplete&#34;</code> 结束该 <code>function_call</code>，再发 <code>response.incomplete</code>。旧逻辑在看到 <code>output_item.done</code> 时不管 status 就把调用放进 <code>function_ch</code>，工具执行是并发的，报错来不及拦住。<code>parse_function_arguments</code> 还会修补截断 JSON，作者举的例子是意图为 21 的 <code>{&#34;temperature&#34;: 2</code> 被修成 2，工具带着错误值跑完，还被记成成功调用。修复后：status 已设置且不是 <code>completed</code> 的调用不再派发。这是此前 GPT Live 后端已有的规则，现在落到共用的 Responses 引擎，覆盖 WebSocket / HTTP 以及 Azure、xAI 等子类。没有 status 的条目仍会派发，以免兼容提供商被误伤。仓库尚未为此打新版本号。我没有在真机上复现。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+工具参数若是流式生成的，响应一旦是 incomplete，就不要把半截 JSON 修补后执行，更不要记成成功。宁可报错或重试，也不要把“21 度 / 21 号出口”做成 2。只有 status 为 completed，或你们明确知道该提供商根本不返回 status 时，才真正调导航或拨号。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/livekit/agents/pull/8703">修复</a> · <a href="https://github.com/livekit/agents">代码</a></p>
+</section>
+<section class="item" id="mlx-audio-v068qwen3-tts-跨步复用-kv-cacheqwen3-asr-按-iso-语种且中文块不再插空格">
+<h3 class="it-title"><span class="it-no">8</span><span>mlx-audio v0.6.8：Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种且中文块不再插空格</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub Neywa-Labs/mlx-audio。在 Apple Silicon 上用 MLX 跑 TTS / ASR 的 Python 库（关注账号 @Prince_Canuma、@lllucas 窗口内没有谈这个版本）。。发帖日期：2026-11-24（新加坡时间 04:22 发布）。</p>
+<p>正式版 v0.6.8。和 Luna 较直接的几笔：Qwen3 TTS 在会话各步之间保留同一个 batch KV cache（#1118）；Qwen3 ASR 接受 ISO 语言代码、CJK 分块之间不再插入空格（#1237），有上下文时对齐官方 chat template（#1236）；Nemotron Transcribe 在换线程前先求值 array cache（#1225）；SOV-Transcribe-1 在读当前 token 之前先把下一步 decode 入队（#1206）；Kokoro 的 PL-BERT 改为与参考实现一样的 <code>gelu_new</code>（#1229）；MOSS-TTS-Nano 分句时不再把数字拆开（#1232）；MeloTTS 时间正规化会保留 am/pm 后的句号（#1239）。这是 Mac 上的 Python MLX 库。窗口内 Neywa-Labs/mlx-audio-swift 没有新提交，不能据此认为 iPhone SDK 已同步。我没有做速度或 WER 复测。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+若在 Mac 上评 Qwen3-TTS / Qwen3-ASR 或 Nemotron Transcribe，应升到 0.6.8 再看延迟和中文分词。要单独回归数字被 TTS 分句拆开（例如“120 公里”）以及中文块被插入空格的情况。iPhone 仍以 mlx-audio-swift 为准，需等它跟进后再进车机候选。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/Neywa-Labs/mlx-audio/releases/tag/v0.6.8">发布说明</a> · <a href="https://github.com/Neywa-Labs/mlx-audio">代码</a></p>
+</section>
+<section class="item" id="maai-synth用-llm-脚本--tts--独立时序模型合成带话轮重叠和-backchannel-的双轨对话稍早于本窗口">
+<h3 class="it-title"><span class="it-no">9</span><span>MaAI-Synth：用 LLM 脚本 &#43; TTS &#43; 独立时序模型合成带话轮、重叠和 backchannel 的双轨对话（稍早于本窗口）</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">话轮控制</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：@inokoj  Koji Inoue（井上昂治）。京都大学，MaAI 对话时序模型作者。本窗口关键词检索到对此仓库的引用；原帖在今日窗口开始前约 50 分钟（11-23 07:52），落在昨日窗口内但昨日报告未写，故标明稍早并补记。。发帖日期：2026-11-23（新加坡时间 07:52 发帖；仓库 11-22 创建，窗口内 14:58 仍有推送）。</p>
+<p>京都大学开源 MaAI-Synth：一条从情景设计到立体声音频的口语对话合成流水线。LLM 写场景和剧本（保留语气词、句末助词和短轮，并经质量门），音色克隆 TTS 按指定说话人读出每一句，再用 MaAI 决定每句何时开始、附和插在何处，避免变成轮流朗读。输出为分轨音频（ch0 系统、ch1 用户）和带时间对齐的转写，可直接用作全双工训练数据。默认组合是 Gemma 4 31B &#43; Irodori-TTS-v4.1-Small-Yomi &#43; MaAI；示例音色是 Inoue 与 Mori。README 给出七类情景（初次见面、长停顿、倾听附和、重叠抢话、问答等）共 35 段样本，并标明 2026 年 11 月为首个公开版本。现成样本和默认 TTS 偏日语。我读了仓库说明和项目页，没有听完全部样本。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+训或评 end-of-turn、backchannel 和重叠时，不要只用轮流朗读的对白。可以借鉴这套拆法：剧本保留短轮和语气词，另用时序模型决定开口和附和，并保存分轨与对齐转写。现成样本不能直接当中英车载数据，但“长停顿 / 附和 / 抢话”这些情景可以用来录司机数据。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/inokoj/status/2124652168707998085">原帖</a> · <a href="https://github.com/MaAI-Kyoto/MaAI-Synth">代码</a> · <a href="https://maai-kyoto.github.io/MaAI-Synth/">样本页</a></p>
+</section>
+<section class="item" id="cekuragpt-live-11-在真人电话榜上到第一人名数字和日期抓取-83">
+<h3 class="it-title"><span class="it-no">10</span><span>Cekura：GPT-Live 1.1 在真人电话榜上到第一，人名、数字和日期抓取 83%</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">前沿语音模型</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@tarush_agarwal_  Tarush Agarwal。Cekura CEO。引用的是 11-19 已发布的 GPT-Live-1.1（不在本窗口），今日新的是这份真人电话评测。。发帖日期：2026-11-23（新加坡时间 20:39）。</p>
+<p>Tarush 写：GPT-Live 1.1 &#43; GPT-6 Sol 在 Cekura 的 Real Human Calls 上为 16 个模型中的第 1，1187 ELO；Grok Voice 3.0 为 1158，GPT-Live 1 为 1123。与此次发布最相关的技能上，超过 70 通录制电话、各跑三轮，它也是第一：人名、数字和日期抓取 83%（下一是 GPT-Live 1 的 76%）；风格要求遵循 82%（下一是 Grok Voice Think Fast 2.0 的 78%）；三轮都处理得好的来电者比例 46%（下一是 Grok Voice 3.0 的 43%）。中位回复 1.86 s，低于同设置下 GPT-Live 1 的 2.27 s。这是云端全双工 API 的第三方评测，我没有复跑，也没有完整转写配图。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+云端 GPT-Live 不是 Luna 的主路径，但“人名、数字、日期”应单独打分。导航里的出口编号、公里数、ETA 和地名同音字要比闲聊更严。他们的中位回复 1.86 s 对车机仍偏慢，端上要以开始出声为准另测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/tarush_agarwal_/status/2124845355011592198">原帖</a></p>
+</section>
+<section class="item" id="copilotkit-上线-a2ui-playground智能体写出-a2ui-10由本机组件目录渲染">
+<h3 class="it-title"><span class="it-no">11</span><span>CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0，由本机组件目录渲染</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">agent 与界面</span></div>
+<p class="it-src">来源：@CopilotKit  CopilotKit 官方。开源 agent 前端框架，也是 AG-UI 的维护方。。发帖日期：2026-11-23（新加坡时间 21:14）。</p>
+<p>CopilotKit 宣布推出 A2UI Playground，并说被 Google 转发介绍。我打开了 https://a2ui.open.bot/ ：页面说明“向智能体要一个界面，模型写出 Google 的开放协议 A2UI，再由你的设计系统画出来”；可选用 CopilotKit 标准目录、shadcn/ui 或自定义组件，也可以不经过模型、手写 A2UI JSON。示例是按地区的销售看板、按套餐的注册量等仪表盘。Google 当日较早的介绍帖还提到 A2UI 1.0 提供开源 SDK 和双向 function call，把 agent 意图绑到组件上。我没有在 playground 里实际跑一轮生成。同日 @ataiiam 主要是 AG-UI 安装量和 OpenBot 的推广，没有新的协议变更，未另列。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+可以用这个 playground 看“意图如何写成组件、再由本机设计系统渲染”。导航里的路线卡片或加油站列表，仍应优先走已有的 function tools / App Intents 画原生 UI，不要把 Web 组件嵌进驾驶视图。协议本身可以继续跟。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/CopilotKit/status/2124854166854218140">原帖</a> · <a href="https://a2ui.open.bot/">Playground</a></p>
+</section>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/agent-app-2026-11-24/"><small>← 上一篇</small>每日 AI 与移动端智能体简报（2026-11-24）</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

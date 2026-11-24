@@ -45,6 +45,50 @@
     "posted_at": "2026-11-23"
   },
   {
+    "id": "lumi-2026-11-24-silero-vad-63",
+    "date": "2026-11-24",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Silero VAD v6.3：短停顿和短语音更好检，端点中位延迟从 64 ms 降到接近 0",
+    "summary": "Silero VAD v6.3 提升短停顿和短语音检出，语音结束检测的中位延迟从 64 ms 降到接近 0；同名 ONNX 可直接替换，但同一阈值下比 v6.2 略严。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "把现有 Silero 换成 v6.3 同名 ONNX 后，先不要沿用 v6.2 的阈值。重点回归车里 100–250 ms 的换气会不会被切成两句，以及“停”“出口”这类短指令会不会漏检。端点尾巴更短，有利于压 barge-in 和 end-of-turn；同时看路噪下误触发是否变化。图更简单，Core ML / ONNX Runtime 的加载和实时性也要一起测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "snakers4/silero-vad",
+      "handle": "",
+      "identity": "GitHub。被广泛使用的端上 VAD（关注账号窗口内没有相关发帖）"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/snakers4/silero-vad/releases/tag/v6.3"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/snakers4/silero-vad"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
     "id": "agent-app-2026-11-24-sarvam-dictate",
     "date": "2026-11-24",
     "seq": 2,
@@ -90,6 +134,62 @@
       }
     ],
     "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-duopra",
+    "date": "2026-11-24",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "Duopra：全双工模型边说边静默调工具，任务成功率从 4.7% 提到 44.7%",
+    "summary": "Duopra 在说话的同时走不发声通道调工具；在 Full-Duplex-Bench v3 上 Pass@1 从 4.7% 提到 44.7%。这是 GPU 上的 speech-to-speech，不是端上小模型。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不必把级联换成双工基座，但应单独测“任务有没有真正发出去”，不要只看助手有没有开口。司机中途改目的地或数量时，只把最终参数交给导航工具，不要先按旧值下单。函数名不要读出来，调用走静默通道。评测可对照 Full-Duplex-Bench v3，端上的延迟、回声和电池要另测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "语音 Agent"
+    ],
+    "types": [
+      "论文",
+      "开源"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "话轮控制",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Zhuosheng Zhang",
+      "handle": "@zhangzhuosheng",
+      "identity": "上海交通大学，Duopra 通讯作者（论文合作方还包括腾讯、上海大学）"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/zhangzhuosheng/status/2124700339630927923"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.25773"
+      },
+      {
+        "label": "项目页",
+        "url": "https://cychen2003.github.io/duopra/"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/cyChen2003/duopra"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/Chechen123/Duopra"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
     "posted_at": "2026-11-23"
   },
   {
@@ -146,6 +246,49 @@
     "posted_at": "2026-11-23"
   },
   {
+    "id": "lumi-2026-11-24-cekura-phonic-11",
+    "date": "2026-11-24",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "Cekura：Phonic-1.1 在 Turn Bench 第一，backchannel 时继续说的比例 86% 对中位 6%",
+    "summary": "Cekura 评测称 Phonic-1.1 在 Turn Bench 的 19 个模型里排第一，backchannel 时继续说的比例为 86%，对照中位数 6%。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "把“对方还在附和时，助手会不会把话说完、会不会把未说完的指令切掉”单列为评测项，不要只看总 ELO 或中位延迟。Luna 的“好的”“在找”可以在司机换气时插入，但必须让短指令说完。这些是云端 S2S 的数字，端上级联要在车噪下自己复测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "评测与榜单",
+      "语音 Agent"
+    ],
+    "types": [
+      "评测结果"
+    ],
+    "tags": [
+      "话轮控制",
+      "前沿语音模型",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Tarush Agarwal",
+      "handle": "@tarush_agarwal_",
+      "identity": "Cekura（语音 agent 评测）CEO。引用的是 @phonic_co 今日发布的 Phonic-1.1"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/tarush_agarwal_/status/2124917123575349396"
+      },
+      {
+        "label": "Phonic 发布",
+        "url": "https://x.com/phonic_co/status/2124903301120680342"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-24"
+  },
+  {
     "id": "agent-app-2026-11-24-gemini-file-slicing",
     "date": "2026-11-24",
     "seq": 4,
@@ -195,6 +338,48 @@
     "posted_at": "2026-11-23"
   },
   {
+    "id": "lumi-2026-11-24-sherpa-onnx-nemo-ctc",
+    "date": "2026-11-24",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx：流式 NeMo CTC 把子采样写死成 4，1.2 s 端点实际要约 2.4 s，还会吃掉下一句首词",
+    "summary": "sherpa-onnx 流式 NeMo CTC 把子采样因子写死为 4，使 1.2 s 端点实际约需 2.4 s，还会吃掉下一句首词；PR #4282 已修但尚未打进正式版。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若流式 ASR 使用 NeMo CTC 或任何子采样不是 4 的模型，端点和时间戳必须用模型元数据里的因子，不要写死。否则看起来是 1.2 s 的 end-of-turn，实际会拖到约 2.4 s，下一句开头还可能被吃掉。换模型家族后，要用“短句 + 1–2 s 间隔 + 噪声”专门看首词错误率，不要只看整段 WER。这笔修复还没进正式发布包。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "端侧",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "话轮控制",
+      "端上语音"
+    ],
+    "source": {
+      "name": "k2-fsa/sherpa-onnx",
+      "handle": "",
+      "identity": "GitHub。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "端点修复",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4282"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/k2-fsa/sherpa-onnx"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
     "id": "agent-app-2026-11-24-claude-plugins",
     "date": "2026-11-24",
     "seq": 5,
@@ -240,6 +425,50 @@
       }
     ],
     "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-sophon-realtime-162",
+    "date": "2026-11-24",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Sophon Realtime 1.6.2：`say` 不再因 token 余量不够念到一半，通话开始、对方未开口也能播",
+    "summary": "Sophon Realtime 1.6.2 修了 say 因 token 余量不够念到一半的问题，并让通话开始、对方尚未开口时也能播报。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "导航回读、录音提示这类“按原文朗读”不要用“token 数 + 固定余量”当停止条件，量化或约束解码可能把同一句话拆得更碎，会念到一半被切断。被打断时，对话历史只留实际播出的字。安全声明或录音提示必须在司机开口前就能播，不要等第一轮用户语音才打开通道。"
+    },
+    "relevance": 4,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程",
+      "前沿语音模型"
+    ],
+    "source": {
+      "name": "adventists-ai/sophon-realtime",
+      "handle": "",
+      "identity": "GitHub。开源实时 speech-to-speech 引擎，带 OpenAI Realtime 兼容面以及 LiveKit / Pipecat 网关"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.2"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/adventists-ai/sophon-realtime"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
     "posted_at": "2026-11-23"
   },
   {
@@ -296,6 +525,52 @@
     "posted_at": "2026-11-23"
   },
   {
+    "id": "lumi-2026-11-24-hf-speech-to-speech",
+    "date": "2026-11-24",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Hugging Face speech-to-speech：把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做",
+    "summary": "Hugging Face speech-to-speech 在把确认语和工具调用拆成两条 assistant 消息后，后续轮次会只说不做；PR #664 修了这段历史写法。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "确认语和这次工具调用必须写在同一条助手消息里。若先存“我来帮你查加油站”、再另开一条只放函数调用，后面几轮很容易只开口、不再调工具。加一条回归：第一轮工具成功之后，紧接着再下一轮指令，工具仍要发出。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "开源",
+      "工具与 MCP"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "开源发布"
+    ],
+    "source": {
+      "name": "huggingface/speech-to-speech",
+      "handle": "",
+      "identity": "GitHub。可替换模块的级联语音管线（关注账号 @andimarafioti 窗口内没有相关技术帖）"
+    },
+    "links": [
+      {
+        "label": "历史修复",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/664"
+      },
+      {
+        "label": "工具对话评测",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/868"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/huggingface/speech-to-speech"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
     "id": "agent-app-2026-11-24-openai-shirudo",
     "date": "2026-11-24",
     "seq": 7,
@@ -341,6 +616,215 @@
       }
     ],
     "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-livekit-agents-function-call",
+    "date": "2026-11-24",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "LiveKit Agents：未完成的 function call 不要修补后执行，半截 JSON 会被当成成功",
+    "summary": "LiveKit Agents 修复：模型在写完工具参数前撞上 max_output_tokens 时，未完成的 function call 不应被修补后执行，否则半截 JSON 会被当成成功。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "工具参数若是流式生成的，响应一旦是 incomplete，就不要把半截 JSON 修补后执行，更不要记成成功。宁可报错或重试，也不要把“21 度 / 21 号出口”做成 2。只有 status 为 completed，或你们明确知道该提供商根本不返回 status 时，才真正调导航或拨号。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "工具与 MCP",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "livekit/agents",
+      "handle": "",
+      "identity": "GitHub。开源语音 agent 框架（关注账号 @livekit 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "修复",
+        "url": "https://github.com/livekit/agents/pull/8703"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/livekit/agents"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-mlx-audio-068",
+    "date": "2026-11-24",
+    "seq": 8,
+    "source_brief": "lumi",
+    "title": "mlx-audio v0.6.8：Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种且中文块不再插空格",
+    "summary": "mlx-audio v0.6.8 让 Qwen3 TTS 跨步复用 KV cache，Qwen3 ASR 按 ISO 语种代码接受语言，且中文块之间不再插空格。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若在 Mac 上评 Qwen3-TTS / Qwen3-ASR 或 Nemotron Transcribe，应升到 0.6.8 再看延迟和中文分词。要单独回归数字被 TTS 分句拆开（例如“120 公里”）以及中文块被插入空格的情况。iPhone 仍以 mlx-audio-swift 为准，需等它跟进后再进车机候选。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "开源",
+      "语音合成 TTS"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Neywa-Labs/mlx-audio",
+      "handle": "",
+      "identity": "GitHub。在 Apple Silicon 上用 MLX 跑 TTS / ASR 的 Python 库（关注账号 @Prince_Canuma、@lllucas 窗口内没有谈这个版本）"
+    },
+    "links": [
+      {
+        "label": "发布说明",
+        "url": "https://github.com/Neywa-Labs/mlx-audio/releases/tag/v0.6.8"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/Neywa-Labs/mlx-audio"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-24"
+  },
+  {
+    "id": "lumi-2026-11-24-maai-synth",
+    "date": "2026-11-24",
+    "seq": 9,
+    "source_brief": "lumi",
+    "title": "MaAI-Synth：用 LLM 脚本 + TTS + 独立时序模型合成带话轮、重叠和 backchannel 的双轨对话（稍早于本窗口）",
+    "summary": "京都大学开源 MaAI-Synth，用 LLM 脚本、音色克隆 TTS 和独立时序模型合成带话轮、重叠和 backchannel 的双轨对话；原帖稍早于本窗口，昨日报告未写，故补记。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "训或评 end-of-turn、backchannel 和重叠时，不要只用轮流朗读的对白。可以借鉴这套拆法：剧本保留短轮和语气词，另用时序模型决定开口和附和，并保存分轨与对齐转写。现成样本不能直接当中英车载数据，但“长停顿 / 附和 / 抢话”这些情景可以用来录司机数据。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "开源",
+      "全双工"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "话轮控制",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Koji Inoue",
+      "handle": "@inokoj",
+      "identity": "京都大学，MaAI 对话时序模型作者。本窗口关键词检索到对此仓库的引用；原帖在今日窗口开始前约 50 分钟（11-23 07:52），落在昨日窗口内但昨日报告未写，故标明稍早并补记"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/inokoj/status/2124652168707998085"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/MaAI-Kyoto/MaAI-Synth"
+      },
+      {
+        "label": "样本页",
+        "url": "https://maai-kyoto.github.io/MaAI-Synth/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-cekura-gpt-live-11",
+    "date": "2026-11-24",
+    "seq": 10,
+    "source_brief": "lumi",
+    "title": "Cekura：GPT-Live 1.1 在真人电话榜上到第一，人名、数字和日期抓取 83%",
+    "summary": "Cekura 的真人电话评测中，GPT-Live 1.1 在 16 个模型里排第一，人名、数字和日期抓取为 83%；模型本身 11-19 已发布，今日新的是这份评测。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "云端 GPT-Live 不是 Luna 的主路径，但“人名、数字、日期”应单独打分。导航里的出口编号、公里数、ETA 和地名同音字要比闲聊更严。他们的中位回复 1.86 s 对车机仍偏慢，端上要以开始出声为准另测。"
+    },
+    "relevance": 3,
+    "domains": [
+      "评测与榜单",
+      "语音 Agent",
+      "大模型"
+    ],
+    "types": [
+      "评测结果"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Tarush Agarwal",
+      "handle": "@tarush_agarwal_",
+      "identity": "Cekura CEO。引用的是 11-19 已发布的 GPT-Live-1.1（不在本窗口），今日新的是这份真人电话评测"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/tarush_agarwal_/status/2124845355011592198"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "lumi-2026-11-24-copilotkit-a2ui",
+    "date": "2026-11-24",
+    "seq": 11,
+    "source_brief": "lumi",
+    "title": "CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0，由本机组件目录渲染",
+    "summary": "CopilotKit 上线 A2UI Playground：智能体写出 A2UI 1.0 协议的界面，再由本机组件目录渲染。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "可以用这个 playground 看“意图如何写成组件、再由本机设计系统渲染”。导航里的路线卡片或加油站列表，仍应优先走已有的 function tools / App Intents 画原生 UI，不要把 Web 组件嵌进驾驶视图。协议本身可以继续跟。"
+    },
+    "relevance": 3,
+    "domains": [
+      "Agent 架构",
+      "工具与 MCP"
+    ],
+    "types": [
+      "产品发布",
+      "开源"
+    ],
+    "tags": [
+      "agent 与界面"
+    ],
+    "source": {
+      "name": "CopilotKit",
+      "handle": "@CopilotKit",
+      "identity": "CopilotKit 官方。开源 agent 前端框架，也是 AG-UI 的维护方"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/CopilotKit/status/2124854166854218140"
+      },
+      {
+        "label": "Playground",
+        "url": "https://a2ui.open.bot/"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-24/",
     "posted_at": "2026-11-23"
   },
   {
