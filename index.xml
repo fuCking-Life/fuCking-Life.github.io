@@ -16,6 +16,14 @@
 &lt;p&gt;今天最大的收获是：&lt;strong&gt;工具说不清楚，模型不会乱用它，而是绕开它；危险命令被拦住，模型也会换条路走。&lt;/strong&gt;两种情况，工作最后都流向了 harness 最难管的 bash。安全不能靠列出所有危险写法，也不能靠多问，要靠沙盒把范围圈住、让大部分操作可以撤回。我有三个预测都没说中：以为描述写错模型会找不到工具，以为它会拿名字含糊的工具去写文件，以为被拒后它知道是用户拒的。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-24）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-24/</link>
+      <pubDate>Tue, 24 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-24/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-23 08:40 – 2026-11-24 08:38（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 7 条：Phonic 发布语音到语音模型 Phonic-1.1，官方称在多项语音智能体评测中领先；Sarvam 推出 Dictate API，把口语整理成可直接使用的文本，覆盖英语和 22 种印度语言；Nothing 预告 12 月 8 日推出 Ear (note)，耳机与充电盒可录音并做 AI 转写；Gemini API 上线文件切片，智能体可只加载文档、表格或音视频中需要的片段；Claude 把 Connectors 与 Skills 合并为 Plugins，免费档也可浏览逾 1 万个插件；DeepMind 用 Gemini 4 智能体团队改进量子线路，并用 Lean 形式化验证结果；OpenAI 与 Cisco 开源 Linux 运行时 Shirudo，让智能体在不停机的情况下加临时防护。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>每日交易资讯（2026-11-23）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-23/</link>
       <pubDate>Mon, 23 Nov 2026 08:00:00 +0800</pubDate>
