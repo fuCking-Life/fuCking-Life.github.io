@@ -1,5 +1,349 @@
 [
   {
+    "id": "agent-app-2026-11-24-phonic-1-1",
+    "date": "2026-11-24",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "Phonic 发布语音到语音模型 Phonic-1.1，官方称在多项语音智能体评测中领先",
+    "summary": "Phonic 发布面向智能体任务的语音到语音模型 Phonic-1.1；官方称在 Speech to Speech Index、τ-Voice 和 DIAL 等评测中领先，但同一对照表里并非所有分项最高，且这是云端接口、不是端侧模型。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "语音助手的体感，往往先败在「抢话或接得太慢」，而不是再堆一个推理分数。可迁移的是把轮次切换、噪声里的等待、以及通话中途的工具调用，当成和识别准确率同等重要的产品指标。端上可以先做端点检测、打断和本地草稿，再把需要工具调用的回合交给云端语音模型；但要把首字时延写进自己的验收，而不能只看榜单名次。Phonic-1.1 仍然是云端能力，手机端侧助手不能直接把它当成本地模型来用。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "端到端语音",
+      "评测与榜单"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "语音助手",
+      "语音到语音",
+      "智能体",
+      "评测"
+    ],
+    "source": {
+      "name": "Phonic",
+      "handle": "@phonic_co",
+      "identity": "语音模型公司 Phonic 官方账号；Phonic 官方博客"
+    },
+    "links": [
+      {
+        "label": "官方博客",
+        "url": "https://phonic.ai/blog/phonic-1-1"
+      },
+      {
+        "label": "官方帖 @phonic_co",
+        "url": "https://x.com/phonic_co/status/2124903301120680342"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-sarvam-dictate",
+    "date": "2026-11-24",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "Sarvam 推出 Dictate API：把口语整理成可直接使用的文本，覆盖英语和 22 种印度语言",
+    "summary": "Sarvam 推出 Dictate API，用 Saaras v4 转写再用 105B 模型把口语整理成可直接使用的文本，覆盖英语和 22 种印度语言；这是云端 API，评测数字来自公司自己的测试。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "听写产品真正要解决的，往往是「改口、口头禅、通讯录里的名字」，而不是再降一点词错误率。端侧语音助手可以把端点检测和第一稿放在本地，把当前屏幕上的联系人、文件名或未完成草稿作为词汇表和上下文送给云端润色；脚本模式（本族文字还是拉丁转写）也应该做成用户可切换的选项，而不是模型自行决定。105B 的编辑模型说明，这一步目前仍适合放在云端；如果以后要做离线听写，需要另选更小的润色模型，并明确在没有词汇表时专有名词会如何回退。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "语音 Agent",
+      "大模型"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "语音输入",
+      "听写 API",
+      "多语言",
+      "移动输入"
+    ],
+    "source": {
+      "name": "Sarvam",
+      "handle": "@SarvamAI",
+      "identity": "印度 AI 公司 Sarvam 官方账号；Sarvam 官方博客"
+    },
+    "links": [
+      {
+        "label": "官方博客",
+        "url": "https://www.sarvam.ai/blogs/sarvam-dictate"
+      },
+      {
+        "label": "宣布帖 @SarvamAI",
+        "url": "https://x.com/SarvamAI/status/2124893117069570473"
+      },
+      {
+        "label": "API 说明",
+        "url": "https://docs.sarvam.ai/api/api-guides-tutorials/dictate/overview"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-nothing-ear-note",
+    "date": "2026-11-24",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "Nothing 预告 12 月 8 日推出 Ear (note)：耳机与充电盒可录音并做 AI 转写",
+    "summary": "Nothing 预告 12 月 8 日推出 Ear (note)：耳机可录转写通话，带麦克风的充电盒可录线下会议；这是产品预告，价格和官方续航、准确率数字尚未公布。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对手机语音助手来说，耳机体感最好的部分不是再做一个聊天入口，而是默默收集「正在开的会、刚打完的电话」这类上下文，再在需要时给出摘要和可确认的下一步。如果要做类似能力，应把录音开关、指示灯和本地保存默认做进主路径，摘要可以后送到云端；也要提前想好通话双方的告知和同意，而不是只做单向转写。Pei 所谓的硬件上下文层，提醒端侧助手优先复用用户已经戴着的设备，而不是再发明一个新入口；在官方定价和隐私说明出来之前，不要把「持续后台录音」写成确定的产品能力。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "个人 Agent",
+      "语音识别 ASR"
+    ],
+    "types": [
+      "产品发布",
+      "观点讨论"
+    ],
+    "tags": [
+      "可穿戴",
+      "语音转写",
+      "硬件上下文",
+      "移动音频"
+    ],
+    "source": {
+      "name": "Mark Gurman",
+      "handle": "@markgurman",
+      "identity": "Bloomberg 主编；@getpeid（Carl Pei，Nothing 首席执行官）；The Verge 报道（Stevie Bonifield 撰文）。Bloomberg 原文付费，未能全文阅读"
+    },
+    "links": [
+      {
+        "label": "宣布帖 @markgurman",
+        "url": "https://x.com/markgurman/status/2124914873611989316"
+      },
+      {
+        "label": "Carl Pei 帖 @getpeid",
+        "url": "https://x.com/getpeid/status/2124935404134789334"
+      },
+      {
+        "label": "The Verge 报道",
+        "url": "https://www.theverge.com/gadgets/1040357/nothing-ear-note-earbuds-ai-recording"
+      },
+      {
+        "label": "9to5Google 报道",
+        "url": "https://9to5google.com/2026/11/23/nothing-ear-note-ai-recorder-teaser/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-gemini-file-slicing",
+    "date": "2026-11-24",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "Gemini API 上线文件切片：智能体可只加载文档、表格或音视频中需要的片段",
+    "summary": "Gemini API 与 Google AI Studio 上线服务端文件切片，并可原生接收 Office 与 OpenDocument 文件；模型只查看并计费被指定的页、单元格或音视频片段，官方把它写成给智能体用的接口。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "手机上的智能体如果先在本地用 LibreOffice 或 ffmpeg 把大文件切碎，再整段送给模型，既耗电又占存储。更稳妥的分层是：端上只做目录、页码和低成本预览，真正的高分辨率理解按需请求云端切片，并且让模型在工具返回里自己点名下一页或下一段。这对语音助手也很实际：用户说「看看合同第三页的违约条款」时，不应把整份 PDF 送进上下文。设计时要把「先浏览、再放大」写成默认工作流，并记住计费是按实际查看的部分走的，前缀缓存才不容易被整文件重传打断。"
+    },
+    "relevance": 4,
+    "domains": [
+      "工具与 MCP",
+      "多模态",
+      "Agent 架构"
+    ],
+    "types": [
+      "产品发布",
+      "技术解读"
+    ],
+    "tags": [
+      "Agent 工具",
+      "Gemini API",
+      "多模态",
+      "上下文管理"
+    ],
+    "source": {
+      "name": "Rohan Doshi / Ben Caine",
+      "handle": "@GoogleAIStudio",
+      "identity": "Google DeepMind 高级产品经理与首席工程师，Google 官方博客；Google AI Studio 官方账号"
+    },
+    "links": [
+      {
+        "label": "Google 官方博客",
+        "url": "https://blog.google/innovation-and-ai/technology/developers-tools/file-slicing-controls/"
+      },
+      {
+        "label": "官方帖 @GoogleAIStudio",
+        "url": "https://x.com/GoogleAIStudio/status/2124928707529674979"
+      },
+      {
+        "label": "Gemini API 更新说明",
+        "url": "https://aistudio.google.com/docs/changelog"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-claude-plugins",
+    "date": "2026-11-24",
+    "seq": 5,
+    "source_brief": "agent-app",
+    "title": "Claude 把 Connectors 与 Skills 合并为 Plugins，免费档也可浏览逾 1 万个插件",
+    "summary": "Anthropic 把 Claude 的 Connectors 与 Skills 合并进同一套 Plugins 页面；Free、Pro、Max 和 Ultra 现已可浏览逾 1 万个插件，这是产品入口调整，不是新模型发布。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "把「接上外部工具」和「教会助手一项技能」放进同一个目录，降低的是用户的理解成本，也方便把两者打包分发。端侧或 App 内助手可以借鉴：系统能力、第三方连接器和用户自写技能用同一套安装、权限和卸载界面，并在卡片上标明类型和来源（官方验证还是社区）。同时要保留拆开卸载的能力，避免删一个插件时把已经授权的数据连接悄悄留下；涉及健康或机密数据的技能，默认不要纳入同一份合规承诺。"
+    },
+    "relevance": 4,
+    "domains": [
+      "工具与 MCP",
+      "Agent 架构",
+      "个人 Agent"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "插件",
+      "Skills",
+      "Connectors",
+      "Claude"
+    ],
+    "source": {
+      "name": "Claude",
+      "handle": "@claudeai",
+      "identity": "Anthropic 的 Claude 官方账号；Claude 帮助中心"
+    },
+    "links": [
+      {
+        "label": "官方帖 @claudeai",
+        "url": "https://x.com/claudeai/status/2124970294523945328"
+      },
+      {
+        "label": "插件目录",
+        "url": "https://claude.ai/plugins"
+      },
+      {
+        "label": "帮助中心说明",
+        "url": "https://support.claude.com/en/articles/17740565-manage-plugins-skills-and-connectors-from-one-plugins-page"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-deepmind-formal-quantum",
+    "date": "2026-11-24",
+    "seq": 6,
+    "source_brief": "agent-app",
+    "title": "DeepMind 用 Gemini 4 智能体团队改进量子线路，并用 Lean 形式化验证结果",
+    "summary": "DeepMind 与 Google Quantum AI 用多组彼此独立的 Gemini 4 智能体团队改进量子线路，并用 Lean 验证结果后写入共享笔记本；相关 Lean 库和已验证解开源，这是研究方法结果，不是消费级产品。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "值得迁移的不是量子线路本身，而是「多队独立探索 + 用外部检查器卡住正确性 + 定期汇总」这套工作方式。端侧或端云助手在改配置、改路由或生成操作计划时，同样不能只让模型自说自话，而应把通过测试、类型检查或可回放的断言，作为写回共享状态的前提。定期把多个子智能体的结论对在一起，也比单次长推理更适合发现相互冲突的建议。对手机产品来说，Lean 式的重验证应放在云端或开发流水线里；端上更适合保留轻量的单元检查，以及在验证通过前不把改动应用到用户设备。"
+    },
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "开源",
+      "论文"
+    ],
+    "types": [
+      "论文",
+      "开源"
+    ],
+    "tags": [
+      "多智能体",
+      "形式化验证",
+      "量子算法",
+      "DeepMind"
+    ],
+    "source": {
+      "name": "Google DeepMind",
+      "handle": "@GoogleDeepMind",
+      "identity": "Sergey Shirobokov、Ben Jaderberg 与 Ryan Babbush 等（Google DeepMind 与 Google Quantum AI，官方博文作者）；Google DeepMind 官方账号"
+    },
+    "links": [
+      {
+        "label": "DeepMind 官方博客",
+        "url": "https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/"
+      },
+      {
+        "label": "官方帖 @GoogleDeepMind",
+        "url": "https://x.com/GoogleDeepMind/status/2124911073266413634"
+      },
+      {
+        "label": "GitHub 仓库",
+        "url": "https://github.com/google-deepmind/formal-quantum-computation"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.09822"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
+    "id": "agent-app-2026-11-24-openai-shirudo",
+    "date": "2026-11-24",
+    "seq": 7,
+    "source_brief": "agent-app",
+    "title": "OpenAI 与 Cisco 开源 Linux 运行时 Shirudo，让智能体在不停机的情况下加临时防护",
+    "summary": "OpenAI 与 Cisco 开源 Linux 运行时 Shirudo，用 eBPF 在正式补丁落地前给正在运行的系统加临时防护；这是面向 Linux 服务器的预发布方向，不是移动端或 iOS 产品。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对会改系统状态的智能体来说，关键不是让它直接上线修复，而是先生成可验证、可回滚的临时防护，再由人批准后生效。端侧语音或 App 助手若要改权限、改路由或写入配置，也应先走「观察影响 → 签名或完整性校验 → 人工或策略批准 → 留下可审计记录」这一路径，并且默认不能在不重启之外再获得更高权限。Shirudo 针对的是 Linux 服务，不能直接搬进 iPhone；但「发现问题和完成修复之间，先有一层可撤销的护栏」这一分层，对长期运行的端云助手同样适用。"
+    },
+    "relevance": 4,
+    "domains": [
+      "开源",
+      "Agent 架构"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "安全智能体",
+      "eBPF",
+      "开源",
+      "基础设施"
+    ],
+    "source": {
+      "name": "OpenAI",
+      "handle": "@OpenAI",
+      "identity": "OpenAI 官方博客；OpenAI 官方账号；文中引用 OpenAI 总裁兼联合创始人 Greg Brockman"
+    },
+    "links": [
+      {
+        "label": "OpenAI 官方博客",
+        "url": "https://openai.com/index/introducing-shirudo/"
+      },
+      {
+        "label": "官方帖 @OpenAI",
+        "url": "https://x.com/OpenAI/status/2124980590717911527"
+      },
+      {
+        "label": "GitHub 仓库",
+        "url": "https://github.com/shirudo-dev/shirudo"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-24/",
+    "posted_at": "2026-11-23"
+  },
+  {
     "id": "agent-app-2026-11-23-gemini-voice-editing",
     "date": "2026-11-23",
     "seq": 1,
