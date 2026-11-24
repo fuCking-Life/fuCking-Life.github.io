@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/post/</link>
     <description>全部文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 24 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-25）：把关的 hook 会挡住旁观的 hook</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-25/</link>
+      <pubDate>Wed, 25 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-25/</guid>
+      <description>&lt;p&gt;覆盖范围：复习（回忆 8 题对 6 题）&amp;#43; learn-claude-code s04 Hooks。今天聊了三件事：hook 是怎么把扩展挂到循环上的、为什么被拒绝的调用会从日志里消失、Stop hook 能让 harness 亲自检查&amp;#34;任务真的做完了吗&amp;#34;。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;hook 链遇到第一个返回值就停，所以&amp;#34;把关&amp;#34;的 hook 会挡住排在后面的&amp;#34;旁观&amp;#34;的 hook&lt;/strong&gt;。课程里权限检查排在日志前面，被拒绝的调用一条日志都没有，而那恰恰是最该留记录的。计时 hook 是我自己设计的，三处位置都放对了；Stop hook 的风险，我漏掉了最隐蔽的一条：模型会去钻检查的空子。复习里，&amp;#34;收尾靠结构、不靠提示词&amp;#34;这一点我又错了一次。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日交易资讯（2026-11-24）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-24/</link>
