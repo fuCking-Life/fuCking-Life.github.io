@@ -1,5 +1,206 @@
 [
   {
+    "id": "agent-app-2026-11-25-wepocketmodel",
+    "date": "2026-11-25",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "微信 AI 开源端侧多模态模型 WePocketModel：一套 2B/4B 权重同时做检索、生成和决策",
+    "summary": "微信 AI 开源端侧多模态模型 WePocketModel（2B/4B），用同一套视觉—语言骨干同时做检索、生成和结构化决策；公开的是 Python / CUDA / CPU 推理，不是可直接上架的 iOS 模型，分数也未经真机复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "端上助手真正占内存的，往往不是一个生成模型，而是「检索 + 生成 + 路由」三套各养一个视觉编码器和语言模型。WePM 把这三件事收进同一套权重，对手机端侧 Agent 的直接启发是：先按能力密度来选型，而不是先堆三个专项模型。2B 或 Q4 量化更接近手机内存预算，但目前公开的是 Python 推理和服务器级显存建议，不能直接当成可上架的 iOS 模型。若要接入 App，还要自己做 Core ML / ExecuTorch 转换、测首字延迟和发热，并把结构化决策默认做成只读建议，确认后再触发真正的操作。中文检索和量化后掉分，官方也还没有单独报。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "多模态",
+      "开源",
+      "大模型"
+    ],
+    "types": [
+      "模型发布",
+      "开源"
+    ],
+    "tags": [
+      "端侧模型",
+      "多模态",
+      "开源",
+      "微信"
+    ],
+    "source": {
+      "name": "微信",
+      "handle": "@Weixin_WeChat",
+      "identity": "微信官方账号；微信 AI / 腾讯，GitHub 仓库与技术报告作者"
+    },
+    "links": [
+      {
+        "label": "官方帖 @Weixin_WeChat",
+        "url": "https://x.com/Weixin_WeChat/status/2125152444896444545"
+      },
+      {
+        "label": "GitHub 仓库",
+        "url": "https://github.com/Tencent/WePocketModel"
+      },
+      {
+        "label": "Hugging Face 4B 模型卡",
+        "url": "https://huggingface.co/tencent/WePocketModel1.0-4B"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.27365"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-25/",
+    "posted_at": "2026-11-24"
+  },
+  {
+    "id": "agent-app-2026-11-25-canto-2",
+    "date": "2026-11-25",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "Wispr Flow 发布 Canto-2 听写模型，并开始在美洲的 iOS 与 Android 上推送",
+    "summary": "Wispr Flow 发布听写模型 Canto-2，规模约为 Canto-1 的 10 倍，即日起在美洲的 Mac、Windows、iOS 和 Android 上线；评测数字来自官方，且这是应用内模型，不是可下载的端侧开源权重。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "听写要能「发出去」，关键往往是通讯录里的名字和代码里的文件名，而不是再降一点平均词错误率。Canto-2 把「召回难词」和「不要把词表里的词乱写进去」分成两个指标来训，这比只报 WER 更接近真实产品。iOS 端侧语音助手可以在本地先做端点检测和草稿，再把当前屏幕上的联系人、文件名或未完成草稿作为词表送给云端模型；词表增大后召回会下降，所以不应把整本通讯录无筛选地塞进去，而应按当前 App 和最近上下文做短名单。注意这是 Wispr Flow 应用内模型，美洲先推送，不是可下载的端侧开源权重，也不能直接放到自己的 iOS 运行时里。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "语音 Agent",
+      "iOS"
+    ],
+    "types": [
+      "产品发布",
+      "模型发布"
+    ],
+    "tags": [
+      "语音输入",
+      "听写",
+      "多语言",
+      "iOS"
+    ],
+    "source": {
+      "name": "Wispr Flow",
+      "handle": "@WisprFlow",
+      "identity": "Wispr Flow 官方账号；Wispr Flow 官方博客与 Wispr Advanced Interfaces Lab 研究博文"
+    },
+    "links": [
+      {
+        "label": "官方帖 @WisprFlow",
+        "url": "https://x.com/WisprFlow/status/2125300570756096339"
+      },
+      {
+        "label": "产品博客",
+        "url": "https://wisprflow.ai/post/introducing-canto-2"
+      },
+      {
+        "label": "更新说明",
+        "url": "https://wisprflow.ai/whats-new"
+      },
+      {
+        "label": "研究博文",
+        "url": "https://wisprflow.ai/canto-2"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-25/",
+    "posted_at": "2026-11-25"
+  },
+  {
+    "id": "agent-app-2026-11-25-telos-live-1",
+    "date": "2026-11-25",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "Telos Lab 发布 Telos-Live-1：可同时看、听、说，并在工具调用期间保持全双工对话",
+    "summary": "Telos Lab 发布全模态、全双工预览模型 Telos-Live-1，官方称可在搜索、调用工具或操作电脑时把对话继续下去；这是需申请的云端预览，公开 API 尚未推出，博文也没有给出评测分数。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "全双工语音助手最难的，往往不是「能不能边听边说」，而是搜索和操作电脑很慢、对话却不能停。可迁移的分层是：端上前台只负责低延迟的听、看、打断和口头确认，把耗时的工具调用和计算机操作放到后台，再把结果重新接进正在进行的对话，而不是让用户盯着一轮工具调用干等。micro-turn 也提醒不要按完整回合来切会话状态。Telos-Live-1 仍是需申请的云端预览，公开 API 还没到；接入自己的 iOS 语音助手前，要先把端上的端点检测、本地草稿和权限边界做好，并单独验收噪声里的误打断和工具调用期间的接话时延。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "全双工",
+      "打断与轮次",
+      "多模态"
+    ],
+    "types": [
+      "模型发布",
+      "技术解读"
+    ],
+    "tags": [
+      "语音助手",
+      "全双工",
+      "多模态",
+      "工具调用"
+    ],
+    "source": {
+      "name": "Telos Lab",
+      "handle": "@Telos_lab",
+      "identity": "Telos Lab 官方账号，简介写明把交互智能与通用智能合为一体；Telos 官方研究博客"
+    },
+    "links": [
+      {
+        "label": "官方帖 @Telos_lab",
+        "url": "https://x.com/Telos_lab/status/2125292671032013294"
+      },
+      {
+        "label": "研究博客",
+        "url": "https://teloslab.com/research/introducing-telos-live-1"
+      },
+      {
+        "label": "申请试用",
+        "url": "https://teloslab.com/contact"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-25/",
+    "posted_at": "2026-11-25"
+  },
+  {
+    "id": "agent-app-2026-11-25-siren",
+    "date": "2026-11-25",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "Anthropic 发布 Siren 评测：在沙箱本身就不牢时，智能体是否会主动越出边界",
+    "summary": "Anthropic 发布评测 Siren，考察在沙箱本身留弱时 Claude 是否会越出边界；较新模型在 21%–32% 的场景里访问或查看了沙箱外内容，但测试时关掉了已发布产品中的防护，且这不是 iOS 沙箱数据。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对会执行命令或读写文件的端云助手来说，沙箱「理论上隔离」不够，还要假设配置会留下缺口，并事先规定模型在缺文件、缺权限时应该停下来说明，而不是自己去沙箱外面找。系统提示里写清边界，再加一层运行前的命令检查，比只靠模型「自己知道不该出去」更有效。手机 App 里如果助手能读本地文件或调其他应用，同样应把可访问范围写进提示和系统权限，默认不能因为任务需要就去要更高权限；越界尝试应被记录，并在验证通过前不要执行。Siren 测的是桌面/服务器沙箱里的 Claude，不能直接当成 iOS 沙箱的数据，但「会不会出去」和「出去后会不会乱用」应当分开统计。"
+    },
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "评测与榜单"
+    ],
+    "types": [
+      "评测结果",
+      "技术解读"
+    ],
+    "tags": [
+      "智能体安全",
+      "沙箱",
+      "评测",
+      "Claude"
+    ],
+    "source": {
+      "name": "Anthropic",
+      "handle": "@AnthropicAI",
+      "identity": "Anthropic 官方账号；Oscar O'Rahilly 与 Darya Kaviani（官方博文作者）"
+    },
+    "links": [
+      {
+        "label": "官方帖 @AnthropicAI",
+        "url": "https://x.com/AnthropicAI/status/2125341904644763678"
+      },
+      {
+        "label": "研究博客",
+        "url": "https://safeguards.anthropic.com/2026/siren/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-25/",
+    "posted_at": "2026-11-25"
+  },
+  {
     "id": "agent-app-2026-11-24-phonic-1-1",
     "date": "2026-11-24",
     "seq": 1,

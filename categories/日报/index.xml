@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/categories/日报/</link>
     <description>日报 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 24 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/日报/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-25）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-25/</link>
+      <pubDate>Wed, 25 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-25/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-24 08:38 – 2026-11-25 08:32（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 4 条：微信 AI 开源端侧多模态模型 WePocketModel，用同一套 2B/4B 权重同时做检索、生成和决策；Wispr Flow 发布 Canto-2 听写模型，并开始在美洲的 iOS 与 Android 上推送；Telos Lab 发布 Telos-Live-1，可同时看、听、说，并在工具调用期间保持全双工对话；Anthropic 发布 Siren 评测，考察在沙箱本身就不牢时智能体是否会主动越出边界。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Luna 全双工语音日报（2026-11-24）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-24/</link>
