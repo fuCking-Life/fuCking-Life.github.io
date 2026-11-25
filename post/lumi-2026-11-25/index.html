@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna 全双工语音日报（2026-11-25） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-24 08:43 – 2026-11-25 08:49（新加坡时间） 本期 5 条：LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini；Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 ">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/lumi-2026-11-25/">
+<meta property="og:title" content="Luna 全双工语音日报（2026-11-25）">
+<meta property="og:description" content="时间窗口：2026-11-24 08:43 – 2026-11-25 08:49（新加坡时间） 本期 5 条：LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini；Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 ">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/lumi-2026-11-25/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-25T08:00:00+08:00">2026-11-25</time></div><h1>Luna 全双工语音日报（2026-11-25）</h1><div class="post-meta"><span>约 11 分钟</span><a class="tag" href="/tags/lumi/">#lumi</a></div></header>
+<article class="prose" style="--col:var(--c-daily)">
+<p class="digest-meta">时间窗口：2026-11-24 08:43 – 2026-11-25 08:49（新加坡时间）</p>
+<p>本期 5 条：LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini；Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 94%，改写成文本只有 77%（PR 于 11-17 合并）；sherpa-onnx：PocketTTS 每个分片先大写并补句号，末词正确率从 10/24 提到 24/24；Kokoro 标点曾被加在结束 PAD 之后；Telos-Live-1：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5；Cekura：PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端榜。</p>
+<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 5 条</div><ol><li><a href="#livekit-turn-detector-v11同样误打断预算下端点比-v1-快-1534并开源可在-cpu-上跑的-v11-mini">LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#hugging-face-speech-to-speech工具还在跑时对话继续小模型上正确率-94改写成文本只有-77pr-于-11-17-合并">Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 94%，改写成文本只有 77%（PR 于 11-17 合并）</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#sherpa-onnxpockettts-每个分片先大写并补句号末词正确率从-1024-提到-2424kokoro-标点曾被加在结束-pad-之后">sherpa-onnx：PocketTTS 每个分片先大写并补句号，末词正确率从 10/24 提到 24/24；Kokoro 标点曾被加在结束 PAD 之后</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#telos-live-1前景继续说话后台异步搜调工具和操作电脑full-duplex-bench-上停顿误打断-45-对-85">Telos-Live-1：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5</a><span class="toc-rel" title="相关度 4/5">4</span></li><li><a href="#cekurapolyai-owl-在-25-个-stt-里-elo-点估计第一1052实体抓取-9592这是云端榜">Cekura：PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端榜</a><span class="toc-rel" title="相关度 3/5">3</span></li></ol></nav>
+<section class="item" id="livekit-turn-detector-v11同样误打断预算下端点比-v1-快-1534并开源可在-cpu-上跑的-v11-mini">
+<h3 class="it-title"><span class="it-no">1</span><span>LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：@livekit  LiveKit。开源语音 agent 框架与实时音视频基础设施，维护 eot-bench。发帖日期：2026-11-25（新加坡时间 01:27 发帖并发布博文）。</p>
+<p>LiveKit 发布 Turn Detector v1.1。完整版在听用户音频的同时，读取助手上一条文本；开源的 v1.1-mini 只根据音频判断，可在 CPU 上跑，覆盖同样的 14 种语言，许可证与 v1-mini 相同（LiveKit Model License），权重随 Agents SDK 提供。改进针对两类难例：短回复，以及非母语英语使用者在句中停下来找词。官方的例子是：对“几位客人？”说“Seven”应当结束；对“电话号码是多少？”说“Seven…”则应继续等。为这两类情况，eot-bench 新增 1,088 条短回复和 800 条非母语英语样本，加上原来的 400 条英语和另外 13 种语言各最多 400 条。在把误打断（用户未说完就被切走）控制在 5% 或 10% 时，v1.1 的端点等待比 v1 短 15–34%（英语），在另外 13 种语言上短 17–19%；v1.1-mini 比 v1-mini 短 17–28%。例如 5% 预算下，英语全集（2,288 条）从 996 ms 降到 810 ms，短回复从 1,427 ms 降到 1,096 ms，非母语从 867 ms 降到 700 ms；10% 预算下英语全集从 632 ms 降到 414 ms（−34%）。v1.1 在所有英语集合、两种预算上都排第一。若已通过 LiveKit Inference 使用该检测器，不改代码就会升到 v1.1，但此时只根据音频判断；要让完整版用上助手上一条文本和本轮时长，需升到 Agents 1.8.12（Python）或 1.10.0（Node.js）。完整版主要走 LiveKit Cloud / Inference，不是端上小模型。我读了官方博文和文档，没有在 eot-bench 或 iPhone 上复测，博文也没有逐一列出那 13 种语言。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+端点模型不要只看当前音频。把“助手刚问了什么”和“这轮已经说了多长”一并输入，才能区分“Seven”是完整答案还是电话号码的开头。先把 v1.1-mini 放进端上对照：在车里用短指令（出口、公里数、是/否）和非母语停顿各做一套，误打断率固定在 5% 和 10%，看端点延迟能降多少。评测可直接用新的 eot-bench 短回复 / 非母语集，中文和口音要自己补数据。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/livekit/status/2125280281183883744">原帖</a> · <a href="https://livekit.com/blog/turn-detector-v1-1">博文</a> · <a href="https://docs.livekit.io/agents/build/turns/turn-detector/">文档</a> · <a href="https://github.com/livekit/eot-bench">eot-bench</a></p>
+</section>
+<section class="item" id="hugging-face-speech-to-speech工具还在跑时对话继续小模型上正确率-94改写成文本只有-77pr-于-11-17-合并">
+<h3 class="it-title"><span class="it-no">2</span><span>Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 94%，改写成文本只有 77%（PR 于 11-17 合并）</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">语音 agent 工程</span><span class="it-chip">端上小模型</span></div>
+<p class="it-src">来源：@andimarafioti  Andi Marafioti。Hugging Face 多模态研究负责人，speech-to-speech 维护者。今日发的是演示视频；对应实现是 11-17 已合并的 PR #829，此前日报未写，故标明日期并补记。发帖日期：2026-11-24（新加坡时间 23:07 发帖；PR #829 于 11-17 18:18 合并）。</p>
+<p>Andi 写：编码助手会把当前任务做完再回你的新消息，这对语音 agent 是致命的。他们在 speech-to-speech 里修了这一点：工具还在跑时继续说话，并说明是为小模型、本地语音 agent 保持响应做的。我读了 PR #829，没有完整观看这条 53 秒演示视频。原先只要还有 function call 没有返回，新一轮会被拒绝（<code>Cannot generate a response while function call outputs are pending</code>）。现在：未完成的调用仍保持工具调用结构，只是配一条“仍在运行”的占位结果；结果若在下一轮回复前到达，仍紧挨着该调用；若对话已经往前走，就作为“非用户所说”的标记消息出现在到达处，不回写历史。只要还有调用在跑，最新一条用户消息会临时附带一行正在运行的调用清单（每次请求重建，不入库）。他们在 23 个模型、1–4 个并发工具、8 类情景、每组 2,001 次请求上对比：保留工具结构加占位结果，正确率 96%（重复已在跑的调用 1%）；拿掉状态行是 94%（2%）；把调用改写成用户角色文本（#805 的回退路径）是 88%（8%）。12 个大模型三路都很高（98% / 96% / 99%），11 个小模型则是 94% / 91% / 77%，改写成文本时重复调用升到 17%。多个工具同时跑时，状态行的作用更明显：问“另一个好了没”时，有状态行 96%、无状态行 78%。README 建议：客户端能控制的工具尽量先返回一个 handle，完成后再以标记消息汇报。已知弱项包括：对已在运行的工具再用不同参数调一次，正确率只有 87%。本窗口还合并了 #872：在昨日已记的 <code>tool_conversations</code> 评测上，增加“参数是否符合 schema、城市/方向/时长是否匹配”两项，工具选择本身仍单独计分。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+查路、搜加油站这类可能超过一轮的工具，不要卡住麦克风。调用先立刻返回 handle，让助手可以边等边回话或听司机改口；结果回来后按“此刻上下文”插入，不要改写已经答过的历史。端上小模型不要把工具调用改写成普通文本，保留调用结构并加“仍在运行”的占位和状态行。评测要覆盖：工具未返回时被追问、多个工具同时跑、对已在跑的工具改参数，以及“先说确认再调用”之后下一轮是否还真的发出工具。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/andimarafioti/status/2125244865583960146">原帖</a> · <a href="https://github.com/huggingface/speech-to-speech/pull/829">PR #829</a> · <a href="https://github.com/huggingface/speech-to-speech/pull/872">评测 #872</a> · <a href="https://github.com/huggingface/speech-to-speech">代码</a></p>
+</section>
+<section class="item" id="sherpa-onnxpockettts-每个分片先大写并补句号末词正确率从-1024-提到-2424kokoro-标点曾被加在结束-pad-之后">
+<h3 class="it-title"><span class="it-no">3</span><span>sherpa-onnx：PocketTTS 每个分片先大写并补句号，末词正确率从 10/24 提到 24/24；Kokoro 标点曾被加在结束 PAD 之后</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">开源发布</span></div>
+<p class="it-src">来源：GitHub k2-fsa/sherpa-onnx。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）。发帖日期：2026-11-24（新加坡时间 15:48 合并 PocketTTS #4292，16:53 合并 Kokoro #4290；尚未打进正式版，当前标签仍是 v2.0.3）。</p>
+<p>PR #4292 修的是 PocketTTS 的文本预处理。参考实现（导出 <code>sherpa-onnx-pocket-tts-int8-2026-01-26</code> 的那一版）会在以字母或数字结尾时补句号，并把首字符大写；sherpa 原先按原文送进分词器，模型常常重复或读坏最后一个词，有时还丢掉第一个词。现在每个分片单独做这两步（分片是独立合成的），并用 utf8proc 处理 <code>élan</code>、<code>café</code> 这类字符。作者用已发布的 2.0.3 轮子和上述 int8 模型，8 句全小写、无句号的句子，种子 0/1/2，再用 Whisper tiny.en 转写：原文首词 21/24、末词 10/24、整句 9/24、平均时长 2.30 s；只补句号则末词 23/24；只大写则首词 24/24、末词仍 11/24；两步都做则首词和末词都是 24/24，整句 22/24，平均 1.96 s。未处理时，<code>thank you for calling</code> 会被读成 “Thank you for calling you for Tank you for it.”，<code>turn left at the second light</code> 会丢掉句首。PR #4290 修的是 Kokoro（词表路径）：从 v2.0.0 起，生成时若末尾没有标点就补一个，但分片被包成 <code>[PAD, ..., PAD]</code>，比较的永远是结束 PAD，标点会被加在 PAD 后面（例如 <code>... 3 0 3</code>），风格向量也会错一行。修复后在结束 PAD 之前插入。作者用 <code>kokoro-multi-lang-v1_0</code> 测了含呼号和跑道口令的句子，生成音频每个分片短 46–143 ms（少一个 token）；他没有听感对比。这两笔都还没进正式发布包。我没有在 iOS 上复测。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+若端上 TTS 用 PocketTTS，送进模型的每个分片都要像训练时那样：首字母大写、句末有句号，不要按界面上的原文直接喂。否则“左转”“到了”这类短句容易吞掉首词或重复末词。若用 Kokoro，先确认标点加在结束 PAD 之前，不要沿用 v2.0.0 以来的旧逻辑；风格向量也会跟着错位。换 TTS 家族时，用短导航口令做首词 / 末词正确率，不要只听一整段是否顺。</p></blockquote>
+<p class="it-links">原帖：<a href="https://github.com/k2-fsa/sherpa-onnx/pull/4292">PocketTTS 修复</a> · <a href="https://github.com/k2-fsa/sherpa-onnx/pull/4290">Kokoro 修复</a> · <a href="https://github.com/k2-fsa/sherpa-onnx">代码</a></p>
+</section>
+<section class="item" id="telos-live-1前景继续说话后台异步搜调工具和操作电脑full-duplex-bench-上停顿误打断-45-对-85">
+<h3 class="it-title"><span class="it-no">4</span><span>Telos-Live-1：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">前沿语音模型</span><span class="it-chip">话轮控制</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@Telos_lab  Telos Lab。做全双工、多模态交互模型的实验室（不在日常关注名单；关键词检索到其官方线程，按一手来源记录）。发帖日期：2026-11-25（新加坡时间 02:17 起发布线程）。</p>
+<p>Telos 宣布 Telos-Live-1（Preview）：官方说这是他们的第一个全模态全双工模型，能同时看、听、说，并在搜索、调用工具或操作电脑时把对话维持下去。架构图把 Telos-Live-1 画成前景：多模态编码接收视频、多人音频和环境反馈，输出在线推理、函数调用和音频；旁边另有 Background Model，标注为异步工作和双工调度。官方称他们从模型架构、推理基础设施和训练数据三方面重做，以便在保持任务能力的同时自然交互。评测图（Preview 版本）对比 GPT-Live-1：τ-Voice 四个客服域上，电信 99.1 对 96.5、航空 87.8 对 78.0、零售 87.7 对 84.2、银行 59.8 对 32.0（越高越好）。Full-Duplex-Bench 上，句中停顿误打断（v1，越低越好）4.5 对 8.5，背景声误应答（v1.5）2.0 对 28.0，忽略无关打断（v1.5）75.0 对 54.0，工具调用质量（v3）73.0 对 66.0，回复质量（v3）91.0 对 89.0；会话上下文连贯性接近（4.7 对 4.6）。图的下半部分把“边说边想”的 Telos-Live-1 标在较低延迟一侧，与同尺寸先想再说的双工 / 文本模型对比，我没有复算这些散点的坐标。试用需通过官网联系，不是开源权重。官方技术博文是前端渲染页面，我未能提取正文，以上只依据官方线程和配图，没有观看演示视频。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不必换上云端全双工基座，但可以把“前景继续把话说完、耗时工具放到后台、结果按最新上下文插回来”写成级联的明确分工，和昨日的 Duopra、今日的 speech-to-speech 占位结果是同一类问题。评测里应单独看：路噪 / 广播会不会被当成对助手说话（他们的背景声误应答差了一大截），以及句中换气会不会被当成话轮结束。银行域即使领先也只有 59.8，说明任务成功率不能只看会不会聊天。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/Telos_lab/status/2125292671032013294">原帖</a> · <a href="https://x.com/Telos_lab/status/2125292676912386393">评测配图帖</a> · <a href="https://teloslab.com/research/introducing-telos-live-1">博文（正文未能提取）</a></p>
+</section>
+<section class="item" id="cekurapolyai-owl-在-25-个-stt-里-elo-点估计第一1052实体抓取-9592这是云端榜">
+<h3 class="it-title"><span class="it-no">5</span><span>Cekura：PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端榜</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 3/5" aria-label="相关度 3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="it-chip">端上语音</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@tarush_agarwal_  Tarush Agarwal。Cekura（语音 agent 评测）CEO。引用的是 @polyaivoice 的 Owl，排行榜页面写最后更新于 11-23。发帖日期：2026-11-24（新加坡时间 23:01 先发 24 模型 WER 图；11-25 02:32 发 Owl 登顶 ELO 的帖。榜单页标注 Last updated Nov 23, 2026）。</p>
+<p>Tarush 写：每个模型听同一组 1,000 条公开片段和 300 个真实通话轮次，按片段两两比较；方法和完整结果公开。排行榜上 Owl 的 ELO 点估计为 1052，25 个已评分模型中最高，但 95% 区间是 1035–1062，官方也写 1–7 名并列领先。Owl 的实体抓取（人名、数字、日期等）95.92%，短回复错误 8.6，均为该项第一；总 WER 1.99%，最终文本延迟 TTFS P50 为 19 ms。PolyAI 官方补充：测试包含嘈杂的联络中心音频，Owl 在人名、数字和日期上第一。更早那张“24 模型按 WER 排序”的图没有把 Owl 算进去：ElevenLabs Scribe v3 Live 1.89% / 57 ms，NVIDIA Nemotron 3.5 Transcribe 2.28%（该图未给延迟），Inworld STT-1 5.44% / 41 ms。这些都是云端 API，不是端上模型。我读了 Tarush 的两帖、PolyAI 原文和 https://benchmarks.cekura.ai/stt，没有复跑，也没有逐项核对全部 25 个模型的分项。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+不要只用总 WER 选流式 ASR。把出口编号、公里数、ETA、地名同音字和短回复（“是”“三号出口”）单列，并对着车噪、广播声看。Nemotron 3.5 Transcribe 在这张公开 WER 图上排第 4（2.28%），若 Luna 的端上候选来自同一家族，应用自己的车载录音复测，不能直接搬云端延迟和 ELO。榜上的几十毫秒是云端最终文本时间，端上要以首字和完整槽位为准另测。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/tarush_agarwal_/status/2125296559365697578">原帖</a> · <a href="https://x.com/tarush_agarwal_/status/2125243511125794822">WER 图</a> · <a href="https://benchmarks.cekura.ai/stt">排行榜</a> · <a href="https://x.com/polyaivoice/status/2125263689313812756">PolyAI 宣布</a></p>
+</section>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/agent-app-2026-11-25/"><small>← 上一篇</small>每日 AI 与移动端智能体简报（2026-11-25）</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

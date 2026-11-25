@@ -54,6 +54,58 @@
     "posted_at": "2026-11-24"
   },
   {
+    "id": "lumi-2026-11-25-livekit-turn-detector-v11",
+    "date": "2026-11-25",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini",
+    "summary": "LiveKit 发布 Turn Detector v1.1，在 5% 或 10% 误打断预算下英语端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini；完整版主要走云端，数字未经 iPhone 复测。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "端点模型不要只看当前音频。把“助手刚问了什么”和“这轮已经说了多长”一并输入，才能区分“Seven”是完整答案还是电话号码的开头。先把 v1.1-mini 放进端上对照：在车里用短指令（出口、公里数、是/否）和非母语停顿各做一套，误打断率固定在 5% 和 10%，看端点延迟能降多少。评测可直接用新的 eot-bench 短回复 / 非母语集，中文和口音要自己补数据。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "模型发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "LiveKit",
+      "handle": "@livekit",
+      "identity": "开源语音 agent 框架与实时音视频基础设施，维护 eot-bench"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/livekit/status/2125280281183883744"
+      },
+      {
+        "label": "博文",
+        "url": "https://livekit.com/blog/turn-detector-v1-1"
+      },
+      {
+        "label": "文档",
+        "url": "https://docs.livekit.io/agents/build/turns/turn-detector/"
+      },
+      {
+        "label": "eot-bench",
+        "url": "https://github.com/livekit/eot-bench"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-25/",
+    "posted_at": "2026-11-25"
+  },
+  {
     "id": "agent-app-2026-11-25-canto-2",
     "date": "2026-11-25",
     "seq": 2,
@@ -107,6 +159,57 @@
     "posted_at": "2026-11-25"
   },
   {
+    "id": "lumi-2026-11-25-hf-speech-to-speech",
+    "date": "2026-11-25",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 94%，改写成文本只有 77%（PR 于 11-17 合并）",
+    "summary": "Hugging Face speech-to-speech 在工具还在跑时继续对话；小模型上保留工具结构的正确率 94%，改写成文本只有 77%。这是 11-17 已合并的 PR #829，今日补记。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "查路、搜加油站这类可能超过一轮的工具，不要卡住麦克风。调用先立刻返回 handle，让助手可以边等边回话或听司机改口；结果回来后按“此刻上下文”插入，不要改写已经答过的历史。端上小模型不要把工具调用改写成普通文本，保留调用结构并加“仍在运行”的占位和状态行。评测要覆盖：工具未返回时被追问、多个工具同时跑、对已在跑的工具改参数，以及“先说确认再调用”之后下一轮是否还真的发出工具。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "工具与 MCP",
+      "端侧"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "端上小模型"
+    ],
+    "source": {
+      "name": "Andi Marafioti",
+      "handle": "@andimarafioti",
+      "identity": "Hugging Face 多模态研究负责人，speech-to-speech 维护者。今日发的是演示视频；对应实现是 11-17 已合并的 PR #829，此前日报未写，故标明日期并补记"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/andimarafioti/status/2125244865583960146"
+      },
+      {
+        "label": "PR #829",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/829"
+      },
+      {
+        "label": "评测 #872",
+        "url": "https://github.com/huggingface/speech-to-speech/pull/872"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/huggingface/speech-to-speech"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-25/",
+    "posted_at": "2026-11-24"
+  },
+  {
     "id": "agent-app-2026-11-25-telos-live-1",
     "date": "2026-11-25",
     "seq": 3,
@@ -157,6 +260,52 @@
     "posted_at": "2026-11-25"
   },
   {
+    "id": "lumi-2026-11-25-sherpa-onnx-pockettts-kokoro",
+    "date": "2026-11-25",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx：PocketTTS 每个分片先大写并补句号，末词正确率从 10/24 提到 24/24；Kokoro 标点曾被加在结束 PAD 之后",
+    "summary": "sherpa-onnx 修复 PocketTTS 分片大小写和句号，末词正确率从 10/24 提到 24/24，并修了 Kokoro 把标点加在结束 PAD 之后的问题；两笔都尚未进正式版。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若端上 TTS 用 PocketTTS，送进模型的每个分片都要像训练时那样：首字母大写、句末有句号，不要按界面上的原文直接喂。否则“左转”“到了”这类短句容易吞掉首词或重复末词。若用 Kokoro，先确认标点加在结束 PAD 之前，不要沿用 v2.0.0 以来的旧逻辑；风格向量也会跟着错位。换 TTS 家族时，用短导航口令做首词 / 末词正确率，不要只听一整段是否顺。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音合成 TTS",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "k2-fsa/sherpa-onnx",
+      "handle": "",
+      "identity": "GitHub。Next-gen Kaldi 的端上语音运行时（关注账号 @csukuangfj 窗口内没有发帖）"
+    },
+    "links": [
+      {
+        "label": "PocketTTS 修复",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4292"
+      },
+      {
+        "label": "Kokoro 修复",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4290"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/k2-fsa/sherpa-onnx"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-25/",
+    "posted_at": "2026-11-24"
+  },
+  {
     "id": "agent-app-2026-11-25-siren",
     "date": "2026-11-25",
     "seq": 4,
@@ -199,6 +348,103 @@
     ],
     "archive_url": "/post/agent-app-2026-11-25/",
     "posted_at": "2026-11-25"
+  },
+  {
+    "id": "lumi-2026-11-25-telos-live-1",
+    "date": "2026-11-25",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "Telos-Live-1：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5",
+    "summary": "Telos 宣布 Telos-Live-1 预览：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5。试用需联系，不是开源权重。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不必换上云端全双工基座，但可以把“前景继续把话说完、耗时工具放到后台、结果按最新上下文插回来”写成级联的明确分工，和昨日的 Duopra、今日的 speech-to-speech 占位结果是同一类问题。评测里应单独看：路噪 / 广播会不会被当成对助手说话（他们的背景声误应答差了一大截），以及句中换气会不会被当成话轮结束。银行域即使领先也只有 59.8，说明任务成功率不能只看会不会聊天。"
+    },
+    "relevance": 4,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "语音 Agent"
+    ],
+    "types": [
+      "模型发布",
+      "评测结果"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "话轮控制",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Telos Lab",
+      "handle": "@Telos_lab",
+      "identity": "做全双工、多模态交互模型的实验室（不在日常关注名单；关键词检索到其官方线程，按一手来源记录）"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/Telos_lab/status/2125292671032013294"
+      },
+      {
+        "label": "评测配图帖",
+        "url": "https://x.com/Telos_lab/status/2125292676912386393"
+      },
+      {
+        "label": "博文（正文未能提取）",
+        "url": "https://teloslab.com/research/introducing-telos-live-1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-25/",
+    "posted_at": "2026-11-25"
+  },
+  {
+    "id": "lumi-2026-11-25-cekura-polyai-owl",
+    "date": "2026-11-25",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Cekura：PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端榜",
+    "summary": "Cekura 榜上 PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端 API 评测，不是端上模型。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "不要只用总 WER 选流式 ASR。把出口编号、公里数、ETA、地名同音字和短回复（“是”“三号出口”）单列，并对着车噪、广播声看。Nemotron 3.5 Transcribe 在这张公开 WER 图上排第 4（2.28%），若 Luna 的端上候选来自同一家族，应用自己的车载录音复测，不能直接搬云端延迟和 ELO。榜上的几十毫秒是云端最终文本时间，端上要以首字和完整槽位为准另测。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音识别 ASR",
+      "评测与榜单"
+    ],
+    "types": [
+      "评测结果"
+    ],
+    "tags": [
+      "端上语音",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Tarush Agarwal",
+      "handle": "@tarush_agarwal_",
+      "identity": "Cekura（语音 agent 评测）CEO。引用的是 @polyaivoice 的 Owl，排行榜页面写最后更新于 11-23"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/tarush_agarwal_/status/2125296559365697578"
+      },
+      {
+        "label": "WER 图",
+        "url": "https://x.com/tarush_agarwal_/status/2125243511125794822"
+      },
+      {
+        "label": "排行榜",
+        "url": "https://benchmarks.cekura.ai/stt"
+      },
+      {
+        "label": "PolyAI 宣布",
+        "url": "https://x.com/polyaivoice/status/2125263689313812756"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-25/",
+    "posted_at": "2026-11-24"
   },
   {
     "id": "agent-app-2026-11-24-phonic-1-1",
