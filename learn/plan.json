@@ -488,8 +488,14 @@
       },
       {
        "id": "20261130-4",
-       "text": "改一处：把你工作里一个重复流程写成 skill，看它什么时候被加载，对比改之前和改之后",
-       "min": 60
+       "text": "改一处：把你工作里一个重复流程写成 skill，看它什么时候被加载，对比改之前和改之后；先读 skills_from_scratch 里已经跑好的结果：按需加载让每次调用的 token 降了很多，却没省钱，想清楚为什么（提示：缓存）",
+       "min": 70,
+       "links": [
+        {
+         "label": "skills_from_scratch.ipynb",
+         "url": "https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/skills_from_scratch.ipynb"
+        }
+       ]
       },
       {
        "id": "20261130-5",
@@ -532,8 +538,18 @@
       },
       {
        "id": "20261201-4",
-       "text": "改一处：把压缩阈值调得很低，看压缩后丢了什么关键信息，对比改之前和改之后",
-       "min": 60
+       "text": "改一处：先读 Extra09 第五章（OpenClaw 压缩上下文时丢了“未经批准不得操作”，接着删了用户邮件）。把压缩阈值调低以便触发压缩，再把“删除任何文件前必须先问我”分别放在第 5 轮左右的用户消息里和写进 SYSTEM，各跑 2 次，看压缩后 agent 会不会越线",
+       "min": 70,
+       "links": [
+        {
+         "label": "hello-agents Extra09：Agent 开发踩坑经验",
+         "url": "https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra09-Agent%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB.md"
+        },
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
       },
       {
        "id": "20261201-5",
@@ -845,6 +861,21 @@
       },
       {
        "id": "20261208-5",
+       "text": "跑 claw0 的 s09：用 /simulate-failure 依次注入 overflow、rate_limit、auth，看每种错误被哪一层接住；和 s15 的重试比，写下 s15 少了哪几类处理",
+       "min": 40,
+       "links": [
+        {
+         "label": "claw0 s09 说明",
+         "url": "https://github.com/shareAI-lab/claw0/blob/main/sessions/zh/s09_resilience.md"
+        },
+        {
+         "label": "s09 代码",
+         "url": "https://github.com/shareAI-lab/claw0/blob/main/sessions/zh/s09_resilience.py"
+        }
+       ]
+      },
+      {
+       "id": "20261208-6",
        "text": "写当天笔记",
        "min": 20
       }
@@ -928,8 +959,14 @@
       },
       {
        "id": "20261210-4",
-       "text": "改一处：关掉独立判断器，看执行者会不会“自信地交付错误结果”，对比改之前和改之后",
-       "min": 60
+       "text": "改一处：关掉独立判断器，看执行者会不会“自信地交付错误结果”，对比改之前和改之后；再读 reflection_from_scratch 里已经跑好的结果：四种审查者各修好几个、改坏几个。想清楚判断器什么时候才有用（它得知道执行者不知道的东西）",
+       "min": 75,
+       "links": [
+        {
+         "label": "reflection_from_scratch.ipynb",
+         "url": "https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/reflection_from_scratch.ipynb"
+        }
+       ]
       },
       {
        "id": "20261210-5",
@@ -2081,12 +2118,16 @@
       },
       {
        "id": "20270112-3",
-       "text": "实验：给 learn-claude-code 加一份功能清单，Markdown 和 JSON 两种格式各跑一次，数模型擅自改清单的次数；再对比自评和独立评审判“完成”的差距",
+       "text": "实验：给 learn-claude-code 加一份功能清单，Markdown 和 JSON 两种格式各跑一次，数模型擅自改清单的次数；再对比自评和独立评审判“完成”的差距。想用现成的对照实验，可以改用 learn-harness-engineering 的 Project 03（弱 harness 对强 harness；是 Electron 应用，较重，两组放在互相隔离的目录里，不要用分支）",
        "min": 60,
        "links": [
         {
          "label": "learn-claude-code",
          "url": "https://github.com/shareAI-lab/learn-claude-code"
+        },
+        {
+         "label": "Project 03 说明",
+         "url": "https://github.com/walkinglabs/learn-harness-engineering/blob/main/docs/zh/projects/project-03-multi-session-continuity/index.md"
         }
        ]
       },
@@ -2548,19 +2589,29 @@
       },
       {
        "id": "20270122-2",
-       "text": "实验：同一个长任务，分别用全量历史 / 只留最近 N 轮 / 压缩 + 草稿本文件跑，比较 token、做成率、压缩后丢了什么",
+       "text": "实验：让 AI 把 context_engineering_from_scratch 改成用 DeepSeek，对比 clear_every=0 / 1 / 5 三种设置的 token、缓存命中和正确率；搞懂为什么在历史中间清理会让缓存失效（对照 01-19 的“只追加”）",
        "min": 70,
        "links": [
         {
-         "label": "learn-claude-code",
-         "url": "https://github.com/shareAI-lab/learn-claude-code"
+         "label": "context_engineering_from_scratch.ipynb",
+         "url": "https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/context_engineering_from_scratch.ipynb"
         }
        ]
       },
       {
        "id": "20270122-3",
-       "text": "回顾 s08、Claude Code、Codex、OpenHands 四种压缩：哪个能还原原文，哪个会丢信息",
-       "min": 20
+       "text": "回顾 s08、Claude Code、Codex、OpenHands 四种压缩：哪个能还原原文，哪个会丢信息；再读两份：Anthropic cookbook 里压缩 / 清理工具结果 / 记忆三种做法的对比，以及 decode 的 ADR-0018（压缩为什么在一轮里连续调工具时从来不触发）",
+       "min": 40,
+       "links": [
+        {
+         "label": "Anthropic cookbook notebook",
+         "url": "https://github.com/anthropics/claude-cookbooks/blob/main/tool_use/context_engineering/context_engineering_tools.ipynb"
+        },
+        {
+         "label": "ADR-0018",
+         "url": "https://github.com/itsdecodingai/building-a-coding-agent-from-scratch-course/blob/main/docs/adr/0018-compaction-cut-points-token-source-and-provider-seam-summarizer.md"
+        }
+       ]
       },
       {
        "id": "20270122-4",
@@ -2802,7 +2853,7 @@
       {
        "id": "20270128-1",
        "text": "读两篇：评测器和专家判定 18.5% 不一致；LLM 评判漏放违规写操作（看摘要和结论即可）",
-       "min": 40,
+       "min": 30,
        "links": [
         {
          "label": "评测器审计论文",
@@ -2817,7 +2868,7 @@
       {
        "id": "20270128-2",
        "text": "对昨天的轨迹，用 tau2 evaluate-trajs 算规则分，用 tau2 review 做 LLM 评审，逐条对比哪边判错",
-       "min": 70,
+       "min": 60,
        "links": [
         {
          "label": "tau2 命令参考",
@@ -2827,11 +2878,30 @@
       },
       {
        "id": "20270128-3",
+       "text": "量出评判器自己的错误率：用 recipe-chatbot HW3 的 101 条人工标注，让 DeepSeek 当评判器，算 TPR 和 TNR，再用 judgy 修正通过率并给出置信区间",
+       "min": 60,
+       "links": [
+        {
+         "label": "HW3 说明",
+         "url": "https://github.com/ai-evals-course/recipe-chatbot/blob/main/homeworks/hw3/README.md"
+        },
+        {
+         "label": "HW3 notebook",
+         "url": "https://github.com/ai-evals-course/recipe-chatbot/blob/main/homeworks/hw3/hw3_walkthrough.ipynb"
+        },
+        {
+         "label": "judgy",
+         "url": "https://github.com/ai-evals-course/judgy"
+        }
+       ]
+      },
+      {
+       "id": "20270128-4",
        "text": "写下你的判断标准：什么情况能用 LLM 评判，什么情况必须用规则",
        "min": 30
       },
       {
-       "id": "20270128-4",
+       "id": "20270128-5",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2855,16 +2925,28 @@
       },
       {
        "id": "20270129-2",
-       "text": "收集 30 条以上自己跑过的 trace（learn-claude-code、TradingAgents、Codex、tau2），逐条写一句自由批注：第一次出错在哪一步（open coding）",
-       "min": 70
+       "text": "先看 recipe-chatbot HW5：96 条标好的 agent 轨迹，画“最后成功的状态 → 第一个失败的状态”转移矩阵，看失败集中在哪一步（不调模型）",
+       "min": 30,
+       "links": [
+        {
+         "label": "HW5 说明",
+         "url": "https://github.com/ai-evals-course/recipe-chatbot/blob/main/homeworks/hw5/README.md"
+        }
+       ]
       },
       {
        "id": "20270129-3",
+       "text": "收集 30 条以上自己跑过的 trace（learn-claude-code、TradingAgents、Codex、tau2），逐条写一句自由批注：第一次出错在哪一步（open coding）；可以借 HW5 的视角，按“第一次出错在流水线哪一步”来归类",
+       "min": 70,
+       "links": []
+      },
+      {
+       "id": "20270129-4",
        "text": "把批注归成 4–6 类失败模式（axial coding），数每类有几条，排出先修哪一类",
        "min": 40
       },
       {
-       "id": "20270129-4",
+       "id": "20270129-5",
        "text": "写当天笔记",
        "min": 20
       }
@@ -2897,6 +2979,17 @@
       },
       {
        "id": "20270130-3",
+       "text": "用 4 道探针检查你写的判分：参考解应该满分、空解应该零分、另一种正确写法也该满分、只改坏一处时应该只挂对应那条。至少找出 1 条有漏洞的检查并修掉",
+       "min": 40,
+       "links": [
+        {
+         "label": "hello-agents Extra14（只读第四、五节）",
+         "url": "https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra14-Agent-RL%E7%8E%AF%E5%A2%83%E5%85%A5%E9%97%A8%E4%B8%8E%E5%90%88%E6%88%90%E5%AE%9E%E6%88%98.md"
+        }
+       ]
+      },
+      {
+       "id": "20270130-4",
        "text": "跑一遍，分析失败案例：和昨天的分类对得上吗",
        "min": 40
       }
@@ -3128,12 +3221,16 @@
      "tasks": [
       {
        "id": "20270206-1",
-       "text": "把“读 trace → 批注 → 分类 → 写用例 → 过门禁”写成一个 Claude Code skill，拿一批新 trace 试一次",
-       "min": 80,
+       "text": "把“读 trace → 批注 → 分类 → 写用例 → 过门禁”写成一个 Claude Code skill，拿一批新 trace 试一次；写完后拿同一批 trace 再跑一次 Hamel 和 Shreya 官方的 error-discovery skill，对比两者漏了哪些步骤",
+       "min": 90,
        "links": [
         {
          "label": "Anthropic skills 示例",
          "url": "https://github.com/anthropics/skills"
+        },
+        {
+         "label": "error-discovery skill",
+         "url": "https://github.com/ai-evals-course/evals-skills/blob/main/skills/error-discovery/SKILL.md"
         }
        ]
       },
@@ -3202,19 +3299,29 @@
       },
       {
        "id": "20270208-2",
-       "text": "拿 learn-claude-code 的工具对照这 5 条，挑一个工具让 AI 按原则重写",
-       "min": 50,
+       "text": "实验：让 AI 把 designing_tools_for_agents 改成用 DeepSeek，模型、prompt、循环都不变，只换 A / B / C / D 四套工具（照搬内部 API / 只改描述 / 按任务重新设计 / 再加示例），逐条读失败的 trace，分清哪些错改描述就能修、哪些必须改接口",
+       "min": 70,
        "links": [
         {
-         "label": "learn-claude-code",
-         "url": "https://github.com/shareAI-lab/learn-claude-code"
+         "label": "designing_tools_for_agents.ipynb",
+         "url": "https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/designing_tools_for_agents.ipynb"
         }
        ]
       },
       {
        "id": "20270208-3",
-       "text": "用同样 3 个任务跑改之前和改之后，对比选错工具和多余调用的次数",
-       "min": 40
+       "text": "读 Extra09 第二、三章（管道吞掉报错后模型瞎试；工具分三层）。回到 s02 把 run_bash 改成三档：只给 stdout / stdout+stderr / 再加退出码，给一个路径会写错的任务，看模型是瞎换搜索词还是定位到路径错误",
+       "min": 40,
+       "links": [
+        {
+         "label": "hello-agents Extra09：Agent 开发踩坑经验",
+         "url": "https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra09-Agent%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB.md"
+        },
+        {
+         "label": "learn-claude-code",
+         "url": "https://github.com/shareAI-lab/learn-claude-code"
+        }
+       ]
       },
       {
        "id": "20270208-4",
@@ -3526,7 +3633,7 @@
       {
        "id": "20270217-1",
        "text": "读 CaMeL 论文第 1–4 节：特权模型、隔离模型、能力标签（只读论文，代码是研究原型，不跑）",
-       "min": 70,
+       "min": 60,
        "links": [
         {
          "label": "论文",
@@ -3536,6 +3643,17 @@
       },
       {
        "id": "20270217-2",
+       "text": "跑 plan_then_execute_from_scratch：逐步决策的 agent 和“先写完计划再执行”的 agent，在藏了注入指令的任务上各被骗几次、任务完成率差多少",
+       "min": 50,
+       "links": [
+        {
+         "label": "plan_then_execute_from_scratch.ipynb",
+         "url": "https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/plan_then_execute_from_scratch.ipynb"
+        }
+       ]
+      },
+      {
+       "id": "20270217-3",
        "text": "对比 superagent 的“授权写在代码里”：两者都不让消息内容改权限，做法有什么不同",
        "min": 30,
        "links": [
@@ -3546,12 +3664,13 @@
        ]
       },
       {
-       "id": "20270217-3",
-       "text": "对照 learn-claude-code：要做成 CaMeL 那样，循环里要改哪几处（只写设计，不实现）",
-       "min": 40
+       "id": "20270217-4",
+       "text": "对照 learn-claude-code：要做成 CaMeL 那样，循环里要改哪几处（只写设计，不实现）；顺带写下上面那个 notebook 比 CaMeL 少了什么（没有能力标签，数据流也没有隔离）",
+       "min": 40,
+       "links": []
       },
       {
-       "id": "20270217-4",
+       "id": "20270217-5",
        "text": "写当天笔记",
        "min": 20
       }
@@ -3613,7 +3732,7 @@
       {
        "id": "20270219-2",
        "text": "设计一条校验链：格式校验 → 业务规则 → 可逆性和风险分级 → 确认，让 AI 实现在一个会触发动作的工具上",
-       "min": 70
+       "min": 60
       },
       {
        "id": "20270219-3",
@@ -3622,6 +3741,21 @@
       },
       {
        "id": "20270219-4",
+       "text": "跑微软的审批回执 notebook：审批绑定到动作的哈希上，逐个触发“审批后改金额”“拿 A 的审批执行 B”“审批过期”三种拦截；回头看你的校验链，“确认”这一步绑定了动作的哪些字段",
+       "min": 40,
+       "links": [
+        {
+         "label": "审批回执 notebook",
+         "url": "https://github.com/microsoft/ai-agents-for-beginners/blob/main/18-securing-ai-agents/code_samples/human-authorization-receipts.ipynb"
+        },
+        {
+         "label": "课程正文",
+         "url": "https://github.com/microsoft/ai-agents-for-beginners/blob/main/18-securing-ai-agents/README.md"
+        }
+       ]
+      },
+      {
+       "id": "20270219-5",
        "text": "写当天笔记",
        "min": 20
       }
