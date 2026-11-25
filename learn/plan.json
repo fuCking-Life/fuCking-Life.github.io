@@ -2506,12 +2506,20 @@
       },
       {
        "id": "20270121-2",
-       "text": "实验：20 份文档 + 5 个问题，A 全文塞进上下文，B 只给 grep 和读文件工具让它自己找，C 给向量检索工具；对比正确率和 token",
+       "text": "实验：20 份文档 + 5 个问题，A 全文塞进上下文，B 只给 grep 和读文件工具让它自己找，C 给向量检索工具；对比正确率和 token（C 组可以直接用《AI Agents in Action》第 6 章的向量检索代码）",
        "min": 90,
        "links": [
         {
          "label": "learn-claude-code",
          "url": "https://github.com/shareAI-lab/learn-claude-code"
+        },
+        {
+         "label": "书第 6 章：记忆与知识 RAG（参考）",
+         "url": "https://yixiangshijie.github.io/ai-agents-in-action-2nd-edition-cn/#/cn-book/6.为智能体处理记忆与知识RAG"
+        },
+        {
+         "label": "第 6 章代码：02_RAG_agent_vector.py",
+         "url": "https://github.com/cxbxmxcx/AI-Agent-Workflows/blob/main/chapter_06/02_RAG_agent_vector.py"
         }
        ]
       },
@@ -2874,8 +2882,18 @@
       },
       {
        "id": "20270130-2",
-       "text": "每条写结果检查 + 轨迹检查（该调的工具有没有调）",
-       "min": 50
+       "text": "每条写结果检查 + 轨迹检查（该调的工具有没有调）；参考书第 7 章的测试驱动写法（TDAD）和 grounding 检查",
+       "min": 50,
+       "links": [
+        {
+         "label": "书第 7 章：评估与反馈（参考）",
+         "url": "https://yixiangshijie.github.io/ai-agents-in-action-2nd-edition-cn/#/cn-book/7.通过评估与反馈构建稳健的智能体"
+        },
+        {
+         "label": "第 7 章代码",
+         "url": "https://github.com/cxbxmxcx/AI-Agent-Workflows/blob/main/chapter_07"
+        }
+       ]
       },
       {
        "id": "20270130-3",
@@ -3766,8 +3784,18 @@
       },
       {
        "id": "20270223-3",
-       "text": "实验：工具调用中途杀掉 worker 再重启，读事件历史：从哪一步恢复，工具有没有被重复执行",
-       "min": 50
+       "text": "实验：工具调用中途杀掉 worker 再重启，读事件历史：从哪一步恢复，工具有没有被重复执行；再读书第 8 章的幂等键示例：怎么让重试不会重复执行同一个操作",
+       "min": 50,
+       "links": [
+        {
+         "label": "书第 8 章：部署智能体（参考）",
+         "url": "https://yixiangshijie.github.io/ai-agents-in-action-2nd-edition-cn/#/cn-book/8.部署智能体与智能体系统"
+        },
+        {
+         "label": "幂等键示例代码",
+         "url": "https://github.com/cxbxmxcx/AI-Agent-Workflows/blob/main/chapter_08/06_idempotent_key_example.py"
+        }
+       ]
       },
       {
        "id": "20270223-4",
