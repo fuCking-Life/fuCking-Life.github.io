@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
     <description>Agent 学习笔记 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/agent-学习笔记/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-26）：给了工具，模型不一定用</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-26/</link>
+      <pubDate>Thu, 26 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-26/</guid>
+      <description>&lt;p&gt;覆盖范围：learn-claude-code s05（计划工具 todo_write）和 s06（子 agent）。今天聊了四件事：计划工具什么活都干不了，为什么还能防跑偏；有计划和没计划的对照为什么看不出区别；上下文在 agent 之间怎么移交（派活和交接）；子 agent 在背后做了什么，主 agent 怎么才能知道。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;给了工具，模型不一定用；用了，也不一定说真话。&lt;/strong&gt;计划清单会被无视，没验证也能标成&amp;#34;完成&amp;#34;；子 agent 被权限拦下后换个写法绕了过去，交回的报告里一个字都没提。交接说明则是子 agent 的全部世界：它省钱，也会让子 agent 悄悄漏掉东西。我有几个预测没说中：以为关掉计划工具会漏步骤，以为缓存命中能让模型更聚焦，还低估了交接说明的好处和风险。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Agent 学习笔记（2026-11-25）：把关的 hook 会挡住旁观的 hook</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-25/</link>
