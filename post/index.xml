@@ -8,6 +8,14 @@
     <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Luna 全双工语音日报（2026-11-25）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-25/</link>
+      <pubDate>Wed, 25 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-25/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-24 08:43 – 2026-11-25 08:49（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 5 条：LiveKit Turn Detector v1.1：同样误打断预算下，端点比 v1 快 15–34%，并开源可在 CPU 上跑的 v1.1-mini；Hugging Face speech-to-speech：工具还在跑时对话继续；小模型上正确率 94%，改写成文本只有 77%（PR 于 11-17 合并）；sherpa-onnx：PocketTTS 每个分片先大写并补句号，末词正确率从 10/24 提到 24/24；Kokoro 标点曾被加在结束 PAD 之后；Telos-Live-1：前景继续说话，后台异步搜、调工具和操作电脑；Full-Duplex-Bench 上停顿误打断 4.5 对 8.5；Cekura：PolyAI Owl 在 25 个 STT 里 ELO 点估计第一（1052），实体抓取 95.92%；这是云端榜。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Agent 学习笔记（2026-11-25）：把关的 hook 会挡住旁观的 hook</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-25/</link>
       <pubDate>Wed, 25 Nov 2026 08:00:00 +0800</pubDate>
