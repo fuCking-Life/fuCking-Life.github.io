@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/tags/lumi/</link>
     <description>带 #lumi 标签的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/lumi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Luna 全双工语音日报（2026-11-26）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-26/</link>
+      <pubDate>Thu, 26 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-26/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-25 08:49 – 2026-11-26 08:43（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 5 条：Pipecat Sidechat：32M 端上分类器，在多人对话里决定回应、等待还是沉默，单行约 7 ms；Sage-Interaction：9B 开源全双工 omni，前台继续说话、后台委托工具，FD-Bench v1.5 均分 80.73，对旁人说话只有 61；LiveKit：短句后的静音不再被算进打断时长，该修复发生在 1.9.0 标签之后；ClusterVAD：无阈值的无监督 VAD，AMI 远场和阿里会议 DetER 低于 Silero（11-24 提交，昨日窗口未记）；Gradium：48 kHz 好听的音色在 8 kHz 电话线上会掉队，听测留下 60 个 Telephony 音色。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Luna 全双工语音日报（2026-11-25）</title>
       <link>https://fuCking-Life.github.io/post/lumi-2026-11-25/</link>
