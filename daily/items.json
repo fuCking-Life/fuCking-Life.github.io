@@ -1,5 +1,226 @@
 [
   {
+    "id": "agent-app-2026-11-26-bonsai-25",
+    "date": "2026-11-26",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "PrismML 发布 Ternary Bonsai 2.5：27B 三值模型约 5.93 GB，官方称可通过 MLX 在 Mac、iPhone 和 iPad 上运行",
+    "summary": "PrismML 发布 Ternary Bonsai 2.5 27B 三值模型，PTQ1_0 约 5.93 GB，官方称可通过 MLX 在 Mac、iPhone 和 iPad 上运行，并加强长序列工具调用；评测来自官方，5.93 GB 只是权重大小，不是手机运行时占用。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对想在 iPhone 上跑「能连续调工具的本地助手」的人来说，这是目前很少见的、官方明确点名 iPhone / iPad 的 27B 级选项，而且体积已经落到一台手机存得下的范围。但不要把 5.93 GB 当成可以在 6 GB 内存的手机上流畅跑长上下文的保证：还要为 KV cache、思维链和 MLX 运行时预留内存，并先在目标机型上测长任务能否跑完、会不会过热或被系统杀掉。MLX 包目前是纯文本，多模态（官方规格含视觉塔）不能直接拿到这个手机包里用。若做自己的 iOS 助手，更值得看的是官方把改进重点放在「工具出错后如何接着做完」，而不是再刷一道单轮分数；接入前应用真实的多步工具链做验收，并认准对应的运行时（MLX 或指定的 llama.cpp 构建），不要拿错量化文件。"
+    },
+    "relevance": 5,
+    "domains": [
+      "端侧",
+      "iOS",
+      "大模型",
+      "开源"
+    ],
+    "types": [
+      "模型发布",
+      "开源"
+    ],
+    "tags": [
+      "端侧模型",
+      "三值量化",
+      "智能体",
+      "iOS"
+    ],
+    "source": {
+      "name": "PrismML",
+      "handle": "",
+      "identity": "官方博客；团队介绍称源于 Caltech 研究者，并获 Khosla Ventures、Cerberus、Google 及三星等支持"
+    },
+    "links": [
+      {
+        "label": "官方博客",
+        "url": "https://prismml.com/news/bonsai-2-5-27b"
+      },
+      {
+        "label": "模型文档",
+        "url": "https://docs.prismml.com/models/bonsai-2-5-27b"
+      },
+      {
+        "label": "GGUF 权重",
+        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-gguf"
+      },
+      {
+        "label": "MLX 权重",
+        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-mlx-2bit"
+      },
+      {
+        "label": "转述 9to5Mac",
+        "url": "https://9to5mac.com/2026/11/24/prismmls-bonsai-2-5-brings-better-coding-and-tool-use-to-on-device-ai/"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-26/",
+    "posted_at": "2026-11-24"
+  },
+  {
+    "id": "agent-app-2026-11-26-edgent-asrkit",
+    "date": "2026-11-26",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "TheStage AI 推出端侧语音应用 Edgent 与 SDK ASRKit，可在 iPhone 上离线转写并做可打断的语音对话",
+    "summary": "TheStage AI 推出可在 iPhone 上离线转写并做可打断语音对话的应用 Edgent，以及可嵌入 iOS 应用的端侧语音识别 SDK ASRKit；数字来自官方测量，Mac 版目前是 TestFlight。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这是一条很适合直接上手试的端侧能力：听写、会议转写和可打断的语音对话都在本机，而且官方同时给了可嵌入自己 iOS 应用的 SDK。若要做手机语音助手，可把端点检测、实时字幕和说话人分离放在 Neural Engine 上，云端只处理需要更大模型的摘要或工具调用；也要把「不把音频送出设备」写成默认路径，而不是事后开关。接入 ASRKit 前，应在目标 iPhone 上测噪声、多人重叠和中文场景，不能只看 M2 Max 的 16.7 倍实时和官方词错误率。授权上要分清：Edgent 应用宣称免账号，但 SDK 初始化示例里仍有 token，超过 1,000 台设备需联系官方。录音和说话人命名还要遵守当地同意规则，不能只因为「音频不出设备」就省略告知。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "语音识别 ASR",
+      "端侧",
+      "iOS"
+    ],
+    "types": [
+      "产品发布",
+      "开源"
+    ],
+    "tags": [
+      "端侧语音",
+      "iOS",
+      "语音助手",
+      "SDK"
+    ],
+    "source": {
+      "name": "TheStage AI",
+      "handle": "@TheStageAI",
+      "identity": "TheStage AI 官方账号，简介写明做企业推理栈与研究；官方博客作者包括 Azim Kurbanov、Ruslan Aydarkhanov、Anton Statnik、Mikhail Khoroshikh、Kirill Solodskikh"
+    },
+    "links": [
+      {
+        "label": "官方帖 @TheStageAI",
+        "url": "https://x.com/TheStageAI/status/2125244296182063561"
+      },
+      {
+        "label": "官方博客",
+        "url": "https://app.thestage.ai/blog/ASRKit-and-Edgent:-offline-transcription-with-speaker-labels?id=28"
+      },
+      {
+        "label": "补充说明帖",
+        "url": "https://x.com/TheStageAI/status/2125245183490957457"
+      },
+      {
+        "label": "Apple SDK",
+        "url": "https://github.com/TheStageAI/AppleSDK"
+      },
+      {
+        "label": "TestFlight",
+        "url": "https://testflight.apple.com/join/wygq1BJd"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-26/",
+    "posted_at": "2026-11-24"
+  },
+  {
+    "id": "agent-app-2026-11-26-speculative-encoding",
+    "date": "2026-11-26",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "Ramp Labs 与 Base Labs 发布 Speculative Encoding：用一个 2.35B 网络在不同模型的隐藏状态之间直接翻译",
+    "summary": "Ramp Labs 与 Base Labs 发布 speculative encoding，用一个 2.35B 网络在不同模型的隐藏状态之间直接翻译，以减少多智能体重复 prefill；这是服务端研究，不是可在手机上直接运行的端侧产品，数字也未经复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "端云协同的助手如果要在本地小模型和云端大模型之间切换，最贵的往往不是生成几个词，而是让第二个模型把同一段对话、同一份文件再 prefill 一遍。可迁移的思路是：上下文尽量只编码一次，再交给下一个模型，而不是每次换模型都从头读。这个 2.35B 翻译器目前是按数据中心评测的，42 种组合和隐藏状态接口都不能直接搬进 iOS；在手机上更务实的是先做本地摘要、关键记忆和明确的上下文交接格式，等有面向端侧的实现再考虑把 KV 或隐藏状态传来传去。若只是单模型的端侧助手，优先仍是控制上下文长度和本地检索，而不是上这一套跨模型翻译。"
+    },
+    "relevance": 4,
+    "domains": [
+      "Agent 架构",
+      "大模型",
+      "开源"
+    ],
+    "types": [
+      "论文",
+      "开源"
+    ],
+    "tags": [
+      "智能体",
+      "推理加速",
+      "多模型",
+      "上下文缓存"
+    ],
+    "source": {
+      "name": "Ramp Labs",
+      "handle": "@RampLabs",
+      "identity": "Ramp Labs 官方账号；Base Labs（Baseten 研究博客）"
+    },
+    "links": [
+      {
+        "label": "官方帖 @RampLabs",
+        "url": "https://x.com/RampLabs/status/2125627502802653330"
+      },
+      {
+        "label": "研究博客",
+        "url": "https://labs.baseten.co/articles/speculative-encoding-many-to-many-cache-translation"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/b10-tv/speculative-encoding"
+      },
+      {
+        "label": "权重",
+        "url": "https://huggingface.co/RampPublic/speculative-encoding"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-26/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "agent-app-2026-11-26-hy4-flash-gguf",
+    "date": "2026-11-26",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "腾讯混元开源 Hy4 flash 官方 GGUF 量化权重，称可在 64GB Mac 等设备上本地运行",
+    "summary": "腾讯混元开源经 AngelSlim 量化的 Hy4 flash 官方 GGUF 权重，称可在 64GB Mac 等设备上本地运行；最小权重仍超过 120 GiB，不能当成端侧手机模型，速度也是官方峰值、未经复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "这条新闻的意义在「本地能跑更大的 MoE」，不在「手机也能跑旗舰模型」。对做 iOS 端侧助手的人来说，不应把 64GB Mac mini 上的 18 tokens/s 写成移动端能力；手机上仍应选择像 Bonsai 这类几 GB 级的权重，并把 Hy4 这类 100 GB 以上的量化包留在桌面或自建服务器。若只是要在 Mac 上做本地开发或评测，先按官方文档装对应运行时和量化文件，并自行复测首字时延和长上下文下的稳态速度，不要只引用「最高 TPS」。"
+    },
+    "relevance": 3,
+    "domains": [
+      "开源",
+      "大模型"
+    ],
+    "types": [
+      "开源",
+      "模型发布"
+    ],
+    "tags": [
+      "本地推理",
+      "量化",
+      "Mac",
+      "开源"
+    ],
+    "source": {
+      "name": "腾讯混元",
+      "handle": "@TencentHunyuan",
+      "identity": "腾讯混元官方账号，简介写明是腾讯的基础模型，覆盖文本、图像、视频和 3D"
+    },
+    "links": [
+      {
+        "label": "官方帖 @TencentHunyuan",
+        "url": "https://x.com/TencentHunyuan/status/2125510109417857368"
+      },
+      {
+        "label": "GGUF 权重",
+        "url": "https://huggingface.co/AngelSlim/Hy4-flash-GGUF"
+      },
+      {
+        "label": "AngelSlim",
+        "url": "https://github.com/Tencent/AngelSlim"
+      },
+      {
+        "label": "Strata PR",
+        "url": "https://github.com/Niko1221/Strata/pull/7120"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-26/",
+    "posted_at": "2026-11-25"
+  },
+  {
     "id": "agent-app-2026-11-25-wepocketmodel",
     "date": "2026-11-25",
     "seq": 1,
