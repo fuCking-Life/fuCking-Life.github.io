@@ -5,8 +5,17 @@
     <link>https://fuCking-Life.github.io/tags/agent-app/</link>
     <description>带 #agent-app 标签的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 25 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/agent-app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-26）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-26/</link>
+      <pubDate>Thu, 26 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-26/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-25 08:32 – 2026-11-26 08:39（新加坡时间）
+（附：PrismML Bonsai 2.5 与 TheStage Edgent / ASRKit 发布于昨日窗口后段，上次简报未收录，故一并补入。）&lt;/p&gt;
+&lt;p&gt;本期 4 条：PrismML 发布 Ternary Bonsai 2.5，27B 三值模型约 5.93 GB，官方称可通过 MLX 在 Mac、iPhone 和 iPad 上运行；TheStage AI 推出端侧语音应用 Edgent 与 SDK ASRKit，可在 iPhone 上离线转写并做可打断的语音对话；Ramp Labs 与 Base Labs 发布 Speculative Encoding，用一个 2.35B 网络在不同模型的隐藏状态之间直接翻译；腾讯混元开源 Hy4 flash 官方 GGUF 量化权重，称可在 64GB Mac 等设备上本地运行。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-25）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-25/</link>
