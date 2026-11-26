@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
     <description>Agent 学习笔记 栏目的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 26 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/agent-学习笔记/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-27）：技能写给模型看，description 决定用不用</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-27/</link>
+      <pubDate>Fri, 27 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-27/</guid>
+      <description>&lt;p&gt;覆盖范围：learn-claude-code s07（技能加载），以及按 Agent Skills 官方规范补上的完整结构。今天聊了五件事：模型靠什么决定加载哪个技能；什么样的知识值得做成技能；按需加载为什么不一定省钱（缓存）；我自己写了一个修 bug 的技能，description 改前改后做了对照；agent 为了找它缺的配置，跑出了练习目录。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;技能是写给模型看的，description 决定它用不用。&lt;/strong&gt;写得太泛，模型觉得&amp;#34;这我本来就会&amp;#34;，直接跳过；圈得太宽，不该用的时候也会加载。我预测&amp;#34;只说闪退不会加载修 Jira bug 的技能&amp;#34;，结果第一版照样加载了；还把技能里的 references 当成了&amp;#34;子技能&amp;#34;，把 assets 当成了&amp;#34;能运行的资源&amp;#34;。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Agent 学习笔记（2026-11-26）：给了工具，模型不一定用</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-26/</link>

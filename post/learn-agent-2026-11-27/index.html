@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent 学习笔记（2026-11-27）：技能写给模型看，description 决定用不用 · Fucking Life</title>
+<meta name="description" content="覆盖范围：learn-claude-code s07（技能加载），以及按 Agent Skills 官方规范补上的完整结构。今天聊了五件事：模型靠什么决定加载哪个技能；什么样的知识值得做成技能；按需加载为什么不一定省钱（缓存）；我自己写了一个修 bug 的技能，description 改前改后做了对照；agent 为了找它缺的配置，跑出了练习目录。 今天最大">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/learn-agent-2026-11-27/">
+<meta property="og:title" content="Agent 学习笔记（2026-11-27）：技能写给模型看，description 决定用不用">
+<meta property="og:description" content="覆盖范围：learn-claude-code s07（技能加载），以及按 Agent Skills 官方规范补上的完整结构。今天聊了五件事：模型靠什么决定加载哪个技能；什么样的知识值得做成技能；按需加载为什么不一定省钱（缓存）；我自己写了一个修 bug 的技能，description 改前改后做了对照；agent 为了找它缺的配置，跑出了练习目录。 今天最大">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/learn-agent-2026-11-27/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a class="on" aria-current="page" href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/agent-学习笔记/" style="color:var(--c-learn)">Agent 学习笔记</a> · <time datetime="2026-11-27T08:00:00+08:00">2026-11-27</time></div><h1>技能写给模型看，description 决定用不用</h1><div class="post-meta"><span>约 7 分钟</span><a class="tag" href="/tags/learn-claude-code/">#learn-claude-code</a><a class="tag" href="/tags/agent-skills/">#Agent Skills</a></div></header>
+<article class="prose" style="--col:var(--c-learn)">
+<p class="digest-meta">覆盖范围：learn-claude-code s07（技能加载），以及按 Agent Skills 官方规范补上的完整结构。今天聊了五件事：模型靠什么决定加载哪个技能；什么样的知识值得做成技能；按需加载为什么不一定省钱（缓存）；我自己写了一个修 bug 的技能，description 改前改后做了对照；agent 为了找它缺的配置，跑出了练习目录。</p>
+<p>今天最大的收获是：<strong>技能是写给模型看的，description 决定它用不用。</strong>写得太泛，模型觉得&#34;这我本来就会&#34;，直接跳过；圈得太宽，不该用的时候也会加载。我预测&#34;只说闪退不会加载修 Jira bug 的技能&#34;，结果第一版照样加载了；还把技能里的 references 当成了&#34;子技能&#34;，把 assets 当成了&#34;能运行的资源&#34;。</p>
+<h2 id="今天学了什么">今天学了什么</h2>
+<p><strong>1. 技能分层加载。</strong>课程 s07 把技能分成两层：</p>
+<table><thead><tr><th>内容</th><th>放在哪</th><th>什么时候进上下文</th></tr></thead><tbody><tr><td>每个技能的名字 &#43; 一句话描述</td><td>system prompt</td><td>每次都发</td></tr><tr><td>整份 <code>SKILL.md</code></td><td>工具结果</td><td>模型调用 <code>load_skill(名字)</code> 时</td></tr></tbody></table>
+<p>模型判断加载哪个技能，靠的几乎全是 description，因为调用时只传一个名字。正文一旦加载就留在 messages 里，之后每圈都跟着重发，没有&#34;卸载&#34;这一说。</p>
+<p><strong>2. 通用的代码评审技能，模型根本没加载。</strong>我让它&#34;帮我审一下 count.py 这个脚本有没有问题&#34;，目录里明明有一个 <code>code-review</code> 技能，描述也写着&#34;用户要求审代码、查 bug 时使用&#34;，可它 9 圈里一次都没加载。评审却做得不错：列了 8 个问题，每一条都真的构造了异常输入去验证。</p>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 通用能力已经内化进模型了。值得做成技能的，是模型不知道的东西：团队自己的规范、具体的业务流程、特有的坑。</p></blockquote>
+<p>而模型&#34;不知道自己不知道什么&#34;，所以 description 要点明这个技能<strong>独有</strong>的部分，否则它会像这次一样，觉得自己会，就跳过了。</p>
+<p><strong>3. 按需加载，token 降了，钱不一定省。</strong>提示缓存只认&#34;开头完全一样&#34;：请求按&#34;工具 → system → messages&#34;排成一长串，从头往后比，比到第一个不一样的地方为止，前面这段按大约一折的价格收费。把技能全文放进 system prompt，它每圈都一样，几乎每次都能命中缓存。按需加载省下来的，大多是这些打了一折的 token，还要多花一圈去调用 <code>load_skill</code>。</p>
+<p>真正省钱的情况是：会话很短；用户隔很久才说一句话，缓存几分钟没人用就失效了；技能非常多；技能很少用得上。</p>
+<blockquote class="ln-key">
+<p><strong>要点：</strong> 按需加载的主要价值在上下文和注意力：模型只看到和当前任务有关的东西。钱省不省，要看缓存吃不吃得上。</p></blockquote>
+<p>顺带记住缓存的规矩：<strong>不变的放前面，会变的放后面，尽量只在末尾追加。</strong>在 system 里放当前时间、改工具列表、改写历史中间的消息，都会让后面整段缓存失效。</p>
+<p><strong>4. 我自己写了一个技能：按团队流程修 Jira 上的 iOS bug。</strong>流程是：读 ticket → 找分支 → 读代码 → 用 Maestro 复现 → 读日志找根因 → 修 → 再复现 → 关 ticket。其中模型不知道的只有三处：分支怎么找、怎么用 Maestro 复现、怎么关 ticket。读代码、找根因、改代码它本来就会。另外加了两道闸门：复现不出来先别改代码；关 ticket 之前必须先问我。</p>
+<p><strong>5. description 圈得太宽，会乱加载。</strong></p>
+<table><thead><tr><th>用户说的话</th><th>第一版描述</th><th>改后的描述</th></tr></thead><tbody><tr><td>&#34;首页列表滑动的时候会闪退，帮我看看&#34;</td><td>1 次里加载了 1 次</td><td>3 次里加载了 0 次</td></tr><tr><td>&#34;帮我修一下 IOS-1234 这个 bug&#34;</td><td>1 次里加载了 1 次</td><td>2 次里加载了 2 次</td></tr></tbody></table>
+<p>第一版写着&#34;处理 Jira ticket、QA 提的 bug……时必须先加载&#34;，&#34;bug&#34;两个字把闪退也套了进去。改后写明：&#34;只有用户给出 ticket 号时才加载；只描述现象时不要加载，直接查代码，或者先问用户要闪退日志。&#34;</p>
+<blockquote class="ln-key">
+<p><strong>要点：</strong> 写清楚&#34;什么时候用、什么时候不用、不用的时候做什么&#34;，再实际跑几次验证。description 终究只是请求，要真正保证，还得靠 harness，比如用 hook 检查用户的话里有没有 ticket 号。</p></blockquote>
+<p><strong>6. agent 跑出了练习目录去找配置。</strong>加载修 bug 技能后，它发现练习目录里没有 Jira，就去列用户主目录，读 Claude Code 的配置文件，想找 Jira 的 MCP 配置。这次什么敏感内容都没读到，但 trace 会把它读到的东西原样记下来，我在提交前把这几段删掉了。</p>
+<blockquote class="ln-key">
+<p><strong>原则：</strong> 没有沙盒时，&#34;找不到就去别处找&#34;是 agent 的默认行为。在提示里写&#34;找不到就停下来&#34;只是请求。</p></blockquote>
+<p><strong>7. 技能的完整结构（课程只讲了前两层）。</strong>按 Agent Skills 规范，一个技能就是一个文件夹：</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">ios-jira-bugfix/
+├── SKILL.md          ← 唯一必须有的文件：文件头（name、description）&#43; 正文
+├── references/       ← 需要时才读的说明
+├── scripts/          ← 可以直接运行的固定操作
+└── assets/           ← 直接套用的模板、数据表</code></pre></div>
+<table><thead><tr><th>层</th><th>内容</th><th>什么时候进上下文</th></tr></thead><tbody><tr><td>1</td><td>name &#43; description</td><td>启动时，所有技能都放（每个约 100 token）</td></tr><tr><td>2</td><td>SKILL.md 正文</td><td>技能启用时整份加载（建议 500 行以内）</td></tr><tr><td>3</td><td>references、scripts、assets</td><td>正文里提到、真用得上时才读或运行</td></tr></tbody></table>
+<p>第 3 层不需要任何新机制，<code>read_file</code> 和 bash 就够了；而且脚本的代码不会进上下文，进来的只有它的运行结果。分类的标准是：要模型读懂的说明放 references，每次照固定步骤做的操作放 scripts，直接套用的格式放 assets。</p>
+<h2 id="我理解对的">我理解对的</h2>
+<ul><li><p><strong>模型靠 name 和 description 判断加载哪个技能。</strong>正文加载后，每圈都会跟着发，上下文会变大。</p></li><li><p><strong>code-review 没被加载，是因为这个能力已经内化进模型了。</strong>只有模型不懂的流程、具体的业务，才值得写成技能。</p></li><li><p><strong>全放进 system prompt 时，每圈都一样，都能命中缓存。</strong></p></li><li><p><strong>按需加载真正的价值是：</strong>不让模型看到无关的东西，上下文不会无谓地变长。</p></li><li><p><strong>在我自己的流程里，读代码、找根因、修 bug 模型都会</strong>，要写清楚的是找分支、Maestro 复现和关 ticket。</p></li><li><p><strong>只说闪退也加载 Jira 技能，不是好事</strong>：白占上下文，还把模型带进了错的流程。改法是写明&#34;只在有 ticket 号时加载&#34;。</p></li></ul>
+<h2 id="我理解错的不够准的">我理解错的、不够准的</h2>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我预测&#34;只说闪退，不会加载修 Jira bug 的技能&#34;。第一版描述里&#34;QA 提的 bug&#34;圈得太宽，模型照样加载了。</p></blockquote>
+<p>这和 code-review 那次正好相反：那次是描述太泛，该用的时候不用；这次是圈得太宽，不该用的时候也用了。</p>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我以为 references 是&#34;更小的子技能&#34;。其实它是同一个技能的附录，不在启动时的目录里，要靠正文&#34;指路&#34;才会被读到；只有另一个技能，才有自己的 description，由模型自己判断要不要加载。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我以为 assets 是&#34;可以运行的资源&#34;。能运行的东西放 scripts；assets 放的是模板、图片、数据表这类直接套用的静态文件。</p></blockquote>
+<blockquote class="ln-fix">
+<p><strong>修正：</strong> 我把&#34;找分支的规则&#34;和&#34;切换分支的操作&#34;一起放进了 scripts。规则需要模型读懂，应该放 references；只有每次都一样的切换操作，才适合写成脚本。</p></blockquote>
+<h2 id="举一反三">举一反三</h2>
+<p><strong>1. 技能和工具是同一个道理。</strong></p>
+<table><thead><tr><th></th><th>写得太泛</th><th>圈得太宽</th><th>写清楚</th></tr></thead><tbody><tr><td>技能</td><td>&#34;我本来就会&#34;，直接跳过</td><td>不该用的时候也加载</td><td>什么时候用、什么时候不用、不用时做什么</td></tr><tr><td>工具（s02 的实验）</td><td>说不清用途，模型绕回 bash</td><td>—</td><td>名字、描述、参数三者一致</td></tr></tbody></table>
+<p><strong>2. 缓存规矩适用于所有 agent。</strong>稳定的前缀放前面，只在末尾追加；任何改写历史的操作，比如下一课 s08 的压缩，都要先算一笔&#34;缓存会失效&#34;的账。</p>
+<blockquote class="ln-ext">
+<p><strong>举一反三：</strong> 评审一个技能，先问三件事：它写的是不是模型本来就会的东西？description 能不能把&#34;该用&#34;和&#34;不该用&#34;分开？找不到它需要的东西时，模型会停下来，还是去别处翻？</p></blockquote>
+<h2 id="还没解决的问题">还没解决的问题</h2>
+<blockquote class="ln-ask">
+<p><strong>思考题：</strong> &#34;找不到就停下来说缺什么&#34;这条规矩，应该写在哪里：技能正文里、system prompt 里、hook 里，还是靠沙盒？它们各自能保证到什么程度？提示：还没给。</p></blockquote>
+<blockquote class="ln-ask">
+<p><strong>思考题：</strong> 下一课 s08 的压缩分四步：大结果存盘 → 归档旧消息 → 把旧的工具结果换成路径 → 让模型写摘要。为什么按这个顺序？哪几步会让缓存失效？提示：看每一步丢掉的信息还能不能找回，要不要多调用一次模型，改的是最新消息还是历史中间的消息。</p></blockquote>
+<h2 id="下一步">下一步</h2>
+<ul><li><p>先复习，然后接着学 s08 上下文压缩。</p></li></ul>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/learn-agent-2026-11-26/"><small>← 上一篇</small>给了工具，模型不一定用</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>
