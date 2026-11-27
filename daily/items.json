@@ -1,5 +1,205 @@
 [
   {
+    "id": "agent-app-2026-11-27-gemini-guided-vision",
+    "date": "2026-11-27",
+    "seq": 1,
+    "source_brief": "agent-app",
+    "title": "Gemini Live 的 Guided Vision 现已在 iOS 上线，对准摄像头即可获得实时视觉指引",
+    "summary": "Google 宣布 Gemini Live 的 Guided Vision 现已在 iOS 上线，对准摄像头即可获得实时视觉指引；该功能仍在逐步推送，是云端 Live 能力，不是可在手机上离线运行的端侧模型，且帮助中心尚未单独列出 iOS 设置路径。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "手机语音助手一旦能「看着眼前的东西说话」，交互会从「先拍照再问」变成「边对准边听指引」。对做 iOS 端侧或端云语音助手的人来说，可迁移的产品形态是：端上先做低延迟的取景、构图提示和端点检测，把识别和长说明放到云端 Live；同时要在界面和系统提示里写清能力边界——官方自己也强调它不能当导航或避障。上线不等于全量可用，帮助中心仍写逐步推送，而且 iOS 的设置路径在我查阅时还没有单独写明，接入或演示前应先在目标系统语言和账号下确认入口。不要把这项云端能力写成「iPhone 本地视觉模型」。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音 Agent",
+      "iOS",
+      "多模态",
+      "苹果生态"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "语音助手",
+      "视觉辅助",
+      "Gemini Live",
+      "iOS"
+    ],
+    "source": {
+      "name": "Gemini",
+      "handle": "@GeminiApp",
+      "identity": "Google Gemini 官方账号；Gemini 帮助中心"
+    },
+    "links": [
+      {
+        "label": "官方帖 @GeminiApp",
+        "url": "https://x.com/GeminiApp/status/2125685936344236471"
+      },
+      {
+        "label": "10 月 Android 发布帖",
+        "url": "https://x.com/GeminiApp/status/2107546530987286542"
+      },
+      {
+        "label": "帮助中心",
+        "url": "https://support.google.com/gemini/answer/18365638"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "agent-app-2026-11-27-omlx-084",
+    "date": "2026-11-27",
+    "seq": 2,
+    "source_brief": "agent-app",
+    "title": "oMLX 0.8.4 大幅加快 Inkling 2 Mini 在 Apple Silicon 上的本地推理，并加入 LoopCD 解码",
+    "summary": "oMLX 0.8.4 大幅加快 Inkling 2 Mini 在 Apple Silicon 上的本地推理，并加入 LoopCD 解码；对比数字来自 M5 Ultra 上相对 0.8.3 的官方测试，安装包面向 macOS，没有官方 iOS 或 iPhone 版本，速度和分数也未经复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对已经在 Mac 上跑 Inkling 2 Mini 或同类循环 Transformer 的人来说，这次更新的重点不是再换一个模型，而是用融合 kernel 和可选的 LoopCD，把长上下文 prefill 和解码速度一起拉上去，并用 SSD 卸载专家把 24GB 机器上的占用压到约 10GB。这些数字都来自 M5 Ultra 上的官方测试，不能当成 iPhone 或 16GB 机器可以照搬的速度；oMLX 目前提供的是 macOS 应用和命令行，不是 iOS 运行时。若做 iOS 端侧助手，更可迁移的是「循环层要有专门 kernel，否则多绕几圈会拖慢解码」，以及把专家卸载当成降低峰值内存的手段，而不是指望把 20GB 级笔记本模型直接搬进手机。LoopCD 默认关闭是合理的：它用一点速度换小幅分数，应在目标任务上单独开关，而不是全局限随开。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "苹果生态",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "本地推理",
+      "Apple Silicon",
+      "Inkling",
+      "开源运行时"
+    ],
+    "source": {
+      "name": "Jun Kim",
+      "handle": "@jundotkim",
+      "identity": "Hugging Face 开源机器学习工程师，oMLX 作者；oMLX GitHub 发布说明"
+    },
+    "links": [
+      {
+        "label": "作者帖 @jundotkim",
+        "url": "https://x.com/jundotkim/status/2125956304976114170"
+      },
+      {
+        "label": "发布说明",
+        "url": "https://github.com/jundot/omlx/releases/tag/v0.8.4"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "agent-app-2026-11-27-macremote",
+    "date": "2026-11-27",
+    "seq": 3,
+    "source_brief": "agent-app",
+    "title": "MacStories 创始人开源 MacRemote：把 Mac 上选定的工具和本地 MCP 安全分享给任意设备上的智能体",
+    "summary": "Federico Viticci 开源免费的原生 Mac 应用 MacRemote，把本机选定的工具和本地 MCP 通过按权限的隧道分享给任意设备上的智能体；要求 macOS 26 或更新系统，作者没有实际安装或接入验证。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "手机端智能体常缺的不是「再一个云端工具」，而是家里那台一直开着的 Mac 上的文件、命令行和本地模型。MacRemote 给出的分层是：手机或网页里的助手只作为对话入口，计算和敏感文件留在用户自己的电脑上，并用按应用、按工具的批准，而不是把整台机器交给某一个厂商的 Mac 集成。对做 iOS 助手的人来说，更值得学的是默认只读、破坏性操作先确认、不提供 shell，以及用匹配码批准新客户端；如果要让手机 Agent 调用家用 Mac，应把可访问目录和工具名单写进权限模型，而不是直接暴露终端。它要求 macOS 26，也不是把模型搬到 iPhone 上本地跑。"
+    },
+    "relevance": 4,
+    "domains": [
+      "工具与 MCP",
+      "苹果生态",
+      "个人 Agent"
+    ],
+    "types": [
+      "开源",
+      "产品发布"
+    ],
+    "tags": [
+      "MCP",
+      "桌面智能体",
+      "权限",
+      "iOS 协作"
+    ],
+    "source": {
+      "name": "Federico Viticci",
+      "handle": "@viticci",
+      "identity": "MacStories 创始人兼主编"
+    },
+    "links": [
+      {
+        "label": "官方帖 @viticci",
+        "url": "https://x.com/viticci/status/2125994816945246298"
+      },
+      {
+        "label": "MacStories 文章",
+        "url": "https://www.macstories.net/stories/macremote-connect-any-agent-to-your-macs-tools-now-free-and-open-source/"
+      },
+      {
+        "label": "GitHub 仓库",
+        "url": "https://github.com/viticci/MacRemote"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-27"
+  },
+  {
+    "id": "agent-app-2026-11-27-dfly2",
+    "date": "2026-11-27",
+    "seq": 4,
+    "source_brief": "agent-app",
+    "title": "腾讯开源 DFly2：与目标稀疏模型共享 KV 和索引，官方称长上下文与智能体任务可显著加速",
+    "summary": "腾讯开源推测解码草稿器 DFly2，官方称通过共享目标模型的稀疏 KV 和索引，可在长上下文和智能体任务上显著加速；这是面向数据中心稀疏大模型的服务端方案，不是手机可以运行的端侧加速，数字也未经复现。",
+    "insight": {
+      "heading": "对端侧 Agent / App 的启发",
+      "body": "对会跑长对话、连续调工具的智能体服务来说，推测解码的瓶颈往往随上下文变长：草稿模型自己再养一份 KV，又要做索引。DFly2 的思路是让草稿直接复用目标模型已经算好的稀疏 KV 和 top-k 位置，使草稿成本几乎与上下文长度脱钩。这和手机端关系不大——Hy4 flash、DeepSeek-V4.1-Flash 这类模型仍然远超手机内存。若只是做 iOS 端侧助手，不必跟进这套服务端草稿器；更可记的是：一旦上下文和工具轨迹变长，加速应优先考虑「不要为草稿再复制一份缓存」，而不是再堆一个更大的草稿模型。官方数字来自其服务端评测，vLLM 支持仍在进行中，部署前应对照目标后端自行复测接受率和吞吐。"
+    },
+    "relevance": 3,
+    "domains": [
+      "大模型",
+      "开源",
+      "论文"
+    ],
+    "types": [
+      "开源",
+      "论文"
+    ],
+    "tags": [
+      "推理加速",
+      "推测解码",
+      "开源",
+      "智能体服务"
+    ],
+    "source": {
+      "name": "腾讯混元",
+      "handle": "@TencentHunyuan",
+      "identity": "腾讯混元官方账号，简介写明是腾讯的基础模型，覆盖文本、图像、视频和 3D；@TencentAI_News（腾讯全球 AI 新闻与开发者资源官方账号）"
+    },
+    "links": [
+      {
+        "label": "官方帖 @TencentHunyuan",
+        "url": "https://x.com/TencentHunyuan/status/2125928146113585468"
+      },
+      {
+        "label": "官方帖 @TencentAI_News",
+        "url": "https://x.com/TencentAI_News/status/2125968859450802415"
+      },
+      {
+        "label": "技术报告",
+        "url": "https://arxiv.org/abs/2611.34776"
+      },
+      {
+        "label": "训练代码 AngelSpec",
+        "url": "https://github.com/Tencent/AngelSpec"
+      },
+      {
+        "label": "权重集合",
+        "url": "https://huggingface.co/collections/AngelSlim/angelspec"
+      }
+    ],
+    "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
     "id": "agent-app-2026-11-26-bonsai-25",
     "date": "2026-11-26",
     "seq": 1,
