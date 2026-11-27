@@ -5,8 +5,16 @@
     <link>https://fuCking-Life.github.io/post/</link>
     <description>全部文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 27 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 28 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-28）：无损清理也会引发“边读边忘”死循环，摘要会衰减也会炸空</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-28/</link>
+      <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-28/</guid>
+      <description>&lt;p&gt;覆盖范围：learn-claude-code s08（上下文压缩），以及对照 2026 年业界做法（Anthropic Context Editing、OpenAI Responses API 加密 compaction、Claude Code &lt;code&gt;PreCompact&lt;/code&gt;/&lt;code&gt;PostCompact&lt;/code&gt; hook、LangChain Deep Agents）。今天做了四件事：理清四步压缩管线的顺序和缓存失效账；补齐 4 个容易被忽略的机制级护栏；跑两个真实任务读 trace，实测缓存暴跌和“边读边忘”压缩震荡死循环；复现 Extra09 的约束丢失实验，意外挖出推理模型触发 &lt;code&gt;(empty summary)&lt;/code&gt; 的真实 bug。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;无损清理也不是免费的，有损摘要更靠不住。&lt;/strong&gt;改写历史前面的任何一条都会打断前缀缓存；当任务工作集大于上下文阈值、模型又不记笔记时，无损清理会把 agent 困在“边读边忘”的死循环里；而把安全约束放进普通对话消息里，不仅多次压缩会“传话衰减”，摘要调用一旦预算耗尽返回空串，约束还会瞬间清零。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日交易资讯（2026-11-27）</title>
       <link>https://fuCking-Life.github.io/post/trading-2026-11-27/</link>
