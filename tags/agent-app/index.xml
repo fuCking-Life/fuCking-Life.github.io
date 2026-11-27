@@ -5,8 +5,17 @@
     <link>https://fuCking-Life.github.io/tags/agent-app/</link>
     <description>带 #agent-app 标签的文章</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 26 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/agent-app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>每日 AI 与移动端智能体简报（2026-11-27）</title>
+      <link>https://fuCking-Life.github.io/post/agent-app-2026-11-27/</link>
+      <pubDate>Fri, 27 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/agent-app-2026-11-27/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-26 08:39 – 2026-11-27 08:39（新加坡时间）
+（附：Gemini Live 的 iOS Guided Vision 发布于昨日窗口后段，上次简报未收录，故一并补入。）&lt;/p&gt;
+&lt;p&gt;本期 4 条：Google 宣布 Gemini Live 的 Guided Vision 现已在 iOS 上线，对准摄像头即可获得实时视觉指引；oMLX 0.8.4 大幅加快 Inkling 2 Mini 在 Apple Silicon 上的本地推理，并加入 LoopCD 解码；MacStories 创始人开源 MacRemote，把 Mac 上选定的工具和本地 MCP 安全分享给任意设备上的智能体；腾讯开源 DFly2，官方称与目标稀疏模型共享 KV 和索引后，长上下文与智能体任务可显著加速。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>每日 AI 与移动端智能体简报（2026-11-26）</title>
       <link>https://fuCking-Life.github.io/post/agent-app-2026-11-26/</link>
