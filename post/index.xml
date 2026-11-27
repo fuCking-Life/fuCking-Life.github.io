@@ -8,6 +8,14 @@
     <lastBuildDate>Fri, 27 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Luna 全双工语音日报（2026-11-27）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-27/</link>
+      <pubDate>Fri, 27 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-27/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-26 08:43 – 2026-11-27 08:48（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 7 条：μ-Bench 评测共享空间里的多人语音任务，专有系统最高 62.24%，开源全双工模型都在 20% 以下（昨日窗口未收录）；sherpa-onnx 流式端点后可选择保留编码器状态，NeMo 流式模型首词错误从 6.9% 降到 3.8%；Amazon Transcribe Turbo 的语义话轮在公开预览中，官方称约 615 ms 响应、5% 抢话，并可按轮注入 ASR 提示（11-25 发布，今日补记）；llama.cpp v1.1.0 接入 Kyutai Hibiki / Moshi 全双工音视输入输出，并加入一批 TTS 与命名 tool_choice；Qwen-Audio-3.1 官方称 ASR 扩到 59 种语言和 8 种中文方言，Realtime 为 53 种语言和 6 种方言；Neywa Labs 首次 Nativ 活动宣布 Swift 多模态引擎 Build Kit、Nativ Mobile，以及号称在 Mac 上 3× 实时的 Tia；sophon-realtime 1.6.3 修好 4B 构建听不全音频块的问题，自报 FD-Bench v1.0 均分 90.2→91.2。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Agent 学习笔记（2026-11-27）：技能写给模型看，description 决定用不用</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-27/</link>
       <pubDate>Fri, 27 Nov 2026 08:00:00 +0800</pubDate>

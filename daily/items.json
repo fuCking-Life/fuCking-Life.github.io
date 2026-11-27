@@ -49,6 +49,54 @@
     "posted_at": "2026-11-26"
   },
   {
+    "id": "lumi-2026-11-27-mu-bench",
+    "date": "2026-11-27",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "μ-Bench：共享空间里的多人语音任务评测；专有系统最高 62.24%，开源全双工模型都在 20% 以下",
+    "summary": "μ-Bench 评测共享空间里的多人全双工语音任务，作者自报无工具赛道专有系统最高 62.24%、开源模型都在 20% 以下；这是模拟评测，昨日窗口未收录，今日从 arXiv 拉取，未跑评测。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "车里就是共享语音通道：司机设目的地和到达约束，乘客会插话改路或问无关的事。不要只评“能不能打断、会不会抢话”，还要单列：这句话是谁说的、任务线有没有被乘客插话打断、以及有没有在未确认司机同意时调用改路、打电话一类工具。函数工具必须带上说话人身份和权限，不能让模型自己填“请求人”。端上可以先做旁听和说话人标签（昨天的 Sidechat 正是这一层），再把重叠语音尽量收成带说话人的顺序转写；即便如此，多人目标冲突仍要单独做策略，不要指望全双工基座自己搞定。这套 800 例可以先作对照，但中文和车噪必须用自己的录音补测。"
+    },
+    "relevance": 5,
+    "domains": [
+      "全双工",
+      "打断与轮次",
+      "论文"
+    ],
+    "types": [
+      "论文",
+      "评测结果"
+    ],
+    "tags": [
+      "话轮控制",
+      "语音 agent 工程",
+      "论文"
+    ],
+    "source": {
+      "name": "μ-Bench 作者团队",
+      "handle": "",
+      "identity": "论文作者团队。通讯作者包括上海人工智能实验室的 Zhuan Shi、Jing Shao；作者来自上海交通大学、上海人工智能实验室、国科大、复旦、清华大学。仓库与项目页由 lqh1106/mu-bench 发布。关注名单中没有对应 X 账号，今日由 arXiv 检索得到。"
+    },
+    "links": [
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2611.34920"
+      },
+      {
+        "label": "项目页",
+        "url": "https://lqh1106.github.io/mu-bench/"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/lqh1106/mu-bench"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
     "id": "agent-app-2026-11-27-omlx-084",
     "date": "2026-11-27",
     "seq": 2,
@@ -91,6 +139,52 @@
       }
     ],
     "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "lumi-2026-11-27-sherpa-onnx-keep-encoder",
+    "date": "2026-11-27",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "sherpa-onnx：流式端点后可选择保留编码器状态，NeMo 流式模型首词错误从 6.9% 降到 3.8%",
+    "summary": "sherpa-onnx 在流式端点后增加可选择保留编码器状态的选项，作者测得 NeMo 流式模型首词错误从 6.9% 降到 3.8%；RKNN / QNN 上不受支持，数字未经设备复测。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "级联里流式 ASR 会频繁碰到“一句结束、下一句马上开始”。如果每次端点都把编码器清掉，下一句开头更容易吃字，导航口令的第一个词（出口、地名、数字）尤其危险。在 iOS 的 sherpa-onnx 流上先打开 `keep_encoder_states`，用车内连续指令重测端点后的首词错误；RKNN / QNN 路径不要假定有同样选项。说话人分离的 C API 可以跟旁听分类器一起看，但这一项是离线接口，不能直接当成车内实时方案。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "开源发布"
+    ],
+    "source": {
+      "name": "sherpa-onnx",
+      "handle": "@csukuangfj",
+      "identity": "k2-fsa/sherpa-onnx。Luna 关注的端上流式 ASR / VAD / 唤醒仓库，由 @csukuangfj（Fangjun Kuang）等维护。本窗口没有对应 X 原创帖，变更来自已合并的 GitHub PR。"
+    },
+    "links": [
+      {
+        "label": "PR #4305",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4305"
+      },
+      {
+        "label": "PR #4302",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4302"
+      },
+      {
+        "label": "PR #4308",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/pull/4308"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
     "posted_at": "2026-11-26"
   },
   {
@@ -141,6 +235,49 @@
     ],
     "archive_url": "/post/agent-app-2026-11-27/",
     "posted_at": "2026-11-27"
+  },
+  {
+    "id": "lumi-2026-11-27-transcribe-turbo",
+    "date": "2026-11-27",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "Amazon Transcribe Turbo：语义话轮在公开预览中，官方称约 615 ms 响应、5% 抢话，并可按轮注入 ASR 提示",
+    "summary": "Amazon Transcribe Turbo 的语义话轮与按轮 ASR 提示进入公开预览，官方称约 615 ms 响应、5% 抢话；这是云端联系中心预览，11-25 发布、今日补记，尚未声明中文流式语义话轮。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "端点不要只靠静音：报出入口编号、电话、地址时中间停顿不应结束一轮；“下一个出口”“好”这种短指令则应尽快收束。可以同时设一个较高的确定阈值和一个较低的提前信号：提前信号只用来预热 TTS 或草稿，用户继续说就把草稿丢掉。按当前导航上下文注入热词和期望实体（出口名、道路名、门牌、车队编号），比会话级静态词表更贴合逐轮对话。615 ms 和 5% 是 AWS 在电话场景上的自报数字，必须在车噪和中文上重测；云端 Transcribe 不能进 Luna 的默认路径，但阈值、提前信号和按轮热词这三项可以直接做进端上的 VAD / 语义端点模块。"
+    },
+    "relevance": 4,
+    "domains": [
+      "打断与轮次",
+      "语音识别 ASR",
+      "语音 Agent"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "话轮控制",
+      "端上语音",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "Amazon Web Services",
+      "handle": "",
+      "identity": "Amazon Web Services。官方 What's new 与 AWS Builder Center 说明。关注名单中没有 AWS 账号，由今日关键词检索发现；我读了这两篇官方页，没有使用第三方转述作为依据。官方标注发布于 2026-11-25，早于本窗口起点，今日核实后补记。"
+    },
+    "links": [
+      {
+        "label": "官方公告",
+        "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/transcribe-turbo-preview/"
+      },
+      {
+        "label": "Builder 说明",
+        "url": "https://builder.aws.com/content/3MbnTQKvOMxTZQbm34D6XV7hv8q/getting-started-with-amazon-transcribe-turbo-and-voice-agent-features"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
+    "posted_at": "2026-11-25"
   },
   {
     "id": "agent-app-2026-11-27-dfly2",
@@ -197,6 +334,184 @@
       }
     ],
     "archive_url": "/post/agent-app-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "lumi-2026-11-27-llamacpp-v110",
+    "date": "2026-11-27",
+    "seq": 4,
+    "source_brief": "lumi",
+    "title": "llama.cpp v1.1.0：接入 Kyutai Hibiki / Moshi 全双工音视输入输出，并加入一批 TTS 与命名 tool_choice",
+    "summary": "llama.cpp 正式版 v1.1.0 接入 Kyutai Hibiki / Moshi 全双工音视输入输出，并加入一批 TTS 与命名 tool_choice；这是推理运行时接入，不是可直接上车的手机模型，PR 评论里的 2.2–3 秒时延不是官方指标。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "若要在端上试验 Hibiki / Moshi 这类全双工语音，可以先把 llama.cpp 1.1.0 当作对照运行时，而不是默认切到 speech-to-speech 主路径。级联方案仍应继续用 sherpa / Core ML 做 ASR 和 TTS；命名 tool_choice 可以对照 Luna 的函数工具约束（只允许当前场景需要的那几个导航工具）。Zonos3-Mini、Kokoro、tiny-voca 已在同一发布里，便于和已有的 mlx-audio-swift / FluidAudio 音色做一次同句延迟和车载听感对比。不要把 PR 里 2.2–3 秒的翻译时延当成车内对话预算。"
+    },
+    "relevance": 4,
+    "domains": [
+      "端侧",
+      "全双工",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "端上语音",
+      "前沿语音模型",
+      "开源发布"
+    ],
+    "source": {
+      "name": "llama.cpp",
+      "handle": "@ggerganov",
+      "identity": "ggml-org/llama.cpp。关注名单中的 @ggerganov（Georgi Gerganov）在本窗口没有原创帖，版本说明来自 GitHub Release。"
+    },
+    "links": [
+      {
+        "label": "Release",
+        "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0"
+      },
+      {
+        "label": "Hibiki PR #32491",
+        "url": "https://github.com/ggml-org/llama.cpp/pull/32491"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "lumi-2026-11-27-qwen-audio-31",
+    "date": "2026-11-27",
+    "seq": 5,
+    "source_brief": "lumi",
+    "title": "Qwen-Audio-3.1：官方称 ASR 扩到 59 种语言和 8 种中文方言，Realtime 为 53 种语言和 6 种方言",
+    "summary": "Qwen-Audio-3.1 官方称 ASR 扩到 59 种语言和 8 种中文方言，Realtime 为 53 种语言和 6 种方言；这是云端模型，没有随升级发布对应基准表或方言名单，也没有绑定的新开源权重说明。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "这是云端模型，不能当作默认的端上 ASR / TTS。若以后把云端 LLM 作为最后手段，Realtime 的方言和打断宣传需要用车内中文、方言和路噪自己测，不能只看语言个数。官方这次只给了计数、没有方言清单和 WER，选型前先确认要覆盖的口音是否还在列表里。端上主路径仍应继续用可离线运行的流式 ASR，并把出口名、道路名做成按轮热词。"
+    },
+    "relevance": 3,
+    "domains": [
+      "语音识别 ASR",
+      "全双工",
+      "大模型"
+    ],
+    "types": [
+      "模型发布"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "端上语音"
+    ],
+    "source": {
+      "name": "Qwen Audio",
+      "handle": "@TONGYI_SpeechAI",
+      "identity": "@TONGYI_SpeechAI  Qwen Audio。阿里通义语音账号，引用 @Alibaba_Qwen 的官方介绍帖。我读了这两条帖，并打开了帖中给出的 Qwen Cloud 模型页；没有新的技术报告或评测表随这次升级一起发布。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/Alibaba_Qwen/status/2125798914490249411"
+      },
+      {
+        "label": "转发说明",
+        "url": "https://x.com/TONGYI_SpeechAI/status/2125817175642681360"
+      },
+      {
+        "label": "ASR",
+        "url": "https://www.qwencloud.com/models/qwen-audio-3.1-asr-flash"
+      },
+      {
+        "label": "Realtime",
+        "url": "https://www.qwencloud.com/models/qwen-audio-3.1-realtime-flash"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
+    "posted_at": "2026-11-26"
+  },
+  {
+    "id": "lumi-2026-11-27-nativ-tia",
+    "date": "2026-11-27",
+    "seq": 6,
+    "source_brief": "lumi",
+    "title": "Neywa Labs 首次 Nativ 活动：宣布 Swift 多模态引擎 Build Kit、Nativ Mobile，以及号称在 Mac 上 3× 实时的 Tia",
+    "summary": "Prince Canuma 称 Neywa Labs 在首次 Nativ 活动上宣布 Swift 多模态引擎 Build Kit、Nativ Mobile，以及号称在 Mac 上 3× 实时的 Tia；未观看约 38 分钟视频，也没有找到可核对这些指标的单独文档。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "继续盯 mlx-audio-swift 和 Build Kit 是否会把 TTS / ASR / 多模态推理收成可嵌入的 Swift 引擎，这比再包一层 Mac 聊天应用更接近 Luna。Nativ Mobile 如果后续给出 iOS 运行时、模型体积和延迟，再拿来和 Core ML / sherpa-onnx 对比。在看到书面指标和 iPhone 实测之前，不要根据活动宣传改主路径。"
+    },
+    "relevance": 3,
+    "domains": [
+      "端侧",
+      "苹果生态",
+      "开源"
+    ],
+    "types": [
+      "产品发布"
+    ],
+    "tags": [
+      "端上语音",
+      "端上小模型",
+      "开源发布"
+    ],
+    "source": {
+      "name": "Prince Canuma",
+      "handle": "@Prince_Canuma",
+      "identity": "@Prince_Canuma  Prince Canuma。mlx-audio / mlx-audio-swift 作者，Neywa Labs 联合创始人。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/Prince_Canuma/status/2126075753699668241"
+      },
+      {
+        "label": "Nativ 产品页",
+        "url": "https://www.neywalabs.ai/products/nativ"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/Neywa-Labs/nativ"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
+    "posted_at": "2026-11-27"
+  },
+  {
+    "id": "lumi-2026-11-27-sophon-163",
+    "date": "2026-11-27",
+    "seq": 7,
+    "source_brief": "lumi",
+    "title": "sophon-realtime 1.6.3：修好 4B 构建听不全音频块的问题，自报 FD-Bench v1.0 均分 90.2→91.2",
+    "summary": "sophon-realtime 1.6.3 修好 4B 构建听不全音频块的问题，作者自报 FD-Bench v1.0 均分从 90.2 升到 91.2；这是服务器 GPU 上的推理修复，不是手机端侧模型，数字未经复测。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "流式链路里“配置写了全长、运行时却按另一套帧率截断”会悄悄伤到端点和附和。检查 Luna 的 VAD / ASR 分块是否与模型训练时的帧移、上下文长度一致，不要只看平均延迟。0.07 秒和 90.2→91.2 是一块 H100、一个基准上的自报变化，不能外推到 iPhone；但“先保证模型真正听到完整块，再谈话轮分数”这一条适用。"
+    },
+    "relevance": 3,
+    "domains": [
+      "全双工",
+      "开源"
+    ],
+    "types": [
+      "开源"
+    ],
+    "tags": [
+      "前沿语音模型",
+      "话轮控制",
+      "开源发布"
+    ],
+    "source": {
+      "name": "sophon-realtime",
+      "handle": "",
+      "identity": "adventists-ai/sophon-realtime。关注名单中的全双工实时语音项目。本窗口没有对应 X 原创帖，说明来自 GitHub Release。"
+    },
+    "links": [
+      {
+        "label": "Release",
+        "url": "https://github.com/adventists-ai/sophon-realtime/releases/tag/v1.6.3"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-27/",
     "posted_at": "2026-11-26"
   },
   {
