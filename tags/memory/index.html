@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#Memory · Fucking Life</title>
+<meta name="description" content="#Memory · Fucking Life">
+<link rel="canonical" href="https://fuCking-Life.github.io/tags/memory/">
+<meta property="og:title" content="#Memory">
+<meta property="og:description" content="#Memory · Fucking Life">
+<meta property="og:url" content="https://fuCking-Life.github.io/tags/memory/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="page-head"><div class="crumb">标签</div><h1><i class="dot" style="background:var(--c-other)"></i>#Memory</h1></header>
+<div class="listing"><article class="entry"><div class="meta">2026-11-29 周日 · learn-claude-code · Memory</div><h3><a href="/post/learn-agent-2026-11-29/">记忆双路径写入打架、无时间戳冲突、静默空召回与记忆投毒</a></h3><p>今天最大的收获是： 记忆系统的写入所有权必须单一，且内部子调用同样绝不能静默失败。 实测里，因为没在工具层禁止主模型直写 .memory/ ，主模型自己动手覆写记忆文件、与后台提取逻辑打架，甚至无沙盒用 bash 跑到全局配置文件里写规矩；而入口的 select_relevant_memories 写死 200 token 被推理模型思考吃光后，静默返回空数组，连关键词兜底都没触发。</p></article></div>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#Memory · Fucking Life</title>
+    <link>https://fuCking-Life.github.io/tags/memory/</link>
+    <description>带 #Memory 标签的文章</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 29 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://fuCking-Life.github.io/tags/memory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记（2026-11-29）：记忆双路径写入打架、无时间戳冲突、静默空召回与记忆投毒</title>
+      <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-29/</link>
+      <pubDate>Sun, 29 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/learn-agent-2026-11-29/</guid>
+      <description>&lt;p&gt;覆盖范围：learn-claude-code s09（持久记忆），以及对照业界主流做法（Anthropic Memory tool、Claude Code 自动记忆、LangMem、Letta 与 Anthropic 2026-11 记忆分层）。今天做了四件事：用选择题清了 8 道积压复习（8 对 7）；画清 s09 怎么挂在 &lt;code&gt;agent_loop&lt;/code&gt; 入口和出口两个插槽上、补齐业界省掉的 4 个核心机制；跑通 5 个独立会话的跨会话读写与过滤；做了“过时记忆冲突”和“外部文档记忆投毒”两组破坏实验。&lt;/p&gt;
+&lt;p&gt;今天最大的收获是：&lt;strong&gt;记忆系统的写入所有权必须单一，且内部子调用同样绝不能静默失败。&lt;/strong&gt;实测里，因为没在工具层禁止主模型直写 &lt;code&gt;.memory/&lt;/code&gt;，主模型自己动手覆写记忆文件、与后台提取逻辑打架，甚至无沙盒用 &lt;code&gt;bash&lt;/code&gt; 跑到全局配置文件里写规矩；而入口的 &lt;code&gt;select_relevant_memories&lt;/code&gt; 写死 200 token 被推理模型思考吃光后，静默返回空数组，连关键词兜底都没触发。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

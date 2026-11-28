@@ -5,20 +5,20 @@
     <link>https://fuCking-Life.github.io/categories/</link>
     <description>全部栏目</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 28 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent 学习笔记</title>
+      <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
+      <pubDate>Sun, 29 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/categories/agent-学习笔记/</guid>
+      <description></description>
+    </item>
     <item>
       <title>日报</title>
       <link>https://fuCking-Life.github.io/categories/日报/</link>
       <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
       <guid>https://fuCking-Life.github.io/categories/日报/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Agent 学习笔记</title>
-      <link>https://fuCking-Life.github.io/categories/agent-学习笔记/</link>
-      <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
-      <guid>https://fuCking-Life.github.io/categories/agent-学习笔记/</guid>
       <description></description>
     </item>
     <item>

@@ -5,20 +5,27 @@
     <link>https://fuCking-Life.github.io/tags/</link>
     <description>全部标签</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 28 Nov 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>learn-claude-code</title>
+      <link>https://fuCking-Life.github.io/tags/learn-claude-code/</link>
+      <pubDate>Sun, 29 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/tags/learn-claude-code/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Memory</title>
+      <link>https://fuCking-Life.github.io/tags/memory/</link>
+      <pubDate>Sun, 29 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/tags/memory/</guid>
+      <description></description>
+    </item>
     <item>
       <title>lumi</title>
       <link>https://fuCking-Life.github.io/tags/lumi/</link>
       <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
       <guid>https://fuCking-Life.github.io/tags/lumi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>learn-claude-code</title>
-      <link>https://fuCking-Life.github.io/tags/learn-claude-code/</link>
-      <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
-      <guid>https://fuCking-Life.github.io/tags/learn-claude-code/</guid>
       <description></description>
     </item>
     <item>

@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://fuCking-Life.github.io/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/daily/</loc>
@@ -17,14 +17,14 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/categories/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/categories/agent-学习笔记/</loc>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
     <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -33,14 +33,18 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/tags/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
-    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/tags/learn-claude-code/</loc>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/tags/memory/</loc>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
     <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -66,6 +70,10 @@
   <url>
     <loc>https://fuCking-Life.github.io/tags/langgraph/</loc>
     <lastmod>2026-11-22T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/learn-agent-2026-11-29/</loc>
+    <lastmod>2026-11-29T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/lumi-2026-11-28/</loc>
