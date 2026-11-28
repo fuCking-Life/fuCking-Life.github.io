@@ -1,9 +1,9 @@
 {
  "review_due": {
   "date": "2026-11-29",
-  "recall": 43,
+  "recall": 35,
   "transfer": 6,
-  "think": 5
+  "think": 6
  },
  "days": {
   "2026-11-19": {
@@ -222,7 +222,15 @@
     "A/B 对照实测：放消息里的约束经 4 次压缩传话衰减，且推理模型把 2000 max_tokens 花在 thinking 上导致 4 次 (empty summary) 清零历史",
     "安全约束三层防线：用户消息（最脆弱） < SYSTEM（不怕压缩仍是软约束） < 工具层权限/Hook/沙盒（硬保证）"
    ],
-   "note": "/post/learn-agent-2026-11-28/"
+   "note": "/post/learn-agent-2026-11-28/",
+   "review": {
+    "recall": [
+     8,
+     8
+    ],
+    "transfer": 0,
+    "think": 0
+   }
   }
  }
 }
