@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna 全双工语音日报（2026-11-28） · Fucking Life</title>
+<meta name="description" content="时间窗口：2026-11-27 08:48 – 2026-11-28 08:42（新加坡时间） 本期 3 条：Voice Isolator v2 在带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32，10M / 22M 可在单 CPU 线程上跑；通义语音讨论地名只错一个字就会把导航开到另一个目的地，并强调热">
+<link rel="canonical" href="https://fuCking-Life.github.io/post/lumi-2026-11-28/">
+<meta property="og:title" content="Luna 全双工语音日报（2026-11-28）">
+<meta property="og:description" content="时间窗口：2026-11-27 08:48 – 2026-11-28 08:42（新加坡时间） 本期 3 条：Voice Isolator v2 在带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32，10M / 22M 可在单 CPU 线程上跑；通义语音讨论地名只错一个字就会把导航开到另一个目的地，并强调热">
+<meta property="og:url" content="https://fuCking-Life.github.io/post/lumi-2026-11-28/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Fucking Life">
+<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Fucking Life">
+<link rel="icon" href="/favicons/favicon.ico">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css?v=3d7bb42cef">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><a class="brand" href="/">Fucking<span>·</span>Life</a><nav class="nav" aria-label="栏目"><a href="/">首页</a><a class="on" aria-current="page" href="/daily/">日报</a><a href="/categories/每日交易资讯/">交易资讯</a><a href="/categories/agent-学习笔记/">学习笔记</a><a href="/learn/">学习进度</a><a href="/post/">归档</a></nav><button type="button" class="theme-btn" aria-label="切换深浅色" title="切换深浅色"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></div></header>
+<main class="wrap">
+<header class="post-head"><div class="crumb"><a href="/categories/日报/" style="color:var(--c-daily)">日报</a> · <time datetime="2026-11-28T08:00:00+08:00">2026-11-28</time></div><h1>Luna 全双工语音日报（2026-11-28）</h1><div class="post-meta"><span>约 9 分钟</span><a class="tag" href="/tags/lumi/">#lumi</a></div></header>
+<article class="prose" style="--col:var(--c-daily)">
+<p class="digest-meta">时间窗口：2026-11-27 08:48 – 2026-11-28 08:42（新加坡时间）</p>
+<p>本期 3 条：Voice Isolator v2 在带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32，10M / 22M 可在单 CPU 线程上跑；通义语音讨论地名只错一个字就会把导航开到另一个目的地，并强调热词要检索、要克制，不能盖过声学证据；SGLang Omni 把 TTS 做成 tts_start 工具调用，由系统决定何时停，并用 heard_prefix 告诉模型用户实际听到了什么。</p>
+<nav class="toc" aria-label="本期目录"><div class="toc-head">本期 3 条</div><ol><li><a href="#voice-isolator-v2带主叫门控后助手说话时的误打断从-105-次分钟降到-054voicebot-模式-03210m--22m-可在单-cpu-线程上跑">Voice Isolator v2：带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32；10M / 22M 可在单 CPU 线程上跑</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#通义语音地名只错一个字导航就会开到另一个目的地热词要检索要克制不能盖过声学证据">通义语音：地名只错一个字，导航就会开到另一个目的地；热词要检索、要克制，不能盖过声学证据</a><span class="toc-rel hi" title="相关度 5/5">5</span></li><li><a href="#sglang-omni把-tts-做成-ttsstart-工具调用系统决定何时停并用-heardprefix-告诉模型用户实际听到了什么">SGLang Omni：把 TTS 做成 tts_start 工具调用；系统决定何时停，并用 heard_prefix 告诉模型用户实际听到了什么</a><span class="toc-rel" title="相关度 4/5">4</span></li></ol></nav>
+<section class="item" id="voice-isolator-v2带主叫门控后助手说话时的误打断从-105-次分钟降到-054voicebot-模式-03210m--22m-可在单-cpu-线程上跑">
+<h3 class="it-title"><span class="it-no">1</span><span>Voice Isolator v2：带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32；10M / 22M 可在单 CPU 线程上跑</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">话轮控制</span><span class="it-chip">唤醒与声纹</span><span class="it-chip">端上语音</span></div>
+<p class="it-src">来源：@huseinzol05  Husein Zolkepli，马来西亚语音 / LLM 工程师，持续发布开源权重；本项目署名 Scicom，Hugging Face 集合为 Scicom-intl/voice-isolator。发帖日期：2026-11-27（新加坡时间 14:25 起的说明线程）。</p>
+<p>作者今天发了 Voice Isolator 的 v2 说明线程。预印本《The Voice on the Line》（arXiv:2610.35272）第一版提交于 2026-10-26，v2 修订于 2026-11-20（新加坡时间 11-21 01:35），都早于本窗口；今天是作者把 agent 侧用法和数字讲清楚。我读了摘要、LiveKit 插件与打断评测相关章节，以及 Hugging Face 集合页，没有复测。这是因果目标说话人隔离器，放在 VAD、话轮检测和 ASR 前面，20 ms 窗口、无前瞻，从通话里已听到的最响 3 秒登记主叫。555M 发布模型在 60 秒 AMI 窗口上自报 WER 16.13%，对照开源最强 VoxLock 的 23.66%；九个测试集平均 14.77% 对 18.04%。去掉 WavLM 蒸馏出的 22.1M / 9.8M 学生模型可在 LiveKit 里单 CPU 线程实时跑，论文写每路分别占 12.5% 和 8.5% 核心。作者关心的是“助手正在说话时，噪声会不会把它打断”：在会回话的 agent 里，普通隔离模型每分钟助手语音出现 1.05 次误打断（漏掉主叫轮次 0.7%），带主叫在场门控的 agent 模型降到 0.54（漏轮 2.7%），voicebot 模式（先不出声，直到听到主叫）再降到 0.32（漏轮 2.5%）；同一张表上 NVIDIA RE-USE 为 0.95，VoxLock live 为 1.18，Inworld Voice Isolator v1（只去噪）为 4.52。线程里补充：8-bit ONNX 的 22M agent 模型每路占 12.6% 核心、误打断 0.48 次/分钟，新的 10M 为 8.8% 和 0.60；voicebot 在 GPU 上从 0.54 降到 0.32，在 CPU 上从 0.48 降到 0.26。论文还指出，只做降噪会让背景人声更像语音——LiveKit 的 Silero 在仅有他人说话的片段上，原始音频每分钟启动 5.09 次，GTCRN 后面升到 6.54。这些数字都是作者自报，评测集主要是呼叫中心、Krisp 和 AMI 会议，不是车舱中文。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+把目标说话人隔离放在 VAD 前面，不要指望只靠降噪来防误打断：车里收音机和乘客说话被“洗干净”之后，反而更容易被当成对助手讲话。10M / 22M 的 8-bit ONNX 值得在 iPhone 上先测两件事：Luna 正在播报时的误打断，以及司机单独说话时会不会被伤到。不要照搬“已听到的最响 3 秒登记主叫”——车里最响的未必是司机，应改用事先登记的司机声纹；助手若会先开口（主动提醒、导航播报），对照 voicebot 模式，在听到目标说话人之前不要把隔离器的输出送给 VAD。中文和车噪必须自己补测，前 3 秒冷启动也要单独看。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/huseinzol05/status/2126200828558225460">原帖</a> · <a href="https://arxiv.org/abs/2610.35272">论文</a> · <a href="https://huggingface.co/collections/Scicom-intl/voice-isolator">模型</a> · <a href="https://github.com/Scicom-AI-Enterprise-Organization/STT-API/tree/main/stt_api/livekit_plugin/voice_isolator">代码</a></p>
+</section>
+<section class="item" id="通义语音地名只错一个字导航就会开到另一个目的地热词要检索要克制不能盖过声学证据">
+<h3 class="it-title"><span class="it-no">2</span><span>通义语音：地名只错一个字，导航就会开到另一个目的地；热词要检索、要克制，不能盖过声学证据</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 5/5" aria-label="相关度 5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="it-chip">端上语音</span><span class="it-chip">语音 agent 工程</span></div>
+<p class="it-src">来源：@TONGYI_SpeechAI  通义语音 / Qwen Audio 官方账号。发帖日期：2026-11-27（新加坡时间 15:49 的说明线程）。</p>
+<p>官方线程从一个导航事故写起：用户说了一个地名，屏幕上出现读音相近、只差一个字的另一个地点，句子仍然通顺，导航却已经选错目的地；通讯录、药品、型号和公司名也有同样问题。总体 WER 下降，并不等于专有名词对了。他们给出的办法是热词 / 语境偏置（contextual biasing）：把这一次可能出现的词（联系人、会议用语、附近地点、甚至前文）提前告诉 ASR。但提示越多，模型也越容易“听见”根本没说的词；同音的普通词还可能被热词抢走，所以系统必须同时学会何时偏向、何时不要偏向。热词从几十条扩到成千上万条时，先要检索出该看的候选（有的从初转写做 CTC 或拼音检索，有的直接用音频或内部表示，如 BR-ASR 向量、RECAST 解码状态），入选并不等于应该改写。可用的做法包括带候选列表的监督微调、解码时偏置（logit 调整或门控概率融合），以及奖励目标实体、惩罚误改其余内容的强化学习。流式还有额外约束：词可能还没说完，实用做法是维护部分匹配状态，只对末尾仍含糊的片段做有限修正，稳定前缀尽早提交。他们建议评测回答四个问题：目标词有没有认出、无关热词有没有误触发、普通内容有没有被改坏、流式模式下用户等了多久。线程末尾给出的试用入口是 Qwen-Audio-3.1-ASR-Flash-Filetrans 云 API；我打开了产品页，它写明这是面向会议转写、内容生产和通话分析的端到端离线文件转写模型，带热词与语境增强、说话人分离，并支持多方言，不是流式端上模型。我读了整条官方线程和产品页概述，没有调用该 API，也没有测热词效果。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+导航口令里的地名、出口和联系人，正好是“错一个字、句子仍通顺、工具已经调错”的高风险。不要只看总体 WER，至少单列：目标专名是否正确、热词是否误触发、普通词是否被改坏、流式首词和最终提交的时延。附近 POI 和车内联系人可以做成热词候选，但必须先检索、再用声学核对，不能让词表压过声音；若 n-best 里两个地名都很近，与其静默改路，不如先确认。流式不要过早钉死尚未说完的地名。Qwen-Audio-3.1 这条 API 是离线文件转写，不能直接接到 Luna 的流式级联里，要借鉴的是评测口径和偏置策略。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/TONGYI_SpeechAI/status/2126221861315117158">原帖</a> · <a href="https://www.qwencloud.com/models/qwen-audio-3.1-asr-flash-filetrans?region=ap-southeast-1">产品页</a></p>
+</section>
+<section class="item" id="sglang-omni把-tts-做成-ttsstart-工具调用系统决定何时停并用-heardprefix-告诉模型用户实际听到了什么">
+<h3 class="it-title"><span class="it-no">3</span><span>SGLang Omni：把 TTS 做成 tts_start 工具调用；系统决定何时停，并用 heard_prefix 告诉模型用户实际听到了什么</span></h3>
+<div class="it-meta"><span class="it-rel" title="相关度 4/5" aria-label="相关度 4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="it-chip">语音 agent 工程</span><span class="it-chip">agent 与界面</span><span class="it-chip">话轮控制</span></div>
+<p class="it-src">来源：@sgl_project  SGLang 官方。关注名单里原先没有这个账号，今日由其级联全双工博文与原帖补入。发帖日期：2026-11-28（新加坡时间 06:03 发帖；博文标注日期为 2026-11-24，早于本窗口，今日由官方转发并附演示）。</p>
+<p>我读了博文《Speaking Is an Action: Turning TTS into a Tool for Interactive Models》，没有观看评论里的 YouTube 演示。SGLang Omni 仍是 ASR、LLM、TTS 的级联：旧做法是 TTS 朗读 LLM 写出的每一个 token，思考一关模型就变笨，一开又太长、不宜出声；用户打断后若把回复裁成带省略号的半句写进历史，模型之后自己也会在句末加省略号（文中复现：思考关闭的 Qwen3.8-27B，在每轮都被截断的 20 轮历史上，128 次最终回答里有 16 次以省略号结尾，占 12.5%）。新接口把说话本身做成工具：tts_start(text) 归 LLM，tts_close 归 Session，且不在模型的工具列表里。VAD 一检测到用户开口，Session 立即停播并停掉 LLM，不必先等 ASR 和模型，以免又播出一段却被记成“已听见”。工具结果里的 heard_prefix 是播放记录认为用户听到的前缀（默认按句界，开了对齐器则用词级时间戳），与模型写完的全文分开保存。文中回放例子：模型已生成“The parcel code is V2P2.”，但 heard_prefix 停在“The pickup desk is next to the main entrance.”；再被问有没有读出取件码时，三个被测模型都回答还没读、并补出该码。为了降低首包延迟，他们流式写出工具参数，并预填 tts_start 的开头以跳过思考：三句请求上，三个模型的中位首音频从平均 1,826 ms 降到 567 ms（预填路径上 Inkling 2 Mini 540 ms、Inkling 2 Small 535 ms、Qwen3.8-27B 625 ms）。这些是服务端（文中写 H200）上的自报中位数，不是手机端侧数字。系统在一次成功播报后结束该轮，不让模型对着同一输入再讲一遍。</p>
+<blockquote class="it-insight">
+<p><strong>对 Luna 的启发</strong>
+Luna 同样是级联，不要把意图模型或云端 LLM 的全部 token 交给 TTS。把“开口说话”做成和改路、打电话一样的函数工具：模型决定说什么，运行时决定何时停。被司机打断时，必须把“已经生成的全文”和“实际播出去、司机可能听到的前缀”分开记，否则下一句会以为目的地、电话或验证码已经读过。停播应由 VAD 走快路径，不要等 ASR 和 LLM 回来再切。预填并流式写出播报文本，适合云端兜底那一路压首包；1,826→567 ms 是 H200 上的数字，不能外推到 iPhone。</p></blockquote>
+<p class="it-links">原帖：<a href="https://x.com/sgl_project/status/2126436771735257094">原帖</a> · <a href="https://www.sglang.io/blog/tts-as-a-tool">博文</a></p>
+<p>窗口内 44 个关注账号中，12 个发了原创非转发帖（@huseinzol05、@TONGYI_SpeechAI、@ozgul_oncel、@XiaomiTech_、@ngxson、@eustachelb、@_philschmid、@liquidai、@OpenBMB、@tarush_agarwal_、@andimarafioti、@ataiiam）。在这 12 个账号中，除 @huseinzol05 与 @TONGYI_SpeechAI 已单列外，其余多为早间堆栈照片、小米世界模型与机器人、GTA 讨论、夸奖 Kyutai、Gemini 技能、Liquid AI 的 d1.3-ultra 决策模型、OpenBMB 转发已报道过的 Sage-Interaction 以及本地记账助手、Voice AI 招聘与 FDE、OpenBot 审批 UI，未单列。关键词检索里还有 9 月已发布的开源全双工项目 Gander（非关注账号、非一手来源）、Sage-Interaction 与 μ-Bench 的二手转述，以及一篇用 LiveKit 旅行助手演示“沉默预算”的个人长帖，均未作为一手来源另列。本窗口没有新的 arXiv 论文：昨日已收录的 μ-Bench（2611.34920）和脚注中的 JOVE-ICE（2611.33735）都是 11-25 提交，早于本窗口。关注名单里的正式版本有 ag-ui-protocol/ag-ui 的 release/2026-11-27（@ag-ui/mastra 2.1.0 与 ag-ui-langgraph 0.1.0，主要是 Mastra / LangGraph / CopilotKit 的 per-run guidance，不是语音协议变更），以及 llama.cpp 的日常夜间版；sherpa-onnx 合入了 NeMo transducer 元数据读取、Haas-ja-v1.0 的 ONNX 导出和 Rust 离线说话人分离进度回调，未打新版本号。Pipecat 合入 SIP listen（#6877）；LiveKit Agents 有 Gradium STT 用 flush 结束话轮、实时路径在每个工具返回时就发送 eager tool output，以及 Fish Audio s3-pro / Finesse TTS 插件，不是正式发版。mlx-audio、FluidAudio、smart-turn、sidechat、sava 等多数语音仓库本窗口没有新提交。Kyutai 站点、Phonon TTS 博文与 Pipecat Expressive 文档未见可确认的新更新（Expressive 文档仍标 alpha）。专门的唤醒词模型没有新发布；端上意图、槽位和工具调用没有新的端上小模型；前沿 speech-to-speech 基座没有新的开源权重。本窗口将 @sgl_project、博文 https://www.sglang.io/blog/tts-as-a-tool，以及 Scicom-intl/voice-isolator 与 Scicom-AI-Enterprise-Organization/STT-API 中的 LiveKit 插件写入关注名单。</p>
+</section>
+</article>
+<nav class="post-nav" aria-label="同栏目文章"><a class="prev" href="/post/lumi-2026-11-27/"><small>← 上一篇</small>Luna 全双工语音日报（2026-11-27）</a><span class="next none"><small>下一篇 →</small>没有了</span></nav>
+<section class="comments" id="comments" data-repo="fuCking-Life/fuCking-Life.github.io" data-issue-term="pathname"><h2>评论</h2></section>
+</main>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Ermao · <a href="/index.xml">RSS</a></span><span>交易资讯仅为信息整理，不构成投资建议</span></div></footer>
+<script src="/js/site.js?v=3d7bb42cef" defer></script>
+</body>
+</html>

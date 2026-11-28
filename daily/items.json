@@ -1,5 +1,141 @@
 [
   {
+    "id": "lumi-2026-11-28-voice-isolator-v2",
+    "date": "2026-11-28",
+    "seq": 1,
+    "source_brief": "lumi",
+    "title": "Voice Isolator v2：带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32；10M / 22M 可在单 CPU 线程上跑",
+    "summary": "作者今天把 Voice Isolator v2 的 agent 侧用法讲清楚：带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32；10M / 22M 可在单 CPU 线程上跑。数字均为作者自报，未复测，评测集也不是车舱中文。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "把目标说话人隔离放在 VAD 前面，不要指望只靠降噪来防误打断：车里收音机和乘客说话被“洗干净”之后，反而更容易被当成对助手讲话。10M / 22M 的 8-bit ONNX 值得在 iPhone 上先测两件事：Luna 正在播报时的误打断，以及司机单独说话时会不会被伤到。不要照搬“已听到的最响 3 秒登记主叫”——车里最响的未必是司机，应改用事先登记的司机声纹；助手若会先开口（主动提醒、导航播报），对照 voicebot 模式，在听到目标说话人之前不要把隔离器的输出送给 VAD。中文和车噪必须自己补测，前 3 秒冷启动也要单独看。"
+    },
+    "relevance": 5,
+    "domains": [
+      "打断与轮次",
+      "端侧",
+      "开源"
+    ],
+    "types": [
+      "开源",
+      "技术解读"
+    ],
+    "tags": [
+      "话轮控制",
+      "唤醒与声纹",
+      "端上语音"
+    ],
+    "source": {
+      "name": "Husein Zolkepli",
+      "handle": "@huseinzol05",
+      "identity": "@huseinzol05  Husein Zolkepli，马来西亚语音 / LLM 工程师，持续发布开源权重；本项目署名 Scicom，Hugging Face 集合为 Scicom-intl/voice-isolator。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/huseinzol05/status/2126200828558225460"
+      },
+      {
+        "label": "论文",
+        "url": "https://arxiv.org/abs/2610.35272"
+      },
+      {
+        "label": "模型",
+        "url": "https://huggingface.co/collections/Scicom-intl/voice-isolator"
+      },
+      {
+        "label": "代码",
+        "url": "https://github.com/Scicom-AI-Enterprise-Organization/STT-API/tree/main/stt_api/livekit_plugin/voice_isolator"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-28/",
+    "posted_at": "2026-11-27"
+  },
+  {
+    "id": "lumi-2026-11-28-tongyi-hotword",
+    "date": "2026-11-28",
+    "seq": 2,
+    "source_brief": "lumi",
+    "title": "通义语音：地名只错一个字，导航就会开到另一个目的地；热词要检索、要克制，不能盖过声学证据",
+    "summary": "通义语音官方线程从导航地名只错一字就会开错目的地说起，主张热词要先检索、再克制偏置，不能盖过声学证据；末尾给出的 Qwen-Audio-3.1-ASR-Flash-Filetrans 是离线文件转写云 API，不是流式端上模型。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "导航口令里的地名、出口和联系人，正好是“错一个字、句子仍通顺、工具已经调错”的高风险。不要只看总体 WER，至少单列：目标专名是否正确、热词是否误触发、普通词是否被改坏、流式首词和最终提交的时延。附近 POI 和车内联系人可以做成热词候选，但必须先检索、再用声学核对，不能让词表压过声音；若 n-best 里两个地名都很近，与其静默改路，不如先确认。流式不要过早钉死尚未说完的地名。Qwen-Audio-3.1 这条 API 是离线文件转写，不能直接接到 Luna 的流式级联里，要借鉴的是评测口径和偏置策略。"
+    },
+    "relevance": 5,
+    "domains": [
+      "语音识别 ASR",
+      "语音 Agent"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "端上语音",
+      "语音 agent 工程"
+    ],
+    "source": {
+      "name": "通义语音 / Qwen Audio",
+      "handle": "@TONGYI_SpeechAI",
+      "identity": "@TONGYI_SpeechAI  通义语音 / Qwen Audio 官方账号"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/TONGYI_SpeechAI/status/2126221861315117158"
+      },
+      {
+        "label": "产品页",
+        "url": "https://www.qwencloud.com/models/qwen-audio-3.1-asr-flash-filetrans?region=ap-southeast-1"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-28/",
+    "posted_at": "2026-11-27"
+  },
+  {
+    "id": "lumi-2026-11-28-sglang-omni-tts",
+    "date": "2026-11-28",
+    "seq": 3,
+    "source_brief": "lumi",
+    "title": "SGLang Omni：把 TTS 做成 tts_start 工具调用；系统决定何时停，并用 heard_prefix 告诉模型用户实际听到了什么",
+    "summary": "SGLang Omni 把 TTS 做成 tts_start 工具调用，由系统决定何时停，并用 heard_prefix 记录用户实际听到的前缀；预填路径上中位首音频自报从 1,826 ms 降到 567 ms，这是 H200 上的数字，不是手机端侧结果。博文标注日期为 2026-11-24，今日由官方转发。",
+    "insight": {
+      "heading": "对 Luna 的启发",
+      "body": "Luna 同样是级联，不要把意图模型或云端 LLM 的全部 token 交给 TTS。把“开口说话”做成和改路、打电话一样的函数工具：模型决定说什么，运行时决定何时停。被司机打断时，必须把“已经生成的全文”和“实际播出去、司机可能听到的前缀”分开记，否则下一句会以为目的地、电话或验证码已经读过。停播应由 VAD 走快路径，不要等 ASR 和 LLM 回来再切。预填并流式写出播报文本，适合云端兜底那一路压首包；1,826→567 ms 是 H200 上的数字，不能外推到 iPhone。"
+    },
+    "relevance": 4,
+    "domains": [
+      "语音 Agent",
+      "打断与轮次",
+      "工具与 MCP"
+    ],
+    "types": [
+      "技术解读"
+    ],
+    "tags": [
+      "语音 agent 工程",
+      "agent 与界面",
+      "话轮控制"
+    ],
+    "source": {
+      "name": "SGLang",
+      "handle": "@sgl_project",
+      "identity": "@sgl_project  SGLang 官方。关注名单里原先没有这个账号，今日由其级联全双工博文与原帖补入。"
+    },
+    "links": [
+      {
+        "label": "原帖",
+        "url": "https://x.com/sgl_project/status/2126436771735257094"
+      },
+      {
+        "label": "博文",
+        "url": "https://www.sglang.io/blog/tts-as-a-tool"
+      }
+    ],
+    "archive_url": "/post/lumi-2026-11-28/",
+    "posted_at": "2026-11-28"
+  },
+  {
     "id": "agent-app-2026-11-27-gemini-guided-vision",
     "date": "2026-11-27",
     "seq": 1,
