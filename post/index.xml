@@ -8,6 +8,14 @@
     <lastBuildDate>Sat, 28 Nov 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://fuCking-Life.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Luna 全双工语音日报（2026-11-28）</title>
+      <link>https://fuCking-Life.github.io/post/lumi-2026-11-28/</link>
+      <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>
+      <guid>https://fuCking-Life.github.io/post/lumi-2026-11-28/</guid>
+      <description>&lt;p&gt;时间窗口：2026-11-27 08:48 – 2026-11-28 08:42（新加坡时间）&lt;/p&gt;
+&lt;p&gt;本期 3 条：Voice Isolator v2 在带主叫门控后，助手说话时的误打断从 1.05 次/分钟降到 0.54，voicebot 模式 0.32，10M / 22M 可在单 CPU 线程上跑；通义语音讨论地名只错一个字就会把导航开到另一个目的地，并强调热词要检索、要克制，不能盖过声学证据；SGLang Omni 把 TTS 做成 tts_start 工具调用，由系统决定何时停，并用 heard_prefix 告诉模型用户实际听到了什么。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Agent 学习笔记（2026-11-28）：无损清理也会引发“边读边忘”死循环，摘要会衰减也会炸空</title>
       <link>https://fuCking-Life.github.io/post/learn-agent-2026-11-28/</link>
       <pubDate>Sat, 28 Nov 2026 08:00:00 +0800</pubDate>

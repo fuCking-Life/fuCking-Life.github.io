@@ -10,13 +10,17 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/daily/</loc>
-    <lastmod>2026-11-27T08:00:00+08:00</lastmod>
+    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/learn/</loc>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/categories/</loc>
+    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
     <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -28,11 +32,11 @@
     <lastmod>2026-11-27T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/categories/日报/</loc>
-    <lastmod>2026-11-27T08:00:00+08:00</lastmod>
+    <loc>https://fuCking-Life.github.io/tags/</loc>
+    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
-    <loc>https://fuCking-Life.github.io/tags/</loc>
+    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
     <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -45,10 +49,6 @@
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/tags/每日交易资讯/</loc>
-    <lastmod>2026-11-27T08:00:00+08:00</lastmod>
-  </url>
-  <url>
-    <loc>https://fuCking-Life.github.io/tags/lumi/</loc>
     <lastmod>2026-11-27T08:00:00+08:00</lastmod>
   </url>
   <url>
@@ -66,6 +66,10 @@
   <url>
     <loc>https://fuCking-Life.github.io/tags/langgraph/</loc>
     <lastmod>2026-11-22T08:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://fuCking-Life.github.io/post/lumi-2026-11-28/</loc>
+    <lastmod>2026-11-28T08:00:00+08:00</lastmod>
   </url>
   <url>
     <loc>https://fuCking-Life.github.io/post/learn-agent-2026-11-28/</loc>
